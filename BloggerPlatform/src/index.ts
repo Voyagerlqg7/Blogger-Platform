@@ -6,7 +6,6 @@ const port = process.env.PORT || 6419;
 app.use(express.json());
 
 app.use("/blogs", BlogsRouter);
-app.use("/blogs/:id", BlogsRouter);
 
 
 app.listen(port, () => {
