@@ -1,6 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {PostController} from "../Controllers/PostController";
-
+import { query} from 'express-validator';
+import {body} from "express-validator";
 export const PostRouter = Router();
 
 PostRouter.get('/', async (request: Request, response: Response) => {
@@ -15,7 +16,11 @@ PostRouter.get('/:id', async (request: Request, response: Response) => {
         response.status(404).send({ message: 'Blog not found' });
     }
 })
-PostRouter.post('/', async (request: Request, response: Response) => {
+PostRouter.post('/',
+
+
+
+    async (request: Request, response: Response) => {
     const newpost = PostController.AddNewPost(request.body);
     if(newpost){
         response.status(201).send(newpost);
@@ -24,9 +29,13 @@ PostRouter.post('/', async (request: Request, response: Response) => {
         response.status(404).send({ message: 'Blog not found' });
     }
 })
-PostRouter.put('/', async (request: Request, response: Response) => {
+PostRouter.put('/:id', async (request: Request, response: Response) => {
 
 })
 PostRouter.delete('/', async (request: Request, response: Response) => {
-
+    const postToDelete = PostController.DeletePostByID(request.params.id);
+    if(postToDelete){
+        response.status(204).send();
+    }
+    else{response.status(404).send({ message: 'Post not found' });}
 })

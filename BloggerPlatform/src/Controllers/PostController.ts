@@ -1,6 +1,7 @@
 import {PostsDB} from "../DataB/Posts";
 import {posts} from "../DataB/Posts";
 
+
 export const PostController={
     GetAllPosts (): PostsDB[] {
         return posts;
@@ -29,5 +30,4 @@ export const PostController={
         }
         else{return undefined;}
     }
-
 }

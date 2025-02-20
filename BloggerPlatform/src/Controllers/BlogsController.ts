@@ -27,8 +27,4 @@ export const BlogsController = {
         }
         else{return undefined;}
     }
-
-
-
-
 };
