@@ -3,9 +3,9 @@ import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {validationResult} from 'express-validator';
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
-import {blogs, BlogsDB} from "../DataB/Blogs";
+import {blogs} from "../DataB/Blogs";
 import {posts} from "../DataB/Posts";
-import app from "../index";
+
 
 export const BlogsRouter = Router();
 
@@ -38,7 +38,7 @@ BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Reques
         response.status(201).send(newBlog);
     }
 });
-BlogsRouter.put('/:id',authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
+BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
@@ -56,16 +56,16 @@ BlogsRouter.put('/:id',authMiddleware, blogValidationMiddleware, (request: Reque
     }
 });
 
-BlogsRouter.delete('/:id',authMiddleware, (request: Request, response: Response) => {
+BlogsRouter.delete('/:id', authMiddleware, (request: Request, response: Response) => {
     const blogToDelete = BlogsController.DeleteBlogByID(request.params.id);
-    if(blogToDelete){
+    if (blogToDelete) {
         response.status(204).send();
     } else {
         response.status(404).send({ message: 'Blog not found' });
     }
 });
 
-BlogsRouter.get('/testing/all-data', (request: Request, response: Response) => {
+BlogsRouter.delete('/testing/all-data', (request: Request, response: Response) => {
     blogs.length = 0;
     posts.length = 0;
     response.status(204).send();

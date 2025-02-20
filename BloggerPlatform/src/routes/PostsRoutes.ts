@@ -33,7 +33,8 @@ PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request
                 field: err.type
             }))
         });
-    } else {
+    }
+    else{
         const newPost = PostController.AddNewPost(request.body);
         response.status(201).send(newPost);
     }
@@ -66,7 +67,7 @@ PostRouter.delete('/:id', authMiddleware, (request: Request, response: Response)
     }
 });
 PostRouter.delete('/testing/all-data', (request: Request, response: Response) => {
-    blogs.length = 0; // Очищаем массив блогов
-    posts.length = 0; // Очищаем массив постов
+    blogs.length = 0;
+    posts.length = 0;
     response.status(204).send();
 });
