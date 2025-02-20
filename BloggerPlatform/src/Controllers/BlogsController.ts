@@ -28,13 +28,14 @@ export const BlogsController = {
         else{return undefined;}
     },
     UpdateBlogByID(id: string, blog: BlogsDB): BlogsDB | undefined {
-        const updateBlog = blogs.find(blog => blog.id === id);
+        const updateBlog = blogs.find(b => b.id === id);
         if (updateBlog) {
             updateBlog.name = blog.name;
             updateBlog.description = blog.description;
             updateBlog.websiteUrl = blog.websiteUrl;
-            return blog;
+            return updateBlog; // Возвращаем обновленный объект
         }
-        else{return undefined;}
+        console.error(`Blog with ID ${id} not found`);
+        return undefined;
     }
 };

@@ -11,15 +11,20 @@ export const PostController={
         if (!id) return undefined;
         return posts.find(blog => blog.id === id);
     },
-    AddNewPost (post: PostsDB): PostsDB| undefined {
-        let newPost ={
+    AddNewPost(post: PostsDB): PostsDB | undefined {
+        const blogExists = blogs.some(blog => blog.id === post.blogId);
+        if (!blogExists) {
+            console.error(`Blog with ID ${post.blogId} not found`);
+            return undefined;
+        }
+        const newPost = {
             id: new Date().getTime().toString(),
-            title : post.title,
-            shortDescription : post.shortDescription,
+            title: post.title,
+            shortDescription: post.shortDescription,
             content: post.content,
             blogId: post.blogId,
             blogName: post.blogName ?? "",
-        }
+        };
         posts.push(newPost);
         return newPost;
     },
@@ -32,7 +37,7 @@ export const PostController={
         else{return undefined;}
     },
     UpdatePostByID(id: string, post: PostsDB): PostsDB | undefined {
-        const updatePost = posts.find(post => post.id === id);
+        const updatePost = posts.find(p => p.id === id);
         if (updatePost) {
             updatePost.title = post.title;
             updatePost.shortDescription = post.shortDescription;
@@ -40,6 +45,7 @@ export const PostController={
             updatePost.blogName = post.blogName;
             return updatePost;
         }
-        else{return undefined;}
+        console.error(`Post with ID ${id} not found`);
+        return undefined;
     }
 }
