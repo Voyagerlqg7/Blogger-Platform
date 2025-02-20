@@ -26,5 +26,15 @@ export const BlogsController = {
             return blog;
         }
         else{return undefined;}
+    },
+    UpdateBlogByID(id: string, blog: BlogsDB): BlogsDB | undefined {
+        const updateBlog = blogs.find(blog => blog.id === id);
+        if (updateBlog) {
+            updateBlog.name = blog.name;
+            updateBlog.description = blog.description;
+            updateBlog.websiteUrl = blog.websiteUrl;
+            return blog;
+        }
+        else{return undefined;}
     }
 };

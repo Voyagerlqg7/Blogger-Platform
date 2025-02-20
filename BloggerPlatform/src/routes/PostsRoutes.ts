@@ -2,6 +2,7 @@ import {Request, Response, Router} from 'express';
 import {PostController} from "../Controllers/PostController";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {validationResult} from "express-validator";
+import {BlogsController} from "../Controllers/BlogsController";
 
 export const PostRouter = Router();
 
@@ -15,7 +16,7 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
     if (blog) {
         response.status(200).send(blog);
     } else {
-        response.status(404).send({ message: 'Blog not found' });
+        response.status(404).send({ message: 'Post not found' });
     }
 })
 PostRouter.post('/', postValidationMiddleware,(request: Request, response: Response) => {
@@ -28,11 +29,26 @@ PostRouter.post('/', postValidationMiddleware,(request: Request, response: Respo
             }))
         });
     }
-    const newPost = PostController.AddNewPost(request.body);
-    response.status(201).send(newPost);
+    else{
+        const newPost = PostController.AddNewPost(request.body);
+        response.status(201).send(newPost);
+    }
 })
 PostRouter.put('/:id', (request: Request, response: Response) => {
-
+    const idOfPost = request.params.id;
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        response.status(400).send({
+            errorsMessages: errors.array().map(err => ({
+                message: err.msg,
+                field: err.type
+            }))
+        });
+    }
+    else{
+        const newBlog = PostController.UpdatePostByID(idOfPost, request.body);
+        response.status(204);
+    }
 })
 PostRouter.delete('/',  (request: Request, response: Response) => {
     const postToDelete = PostController.DeletePostByID(request.params.id);

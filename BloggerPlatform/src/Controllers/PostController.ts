@@ -1,5 +1,6 @@
 import {PostsDB} from "../DataB/Posts";
 import {posts} from "../DataB/Posts";
+import {blogs, BlogsDB} from "../DataB/Blogs";
 
 
 export const PostController={
@@ -27,6 +28,17 @@ export const PostController={
         if (post) {
             posts.splice(posts.indexOf(post), 1);
             return post;
+        }
+        else{return undefined;}
+    },
+    UpdatePostByID(id: string, post: PostsDB): PostsDB | undefined {
+        const updatePost = posts.find(post => post.id === id);
+        if (updatePost) {
+            updatePost.title = post.title;
+            updatePost.shortDescription = post.shortDescription;
+            updatePost.content = post.content;
+            updatePost.blogName = post.blogName;
+            return updatePost;
         }
         else{return undefined;}
     }

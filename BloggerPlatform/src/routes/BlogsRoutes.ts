@@ -2,6 +2,7 @@ import {Request, Response, Router} from 'express';
 import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {validationResult} from 'express-validator';
+import {BlogsDB} from "../DataB/Blogs";
 
 export const BlogsRouter = Router();
 
@@ -29,10 +30,26 @@ BlogsRouter.post('/', blogValidationMiddleware, (request: Request, response: Res
             }))
         });
     }
-    const newBlog = BlogsController.AddNewBlog(request.body);
-    response.status(201).send(newBlog);
+    else{
+        const newBlog = BlogsController.AddNewBlog(request.body);
+        response.status(201).send(newBlog);
+    }
 });
-BlogsRouter.put('/:id',  (request: Request, response: Response) => {
+BlogsRouter.put('/:id', blogValidationMiddleware, (request: Request, response: Response) => {
+    const idOfBlog = request.params.id;
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        response.status(400).send({
+            errorsMessages: errors.array().map(err => ({
+                message: err.msg,
+                field: err.type
+            }))
+        });
+    }
+    else{
+        const newBlog = BlogsController.UpdateBlogByID(idOfBlog, request.body);
+        response.status(204);
+    }
 });
 
 BlogsRouter.delete('/:id', (request: Request, response: Response) => {
