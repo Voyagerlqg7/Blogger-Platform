@@ -3,8 +3,7 @@ import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {validationResult} from 'express-validator';
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
-import {blogs} from "../DataB/Blogs";
-import {posts} from "../DataB/Posts";
+
 
 
 export const BlogsRouter = Router();
@@ -27,10 +26,7 @@ BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Reques
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
-            errorsMessages: errors.array().map(err => ({
-                message: err.msg,
-                field: err.type
-            }))
+            errorsMessages: errors.array()
         });
     }
     else{
@@ -42,10 +38,7 @@ BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, (request: Requ
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
-            errorsMessages: errors.array().map(err => ({
-                message: err.msg,
-                field: err.type
-            }))
+            errorsMessages: errors.array()
         });
     }
     const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);

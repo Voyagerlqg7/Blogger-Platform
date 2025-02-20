@@ -3,8 +3,8 @@ import {PostController} from "../Controllers/PostController";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {validationResult} from "express-validator";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
-import {posts} from "../DataB/Posts";
-import {blogs} from "../DataB/Blogs";
+
+
 
 export const PostRouter = Router();
 
@@ -28,10 +28,7 @@ PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
-            errorsMessages: errors.array().map(err => ({
-                message: err.msg,
-                field: err.type
-            }))
+            errorsMessages: errors.array()
         });
     }
     else{
@@ -40,14 +37,12 @@ PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request
     }
 });
 
+
 PostRouter.put('/:id', authMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
-            errorsMessages: errors.array().map(err => ({
-                message: err.msg,
-                field: err.type
-            }))
+            errorsMessages: errors.array()
         });
     }
     const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
