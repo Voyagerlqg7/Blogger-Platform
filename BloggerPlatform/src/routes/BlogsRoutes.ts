@@ -24,10 +24,19 @@ BlogsRouter.get('/:id', (request: Request, response: Response) => {
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array().map(error => ({
-            message: error.msg,
-            field: error
-        }));
+
+        const errorsMessages = errors.array().map(error => {
+            let field = "unknown";
+            if (error.msg.includes("Name")) field = "name";
+            if (error.msg.includes("WebsiteUrl")) field = "websiteUrl";
+            if (error.msg.includes("Description")) field = "description";
+
+            return {
+                message: error.msg,
+                field: field
+            };
+        });
+
         response.status(400).send({
             errorsMessages: errorsMessages
         });
@@ -36,21 +45,33 @@ BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Reques
         response.status(201).send(newBlog);
     }
 });
-BlogsRouter.put('/:id', authMiddleware,blogValidationMiddleware, (request: Request, response: Response) => {
+BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        response.status(400).send({
-            errorsMessages: errors.array()
+        const errorsMessages = errors.array().map(error => {
+            let field = "unknown";
+            if (error.msg.includes("Name")) field = "name";
+            if (error.msg.includes("WebsiteUrl")) field = "websiteUrl";
+            if (error.msg.includes("Description")) field = "description";
+
+            return {
+                message: error.msg,
+                field: field
+            };
         });
-    }
-    const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
-    if (updatedBlog) {
-        response.status(204).send();
+
+        response.status(400).send({
+            errorsMessages: errorsMessages
+        });
     } else {
-        response.status(404).send({ message: 'Blog not found' });
+        const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
+        if (updatedBlog) {
+            response.status(204).send(); // Успешное обновление, нет содержимого
+        } else {
+            response.status(404).send({ message: 'Blog not found' }); // Блог не найден
+        }
     }
 });
-
 BlogsRouter.delete('/:id', authMiddleware, (request: Request, response: Response) => {
     const blogToDelete = BlogsController.DeleteBlogByID(request.params.id);
     if (blogToDelete) {

@@ -27,29 +27,55 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
 PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        response.status(400).send({
-            errorsMessages: errors.array()
+        const errorsMessages = errors.array().map(error => {
+            let field = "unknown";
+            if (error.msg.includes("Title")) field = "title";
+            if (error.msg.includes("ShortDescription")) field = "shortDescription";
+            if (error.msg.includes("Content")) field = "content";
+            if (error.msg.includes("BlogId")) field = "blogId";
+
+            return {
+                message: error.msg,
+                field: field
+            };
         });
-    }
-    else{
+
+        response.status(400).send({
+            errorsMessages: errorsMessages
+        });
+    } else {
         const newPost = PostController.AddNewPost(request.body);
         response.status(201).send(newPost);
     }
 });
 
 
-PostRouter.put('/:id', authMiddleware, (request: Request, response: Response) => {
+PostRouter.put('/:id', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        response.status(400).send({
-            errorsMessages: errors.array()
+        const errorsMessages = errors.array().map(error => {
+            let field = "unknown";
+            if (error.msg.includes("Title")) field = "title";
+            if (error.msg.includes("ShortDescription")) field = "shortDescription";
+            if (error.msg.includes("Content")) field = "content";
+            if (error.msg.includes("BlogId")) field = "blogId";
+
+            return {
+                message: error.msg,
+                field: field
+            };
         });
-    }
-    const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
-    if (updatedPost) {
-        response.status(204).send();
+
+        response.status(400).send({
+            errorsMessages: errorsMessages
+        });
     } else {
-        response.status(404).send({ message: 'Post not found' });
+        const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
+        if (updatedPost) {
+            response.status(204).send(); // Успешное обновление, нет содержимого
+        } else {
+            response.status(404).send({ message: 'Post not found' }); // Пост не найден
+        }
     }
 });
 
