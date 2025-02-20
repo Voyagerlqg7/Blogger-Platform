@@ -27,19 +27,10 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
 PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array().map(error => {
-            let field = "unknown";
-            if (error.msg.includes("Title")) field = "title";
-            if (error.msg.includes("ShortDescription")) field = "shortDescription";
-            if (error.msg.includes("Content")) field = "content";
-            if (error.msg.includes("BlogId")) field = "blogId";
-
-            return {
-                message: error.msg,
-                field: field
-            };
-        });
-
+        const errorsMessages = errors.array().map(error => ({
+            message: error.msg,
+            field: error.    // ЗДЕСЬ
+        }));
         response.status(400).send({
             errorsMessages: errorsMessages
         });
@@ -53,19 +44,10 @@ PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request
 PostRouter.put('/:id', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array().map(error => {
-            let field = "unknown";
-            if (error.msg.includes("Title")) field = "title";
-            if (error.msg.includes("ShortDescription")) field = "shortDescription";
-            if (error.msg.includes("Content")) field = "content";
-            if (error.msg.includes("BlogId")) field = "blogId";
-
-            return {
-                message: error.msg,
-                field: field
-            };
-        });
-
+        const errorsMessages = errors.array().map(error => ({
+            message: error.msg,
+            field: error.   // ЗДЕСЬ
+        }));
         response.status(400).send({
             errorsMessages: errorsMessages
         });
