@@ -9,7 +9,7 @@ export const BlogsController = {
         if (!id) return undefined;
         return blogs.find(blog => blog.id === id);
     },
-    AddNewBlog (blog: BlogsDB):void {
+    AddNewBlog (blog: BlogsDB): BlogsDB | undefined {
         let newBlog ={
             id: new Date().getTime().toString(),
             name: blog.name,
@@ -17,6 +17,7 @@ export const BlogsController = {
             websiteUrl: blog.websiteUrl
         }
         blogs.push(newBlog);
+        return newBlog;
     },
     DeleteBlogByID(id: string | null): BlogsDB | undefined {
         const blog = blogs.find(blog => blog.id === id);

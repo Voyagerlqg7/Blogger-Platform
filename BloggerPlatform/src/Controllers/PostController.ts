@@ -9,7 +9,7 @@ export const PostController={
         if (!id) return undefined;
         return posts.find(blog => blog.id === id);
     },
-    AddNewPost (post: PostsDB):void {
+    AddNewPost (post: PostsDB): PostsDB| undefined {
         let newPost ={
             id: new Date().getTime().toString(),
             title : post.title,
@@ -19,6 +19,7 @@ export const PostController={
             blogName: post.blogName ?? "",
         }
         posts.push(newPost);
+        return newPost;
     },
     DeletePostByID(id: string | null): PostsDB | undefined {
         const post = posts.find(post => post.id === id);

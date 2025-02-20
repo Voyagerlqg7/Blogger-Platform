@@ -15,8 +15,13 @@ BlogsRouter.get('/:id', async (request: Request, response: Response) => {
     }
 })
 BlogsRouter.post('/', async (request: Request, response: Response) => {
-    BlogsController.AddNewBlog(request.body);
-    response.status(201).send();
+    const newblog = BlogsController.AddNewBlog(request.body);
+    if(newblog){
+        response.status(201).send(newblog);
+    }
+    else {
+        response.status(404).send({ message: 'Blog not found' });
+    }
 })
 BlogsRouter.put('/', async (request: Request, response: Response) => {
 
