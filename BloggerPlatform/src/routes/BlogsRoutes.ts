@@ -36,7 +36,6 @@ BlogsRouter.post('/', blogValidationMiddleware, (request: Request, response: Res
     }
 });
 BlogsRouter.put('/:id', blogValidationMiddleware, (request: Request, response: Response) => {
-    const idOfBlog = request.params.id;
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
@@ -46,9 +45,11 @@ BlogsRouter.put('/:id', blogValidationMiddleware, (request: Request, response: R
             }))
         });
     }
-    else{
-        const newBlog = BlogsController.UpdateBlogByID(idOfBlog, request.body);
-        response.status(204);
+    const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
+    if (updatedBlog) {
+        response.status(204).send();
+    } else {
+        response.status(404).send({ message: 'Blog not found' });
     }
 });
 

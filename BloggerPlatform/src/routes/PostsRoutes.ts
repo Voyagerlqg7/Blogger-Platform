@@ -35,7 +35,6 @@ PostRouter.post('/', postValidationMiddleware,(request: Request, response: Respo
     }
 })
 PostRouter.put('/:id', (request: Request, response: Response) => {
-    const idOfPost = request.params.id;
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
@@ -45,9 +44,11 @@ PostRouter.put('/:id', (request: Request, response: Response) => {
             }))
         });
     }
-    else{
-        const newBlog = PostController.UpdatePostByID(idOfPost, request.body);
-        response.status(204);
+    const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
+    if (updatedPost) {
+        response.status(204).send();
+    } else {
+        response.status(404).send({ message: 'Post not found' });
     }
 })
 PostRouter.delete('/',  (request: Request, response: Response) => {
