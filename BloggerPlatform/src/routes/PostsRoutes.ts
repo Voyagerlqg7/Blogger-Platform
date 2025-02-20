@@ -65,7 +65,7 @@ PostRouter.delete('/:id', authMiddleware, (request: Request, response: Response)
         response.status(404).send({ message: 'Post not found' });
     }
 });
-PostRouter.delete('/testing/all-data', authMiddleware, (request: Request, response: Response) => {
+PostRouter.delete('/testing/all-data', (request: Request, response: Response) => {
     blogs.length = 0; // Очищаем массив блогов
     posts.length = 0; // Очищаем массив постов
     response.status(204).send();
