@@ -1,10 +1,10 @@
 export type PostsDB = {
-    id: string,
+    id?: string,
     title: string,
     shortDescription: string,
     content: string,
     blogId: string,
-    blogName: string
+    blogName?: string
 }
 export let posts: PostsDB[] = [
     {
