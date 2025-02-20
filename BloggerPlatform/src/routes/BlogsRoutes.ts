@@ -2,6 +2,7 @@ import {Request, Response, Router} from 'express';
 import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {validationResult} from 'express-validator';
+import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {BlogsDB} from "../DataB/Blogs";
 
 export const BlogsRouter = Router();
@@ -20,7 +21,7 @@ BlogsRouter.get('/:id', (request: Request, response: Response) => {
     }
 });
 
-BlogsRouter.post('/', blogValidationMiddleware, (request: Request, response: Response) => {
+BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
@@ -35,7 +36,7 @@ BlogsRouter.post('/', blogValidationMiddleware, (request: Request, response: Res
         response.status(201).send(newBlog);
     }
 });
-BlogsRouter.put('/:id', blogValidationMiddleware, (request: Request, response: Response) => {
+BlogsRouter.put('/:id',authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
@@ -53,7 +54,7 @@ BlogsRouter.put('/:id', blogValidationMiddleware, (request: Request, response: R
     }
 });
 
-BlogsRouter.delete('/:id', (request: Request, response: Response) => {
+BlogsRouter.delete('/:id',authMiddleware, (request: Request, response: Response) => {
     const blogToDelete = BlogsController.DeleteBlogByID(request.params.id);
     if(blogToDelete){
         response.status(204).send();

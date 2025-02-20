@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express';
 import {PostController} from "../Controllers/PostController";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {validationResult} from "express-validator";
-import {BlogsController} from "../Controllers/BlogsController";
+import {authMiddleware} from "../BasicAuthorization/authMiddleware"
 
 export const PostRouter = Router();
 
@@ -19,7 +19,7 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
         response.status(404).send({ message: 'Post not found' });
     }
 })
-PostRouter.post('/', postValidationMiddleware,(request: Request, response: Response) => {
+PostRouter.post('/', authMiddleware, postValidationMiddleware,(request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
@@ -34,7 +34,7 @@ PostRouter.post('/', postValidationMiddleware,(request: Request, response: Respo
         response.status(201).send(newPost);
     }
 })
-PostRouter.put('/:id', (request: Request, response: Response) => {
+PostRouter.put('/:id',authMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
@@ -51,7 +51,7 @@ PostRouter.put('/:id', (request: Request, response: Response) => {
         response.status(404).send({ message: 'Post not found' });
     }
 })
-PostRouter.delete('/',  (request: Request, response: Response) => {
+PostRouter.delete('/:id', authMiddleware, (request: Request, response: Response) => {
     const postToDelete = PostController.DeletePostByID(request.params.id);
     if(postToDelete){
         response.status(204).send();
