@@ -13,13 +13,6 @@ app.use(express.json());
 app.use("/blogs", BlogsRouter);
 app.use("/posts", PostRouter)
 
-app.get('/testing/all-data',  (request: Request, response: Response) => {
-    blogs.length = 0;
-    posts.length = 0;
-    response.status(204).send();
-});
-
-
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
