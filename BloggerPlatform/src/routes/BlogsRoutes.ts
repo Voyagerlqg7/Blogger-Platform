@@ -3,7 +3,9 @@ import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {validationResult} from 'express-validator';
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
-import {BlogsDB} from "../DataB/Blogs";
+import {blogs, BlogsDB} from "../DataB/Blogs";
+import {posts} from "../DataB/Posts";
+import app from "../index";
 
 export const BlogsRouter = Router();
 
@@ -61,4 +63,9 @@ BlogsRouter.delete('/:id',authMiddleware, (request: Request, response: Response)
     } else {
         response.status(404).send({ message: 'Blog not found' });
     }
+});
+
+BlogsRouter.get('/testing/all-data',  (request: Request, response: Response) => {
+    blogs.length = 0;
+    response.status(204).send();
 });
