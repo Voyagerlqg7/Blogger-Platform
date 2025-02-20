@@ -7,6 +7,7 @@ export const blogValidationMiddleware = [
         .isLength({ max: 15 })
         .withMessage('Name must be no longer than 15 characters'),
 
+
     body('description')
         .isString()
         .withMessage('Description must be a string')

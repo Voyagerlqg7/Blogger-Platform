@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
-import {validationResult} from 'express-validator';
+import {body, validationResult} from 'express-validator';
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 
 
@@ -21,20 +21,22 @@ BlogsRouter.get('/:id', (request: Request, response: Response) => {
         response.status(404).send({ message: 'Blog not found' });
     }
 });
-
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
+        const errorsMessages = errors.array().map(error => ({
+            message: error.msg,
+            field: error
+        }));
         response.status(400).send({
-            errorsMessages: errors.array()
+            errorsMessages: errorsMessages
         });
-    }
-    else{
+    } else {
         const newBlog = BlogsController.AddNewBlog(request.body);
         response.status(201).send(newBlog);
     }
 });
-BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
+BlogsRouter.put('/:id', authMiddleware,blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         response.status(400).send({
