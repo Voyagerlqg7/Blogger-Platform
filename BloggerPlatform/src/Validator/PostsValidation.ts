@@ -1,5 +1,4 @@
 import {body, validationResult} from "express-validator";
-import {query} from 'express-validator';
 
 export const postValidationMiddleware = [
     body('title').isString().isLength({ max: 30 }).withMessage('Title must be a string with a maximum length of 30'),

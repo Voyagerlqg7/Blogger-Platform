@@ -1,5 +1,4 @@
 import {body, validationResult} from "express-validator";
-import {query} from 'express-validator';
 
 export const blogValidationMiddleware = [
     body('name').isString().isLength({ max: 15 }).withMessage('Name must be a string with a maximum length of 15'),

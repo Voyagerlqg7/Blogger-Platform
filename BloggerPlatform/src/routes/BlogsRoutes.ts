@@ -64,9 +64,3 @@ BlogsRouter.delete('/:id', authMiddleware, (request: Request, response: Response
         response.status(404).send({ message: 'Blog not found' });
     }
 });
-
-BlogsRouter.delete('/testing/all-data', (request: Request, response: Response) => {
-    blogs.length = 0;
-    posts.length = 0;
-    response.status(204).send();
-});
