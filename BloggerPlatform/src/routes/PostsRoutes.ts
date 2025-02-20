@@ -3,9 +3,8 @@ import {PostController} from "../Controllers/PostController";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {validationResult} from "express-validator";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware"
-import {blogs} from "../DataB/Blogs";
-import {BlogsRouter} from "./BlogsRoutes";
 import {posts} from "../DataB/Posts";
+import {blogs} from "../DataB/Blogs";
 
 export const PostRouter = Router();
 
@@ -61,7 +60,8 @@ PostRouter.delete('/:id', authMiddleware, (request: Request, response: Response)
     }
     else{response.status(404).send({ message: 'Post not found' });}
 });
-PostRouter.get('/testing/all-data',  (request: Request, response: Response) => {
+PostRouter.get('/testing/all-data', authMiddleware, (request: Request, response: Response) => {
     posts.length = 0;
+    blogs.length = 0;
     response.status(204).send();
 });

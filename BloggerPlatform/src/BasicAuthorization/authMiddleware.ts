@@ -9,7 +9,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     } else {
         const base64Credential = authHeader.split(' ')[1];
         const credentials = Buffer.Buffer.from(base64Credential, 'base64').toString('utf-8');
-        const [login, password] = credentials.split(':');
+        const [login, password] = credentials.split('\\');
 
         const validLogin = 'admin';
         const validPassword = 'qwerty';
