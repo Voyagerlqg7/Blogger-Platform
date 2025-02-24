@@ -7,10 +7,9 @@ export const inputValidationMiddleware = (request: Request, response: Response, 
 
         const errorsMessages = errors.array().map(error => ({
             message: error.msg,
-            // @ts-ignore
             field: error.path,
         }));
-        response.status(400).json({ errorsMessages });
+        response.status(400).json({ errorsMessages }).send();
     } else {
         next();
     }
