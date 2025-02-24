@@ -1,10 +1,15 @@
 import {Request, Response, Router} from 'express';
 import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
-import {body, validationResult} from 'express-validator';
+import {validationResult} from 'express-validator';
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 
-
+interface CustomValidationError {
+    value: any;
+    msg: string;
+    param: string;
+    location: string;
+}
 
 export const BlogsRouter = Router();
 
@@ -24,11 +29,7 @@ BlogsRouter.get('/:id', (request: Request, response: Response) => {
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array().map(error => ({
-            message: error.msg,
-            field: error.type,
-        }));
-        response.status(400).json({ errorsMessages });
+        response.status(400).send({ errorsMessages: errors.array() });
     }  else {
         const newBlog = BlogsController.AddNewBlog(request.body);
         response.status(201).send(newBlog);
@@ -37,11 +38,7 @@ BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Reques
 BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array().map(error => ({
-            message: error.msg,
-            field: error.type,
-        }));
-        response.status(400).json({ errorsMessages });
+        response.status(400).send({ errorsMessages: errors.array() });
     }  else {
         const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
         if (updatedBlog) {

@@ -1,6 +1,6 @@
-import { body, validationResult } from "express-validator";
+import {body, ValidationChain} from "express-validator";
 
-export const postValidationMiddleware = [
+export const postValidationMiddleware: ValidationChain[] = [
     body('title')
         .isString()
         .withMessage('Title must be a string')

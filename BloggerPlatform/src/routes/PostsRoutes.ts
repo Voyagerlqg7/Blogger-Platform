@@ -27,11 +27,7 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
 PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array().map(error => ({
-            message: error.msg,
-            field: error.type,
-        }));
-        response.status(400).json({ errorsMessages });
+        response.status(400).send({ errorsMessages: errors.array() });
     } else {
         const newPost = PostController.AddNewPost(request.body);
         response.status(201).send(newPost);
@@ -42,11 +38,7 @@ PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request
 PostRouter.put('/:id', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array().map(error => ({
-            message: error.msg,
-            field: error.type,
-        }));
-        response.status(400).json({ errorsMessages });
+        response.status(400).send({ errorsMessages: errors.array() });
     }  else {
         const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
         if (updatedPost) {
