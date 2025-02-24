@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {PostController} from "../Controllers/PostController";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
-import {validationResult} from "express-validator";
+import {validationResult, } from "express-validator";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 
 
@@ -19,7 +19,7 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
     if (blog) {
         response.status(200).send(blog);
     } else {
-        response.status(404).send({ message: 'Post not found' });
+        response.status(404).send();
     }
 });
 
@@ -29,11 +29,9 @@ PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request
     if (!errors.isEmpty()) {
         const errorsMessages = errors.array().map(error => ({
             message: error.msg,
-            field: error.    // ЗДЕСЬ
+            field: error.type,
         }));
-        response.status(400).send({
-            errorsMessages: errorsMessages
-        });
+        response.status(400).json({ errorsMessages });
     } else {
         const newPost = PostController.AddNewPost(request.body);
         response.status(201).send(newPost);
@@ -46,17 +44,15 @@ PostRouter.put('/:id', authMiddleware, postValidationMiddleware, (request: Reque
     if (!errors.isEmpty()) {
         const errorsMessages = errors.array().map(error => ({
             message: error.msg,
-            field: error.   // ЗДЕСЬ
+            field: error.type,
         }));
-        response.status(400).send({
-            errorsMessages: errorsMessages
-        });
-    } else {
+        response.status(400).json({ errorsMessages });
+    }  else {
         const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
         if (updatedPost) {
-            response.status(204).send(); // Успешное обновление, нет содержимого
+            response.status(204).send();
         } else {
-            response.status(404).send({ message: 'Post not found' }); // Пост не найден
+            response.status(404).send();
         }
     }
 });
@@ -66,6 +62,6 @@ PostRouter.delete('/:id', authMiddleware, (request: Request, response: Response)
     if (postToDelete) {
         response.status(204).send();
     } else {
-        response.status(404).send({ message: 'Post not found' });
+        response.status(404).send();
     }
 });

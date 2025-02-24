@@ -18,7 +18,7 @@ BlogsRouter.get('/:id', (request: Request, response: Response) => {
     if (blog) {
         response.status(200).send(blog);
     } else {
-        response.status(404).send({ message: 'Blog not found' });
+        response.status(404).send();
     }
 });
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
@@ -26,12 +26,10 @@ BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Reques
     if (!errors.isEmpty()) {
         const errorsMessages = errors.array().map(error => ({
             message: error.msg,
-            field: error.    // здесь
+            field: error.type,
         }));
-        response.status(400).send({
-            errorsMessages: errorsMessages
-        });
-    } else {
+        response.status(400).json({ errorsMessages });
+    }  else {
         const newBlog = BlogsController.AddNewBlog(request.body);
         response.status(201).send(newBlog);
     }
@@ -41,17 +39,15 @@ BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, (request: Requ
     if (!errors.isEmpty()) {
         const errorsMessages = errors.array().map(error => ({
             message: error.msg,
-            field: error    // ЗДЕСЬ
+            field: error.type,
         }));
-        response.status(400).send({
-            errorsMessages: errorsMessages
-        });
-    } else {
+        response.status(400).json({ errorsMessages });
+    }  else {
         const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
         if (updatedBlog) {
-            response.status(204).send(); // Успешное обновление, нет содержимого
+            response.status(204).send();
         } else {
-            response.status(404).send({ message: 'Blog not found' }); // Блог не найден
+            response.status(404).send();
         }
     }
 });
@@ -60,6 +56,6 @@ BlogsRouter.delete('/:id', authMiddleware, (request: Request, response: Response
     if (blogToDelete) {
         response.status(204).send();
     } else {
-        response.status(404).send({ message: 'Blog not found' });
+        response.status(404).send();
     }
 });
