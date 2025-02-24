@@ -3,6 +3,7 @@ import {PostController} from "../Controllers/PostController";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {validationResult, } from "express-validator";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
+import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
 
 
@@ -35,17 +36,12 @@ PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request
 });
 
 
-PostRouter.put('/:id', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-        response.status(400).send({ errorsMessages: errors.array() });
-    }  else {
-        const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
-        if (updatedPost) {
-            response.status(204).send();
-        } else {
-            response.status(404).send();
-        }
+PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidationMiddleware, (request: Request, response: Response) => {
+    const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
+    if (updatedPost) {
+        response.status(204).send();
+    } else {
+        response.status(404).send();
     }
 });
 

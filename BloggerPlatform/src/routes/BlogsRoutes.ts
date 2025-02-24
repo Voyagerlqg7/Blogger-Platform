@@ -3,6 +3,7 @@ import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {validationResult} from 'express-validator';
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
+import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
 interface CustomValidationError {
     value: any;
@@ -26,27 +27,18 @@ BlogsRouter.get('/:id', (request: Request, response: Response) => {
         response.status(404).send();
     }
 });
-BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-        response.status(400).send({ errorsMessages: errors.array() });
-    }  else {
-        const newBlog = BlogsController.AddNewBlog(request.body);
-        response.status(201).send(newBlog);
-    }
+BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, (request: Request, response: Response) => {
+    const newBlog = BlogsController.AddNewBlog(request.body);
+    response.status(201).send(newBlog);
 });
-BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, (request: Request, response: Response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-        response.status(400).send({ errorsMessages: errors.array() });
-    }  else {
-        const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
-        if (updatedBlog) {
-            response.status(204).send();
-        } else {
-            response.status(404).send();
-        }
+BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, (request: Request, response: Response) => {
+    const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
+    if (updatedBlog) {
+        response.status(204).send();
+    } else {
+        response.status(404).send();
     }
+
 });
 BlogsRouter.delete('/:id', authMiddleware, (request: Request, response: Response) => {
     const blogToDelete = BlogsController.DeleteBlogByID(request.params.id);
