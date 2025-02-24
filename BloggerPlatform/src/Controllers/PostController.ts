@@ -36,13 +36,13 @@ export const PostController={
         }
         else{return undefined;}
     },
-    UpdatePostByID(id: string, post: PostsDB): PostsDB | undefined {
+    UpdatePostByID(id: string, post: Partial<PostsDB>): PostsDB | undefined {
         const updatePost = posts.find(p => p.id === id);
         if (updatePost) {
-            updatePost.title = post.title;
-            updatePost.shortDescription = post.shortDescription;
-            updatePost.content = post.content;
-            updatePost.blogName = post.blogName;
+            if (post.title) updatePost.title = post.title;
+            if (post.shortDescription) updatePost.shortDescription = post.shortDescription;
+            if (post.content) updatePost.content = post.content;
+            if (post.blogName) updatePost.blogName = post.blogName;
             return updatePost;
         }
         console.error(`Post with ID ${id} not found`);
