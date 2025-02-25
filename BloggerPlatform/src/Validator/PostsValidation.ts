@@ -15,6 +15,7 @@ export const postValidationMiddleware: ValidationChain[] = [
         .withMessage('Short description must be a string')
         .bail()
         .trim()
+        .isLength({ max: 100 })
         .notEmpty()
         .withMessage('Short description is required'),
     body('content')
@@ -22,6 +23,7 @@ export const postValidationMiddleware: ValidationChain[] = [
         .withMessage('Content must be a string')
         .bail()
         .trim()
+        .isLength({ max: 1000 })
         .notEmpty()
         .withMessage('Content is required'),
     body('blogId')
