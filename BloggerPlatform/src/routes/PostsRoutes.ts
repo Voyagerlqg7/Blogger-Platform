@@ -4,6 +4,7 @@ import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {validationResult, } from "express-validator";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
+import {BlogsController} from "../Controllers/BlogsController";
 
 
 
@@ -25,14 +26,9 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
 });
 
 // Protected routes
-PostRouter.post('/', authMiddleware, postValidationMiddleware, (request: Request, response: Response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-        response.status(400).send({ errorsMessages: errors.array() });
-    } else {
-        const newPost = PostController.AddNewPost(request.body);
-        response.status(201).send(newPost);
-    }
+PostRouter.post('/', authMiddleware, postValidationMiddleware,inputValidationMiddleware, (request: Request, response: Response) => {
+    const newPost = PostController.AddNewPost(request.body);
+    response.status(201).send(newPost);
 });
 
 
