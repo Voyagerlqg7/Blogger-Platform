@@ -4,23 +4,31 @@ export const postValidationMiddleware: ValidationChain[] = [
     body('title')
         .isString()
         .withMessage('Title must be a string')
+        .bail()
         .isLength({ max: 30 })
+        .withMessage('Title must be no longer than 30 characters')
         .trim()
         .notEmpty()
-        .withMessage('Title must be no longer than 30 characters'),
+        .withMessage('Title is required'),
     body('shortDescription')
         .isString()
+        .withMessage('Short description must be a string')
+        .bail()
         .trim()
         .notEmpty()
-        .withMessage('Short description must be a string'),
+        .withMessage('Short description is required'),
     body('content')
         .isString()
+        .withMessage('Content must be a string')
+        .bail()
         .trim()
         .notEmpty()
-        .withMessage('Content must be a string'),
+        .withMessage('Content is required'),
     body('blogId')
         .isString()
+        .withMessage('BlogId must be a string')
+        .bail()
         .trim()
         .notEmpty()
-        .withMessage('BlogId must be a string'),
+        .withMessage('BlogId is required'),
 ];
