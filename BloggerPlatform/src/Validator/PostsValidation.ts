@@ -1,4 +1,5 @@
 import { body, ValidationChain } from "express-validator";
+import {blogs} from "../DataB/Blogs"
 
 export const postValidationMiddleware: ValidationChain[] = [
     body('title')
@@ -32,5 +33,12 @@ export const postValidationMiddleware: ValidationChain[] = [
         .bail()
         .trim()
         .notEmpty()
-        .withMessage('BlogId is required'),
+        .withMessage('BlogId is required')
+        .custom((value) => {
+            const blogExists = blogs.some(blog => blog.id === value);
+            if (!blogExists) {
+                throw new Error('BlogId does not exist');
+            }
+            return true;
+        }),
 ];
