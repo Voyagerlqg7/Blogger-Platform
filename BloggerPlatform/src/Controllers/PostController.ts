@@ -4,14 +4,14 @@ import {blogs, BlogsDB} from "../DataB/Blogs";
 
 
 export const PostController={
-    GetAllPosts (): PostsDB[] {
+    async GetAllPosts (): Promise<PostsDB[]> {
         return posts;
     },
-    GetPostByID(id: string | null): PostsDB | undefined {
+    async GetPostByID(id: string | null): Promise<PostsDB | undefined> {
         if (!id) return undefined;
         return posts.find(blog => blog.id === id);
     },
-    AddNewPost(post: PostsDB): PostsDB | undefined {
+    async AddNewPost(post: PostsDB): Promise<PostsDB | undefined> {
         const blogExists = blogs.some(blog => blog.id === post.blogId);
         if (!blogExists) {
             console.error(`Blog with ID ${post.blogId} not found`);
@@ -28,7 +28,7 @@ export const PostController={
         posts.push(newPost);
         return newPost;
     },
-    DeletePostByID(id: string | null): PostsDB | undefined {
+    async DeletePostByID(id: string | null): Promise<PostsDB | undefined> {
         const post = posts.find(post => post.id === id);
         if (post) {
             posts.splice(posts.indexOf(post), 1);
@@ -36,7 +36,7 @@ export const PostController={
         }
         else{return undefined;}
     },
-    UpdatePostByID(id: string, post: Partial<PostsDB>): PostsDB | undefined {
+    async UpdatePostByID(id: string, post: Partial<PostsDB>): Promise<PostsDB | undefined> {
         const updatePost = posts.find(p => p.id === id);
         if (updatePost) {
             if (post.title) updatePost.title = post.title;

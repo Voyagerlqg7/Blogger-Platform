@@ -2,14 +2,14 @@ import {BlogsDB} from "../DataB/Blogs";
 import {blogs} from "../DataB/Blogs";
 
 export const BlogsController = {
-    GetAllBlogs (): BlogsDB[] {
+    async GetAllBlogs (): Promise<BlogsDB[]> {
         return blogs;
     },
-    GetBlogByID(id: string | null): BlogsDB | undefined {
+    async GetBlogByID(id: string | null): Promise<BlogsDB | undefined> {
         if (!id) return undefined;
         return blogs.find(blog => blog.id === id);
     },
-    AddNewBlog (blog: BlogsDB): BlogsDB | undefined {
+    async AddNewBlog (blog: BlogsDB): Promise<BlogsDB | undefined> {
         let newBlog ={
             id: new Date().getTime().toString(),
             name: blog.name,
@@ -19,7 +19,7 @@ export const BlogsController = {
         blogs.push(newBlog);
         return newBlog;
     },
-    DeleteBlogByID(id: string | null): BlogsDB | undefined {
+    async DeleteBlogByID(id: string | null): Promise<BlogsDB | undefined> {
         const blog = blogs.find(blog => blog.id === id);
         if (blog) {
             blogs.splice(blogs.indexOf(blog), 1);
@@ -27,7 +27,7 @@ export const BlogsController = {
         }
         else{return undefined;}
     },
-    UpdateBlogByID(id: string, blog: BlogsDB): BlogsDB | undefined {
+    async UpdateBlogByID(id: string, blog: BlogsDB): Promise<BlogsDB | undefined> {
         const updateBlog = blogs.find(b => b.id === id);
         if (updateBlog) {
             updateBlog.name = blog.name;

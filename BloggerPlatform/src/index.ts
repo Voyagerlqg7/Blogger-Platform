@@ -8,10 +8,10 @@ import {posts} from "./DataB/Posts";
 
 const app = express();
 const port = process.env.PORT || 6419;
-
 app.use(express.json());
 
 try{
+
     app.delete('/testing/all-data', (request: Request, response: Response) => {
         blogs.length = 0;
         posts.length = 0;

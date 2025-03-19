@@ -1,7 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {BlogsController} from "../Controllers/BlogsController";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
-import {validationResult} from 'express-validator';
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
@@ -15,7 +14,7 @@ interface CustomValidationError {
 export const BlogsRouter = Router();
 
 BlogsRouter.get('/',  (request: Request, response: Response) => {
-    const blogs = BlogsController.GetAllBlogs();
+    const blogs =   BlogsController.GetAllBlogs();
     response.status(200).send(blogs);
 });
 
@@ -41,7 +40,7 @@ BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidatio
 
 });
 BlogsRouter.delete('/:id', authMiddleware, (request: Request, response: Response) => {
-    const blogToDelete = BlogsController.DeleteBlogByID(request.params.id);
+    const blogToDelete =  BlogsController.DeleteBlogByID(request.params.id);
     if (blogToDelete) {
         response.status(204).send();
     } else {
