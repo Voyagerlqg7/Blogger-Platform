@@ -1,8 +1,8 @@
 import express, {Request, Response} from 'express';
 import {BlogsRouter} from "./routes/BlogsRoutes";
 import {PostRouter} from "./routes/PostsRoutes";
-import {blogs} from "./DataB/Blogs";
-import {posts} from "./DataB/Posts";
+import {blogs} from "./Objects/Blogs";
+import {posts} from "./Objects/Posts";
 
 
 

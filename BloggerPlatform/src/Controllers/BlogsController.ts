@@ -1,5 +1,5 @@
-import {BlogsDB} from "../DataB/Blogs";
-import {blogs} from "../DataB/Blogs";
+import {BlogsDB} from "../Objects/Blogs";
+import {blogs} from "../Objects/Blogs";
 
 export const BlogsController = {
     async GetAllBlogs (): Promise<BlogsDB[]> {

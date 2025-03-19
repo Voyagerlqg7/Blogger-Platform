@@ -13,34 +13,34 @@ interface CustomValidationError {
 
 export const BlogsRouter = Router();
 
-BlogsRouter.get('/',  (request: Request, response: Response) => {
-    const blogs =   BlogsController.GetAllBlogs();
+BlogsRouter.get('/',  async (request: Request, response: Response) => {
+    const blogs = await BlogsController.GetAllBlogs();
     response.status(200).send(blogs);
 });
 
-BlogsRouter.get('/:id', (request: Request, response: Response) => {
-    const blog = BlogsController.GetBlogByID(request.params.id);
+BlogsRouter.get('/:id', async (request: Request, response: Response) => {
+    const blog = await BlogsController.GetBlogByID(request.params.id);
     if (blog) {
         response.status(200).send(blog);
     } else {
         response.status(404).send();
     }
 });
-BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, (request: Request, response: Response) => {
-    const newBlog = BlogsController.AddNewBlog(request.body);
+BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+    const newBlog = await BlogsController.AddNewBlog(request.body);
     response.status(201).send(newBlog);
 });
-BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, (request: Request, response: Response) => {
-    const updatedBlog = BlogsController.UpdateBlogByID(request.params.id, request.body);
-    if (updatedBlog) {
+BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+    const updatedBlog = await BlogsController.UpdateBlogByID(request.params.id, request.body);
+    if ( updatedBlog) {
         response.status(204).send();
     } else {
         response.status(404).send();
     }
 
 });
-BlogsRouter.delete('/:id', authMiddleware, (request: Request, response: Response) => {
-    const blogToDelete =  BlogsController.DeleteBlogByID(request.params.id);
+BlogsRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
+    const blogToDelete = await BlogsController.DeleteBlogByID(request.params.id);
     if (blogToDelete) {
         response.status(204).send();
     } else {

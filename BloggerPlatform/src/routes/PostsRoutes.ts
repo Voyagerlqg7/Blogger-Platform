@@ -11,13 +11,13 @@ import {BlogsController} from "../Controllers/BlogsController";
 export const PostRouter = Router();
 
 // Public routes
-PostRouter.get('/', (request: Request, response: Response) => {
-    const blogs = PostController.GetAllPosts();
+PostRouter.get('/', async (request: Request, response: Response) => {
+    const blogs = await PostController.GetAllPosts();
     response.status(200).send(blogs);
 });
 
-PostRouter.get('/:id', (request: Request, response: Response) => {
-    const blog = PostController.GetPostByID(request.params.id);
+PostRouter.get('/:id', async (request: Request, response: Response) => {
+    const blog = await PostController.GetPostByID(request.params.id);
     if (blog) {
         response.status(200).send(blog);
     } else {
@@ -26,14 +26,14 @@ PostRouter.get('/:id', (request: Request, response: Response) => {
 });
 
 // Protected routes
-PostRouter.post('/', authMiddleware, postValidationMiddleware,inputValidationMiddleware, (request: Request, response: Response) => {
-    const newPost = PostController.AddNewPost(request.body);
+PostRouter.post('/', authMiddleware, postValidationMiddleware,inputValidationMiddleware, async  (request: Request, response: Response) => {
+    const newPost = await PostController.AddNewPost(request.body);
     response.status(201).send(newPost);
 });
 
 
-PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidationMiddleware, (request: Request, response: Response) => {
-    const updatedPost = PostController.UpdatePostByID(request.params.id, request.body);
+PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+    const updatedPost = await PostController.UpdatePostByID(request.params.id, request.body);
     if (updatedPost) {
         response.status(204).send();
     } else {
@@ -41,8 +41,8 @@ PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidation
     }
 });
 
-PostRouter.delete('/:id', authMiddleware, (request: Request, response: Response) => {
-    const postToDelete = PostController.DeletePostByID(request.params.id);
+PostRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
+    const postToDelete = await PostController.DeletePostByID(request.params.id);
     if (postToDelete) {
         response.status(204).send();
     } else {

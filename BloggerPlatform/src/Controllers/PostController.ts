@@ -1,6 +1,6 @@
-import {PostsDB} from "../DataB/Posts";
-import {posts} from "../DataB/Posts";
-import {blogs, BlogsDB} from "../DataB/Blogs";
+import {PostsDB} from "../Objects/Posts";
+import {posts} from "../Objects/Posts";
+import {blogs, BlogsDB} from "../Objects/Blogs";
 
 
 export const PostController={

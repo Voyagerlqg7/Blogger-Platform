@@ -1,5 +1,5 @@
 import { body, ValidationChain } from "express-validator";
-import {blogs} from "../DataB/Blogs"
+import {blogs} from "../Objects/Blogs"
 
 export const postValidationMiddleware: ValidationChain[] = [
     body('title')
