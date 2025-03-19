@@ -1,8 +1,9 @@
 import express, {Request, Response} from 'express';
 import {BlogsRouter} from "./routes/BlogsRoutes";
 import {PostRouter} from "./routes/PostsRoutes";
-import {blogs} from "./Objects/Blogs";
-import {posts} from "./Objects/Posts";
+import {connectDB}from "./mongo/ConnectDB";
+import {client} from "./mongo/ConnectDB";
+
 
 
 
@@ -10,21 +11,22 @@ const app = express();
 const port = process.env.PORT || 6419;
 app.use(express.json());
 
-try{
+app.use("/blogs", BlogsRouter);
+app.use("/posts", PostRouter)
 
-    app.delete('/testing/all-data', (request: Request, response: Response) => {
-        blogs.length = 0;
-        posts.length = 0;
+const startApp = async () => {
+    await connectDB();
+
+    app.delete('/testing/all-data', async (request: Request, response: Response) => {
+        await client.db("Blogs").collection("blogs").deleteMany({});
+        await client.db("Posts").collection("posts").deleteMany({});
         response.status(204).send();
     });
-    app.use("/blogs", BlogsRouter);
-    app.use("/posts", PostRouter)
-}
-catch(err){
-    console.log(err);
-}
 
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-})
+    app.listen(port, () => {
+        console.log(`Listening on port ${port}`);
+    });
+};
+
+startApp();
 export default app;
