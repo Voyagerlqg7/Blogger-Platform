@@ -2,8 +2,8 @@ import { PostsDB } from "../Objects/Posts";
 import { BlogsDB } from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
 
-const postsCollection = client.db("Posts").collection<PostsDB>("posts");
-const blogsCollection = client.db("Blogs").collection<BlogsDB>("blogs");
+const postsCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
+const blogsCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const PostDBController = {
     async GetAllPosts(): Promise<PostsDB[]> {

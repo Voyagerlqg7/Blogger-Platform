@@ -1,6 +1,12 @@
 import {MongoClient} from "mongodb";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const mongoURI = process.env.MONGODB_URI || "mongodb+srv://stepanenkovadik:<EvVKF2IITxfWqs8A>@cluster0.fxtec.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURI = process.env.MONGODB_URI;
+
+if(!mongoURI){
+    throw new Error("MongoDB URI is missing");
+}
 
 
 export const client = new MongoClient(mongoURI);
