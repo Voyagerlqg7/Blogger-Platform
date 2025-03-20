@@ -26,6 +26,7 @@ export const PostDBController = {
             shortDescription: post.shortDescription,
             content: post.content,
             blogId: post.blogId,
+            createdAt: new Date().toISOString(),
             blogName: IfBlogExist.name,
         };
         const result = await postsCollection.insertOne(newPost);

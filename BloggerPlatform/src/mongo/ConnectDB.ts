@@ -7,8 +7,6 @@ const mongoURI = process.env.MONGODB_URI;
 if(!mongoURI){
     throw new Error("MongoDB URI is missing");
 }
-
-
 export const client = new MongoClient(mongoURI);
 
 export async function connectDB() {

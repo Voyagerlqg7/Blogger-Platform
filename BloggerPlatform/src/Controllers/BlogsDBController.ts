@@ -12,14 +12,16 @@ export const BlogsDBController = {
         return await blogDBController.findOne({id:id}) || undefined;
     },
     async AddNewBlog (blog: BlogsDB): Promise<BlogsDB | undefined> {
-        let newBlog ={
+        let newBlog = {
             id: new Date().getTime().toString(),
             name: blog.name,
             description: blog.description,
-            websiteUrl: blog.websiteUrl
-        }
+            websiteUrl: blog.websiteUrl,
+            createdAt: new Date().toISOString(),
+            isMembership: false
+        };
         const result = await blogDBController.insertOne(newBlog);
-        return result.acknowledged ? newBlog : undefined
+        return result.acknowledged ? newBlog : undefined;
     },
     async DeleteBlogByID(id: string | null): Promise<boolean> {
         if (!id) return false;
