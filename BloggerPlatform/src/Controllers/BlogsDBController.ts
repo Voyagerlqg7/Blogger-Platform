@@ -2,12 +2,12 @@ import { ObjectId } from 'mongodb';
 import { BlogsDB } from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
 
-const blogDBController = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
+const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const BlogsDBController = {
     async GetAllBlogs(): Promise<BlogsDB[]> {
         try {
-            const blogs = await blogDBController.find().toArray();
+            const blogs = await blogsDBCollection.find().toArray();
             return blogs.map(blog => ({
                 id: blog._id.toString(),
                 name: blog.name,
@@ -26,7 +26,7 @@ export const BlogsDBController = {
         if (!id) return undefined;
 
         try {
-            const blog = await blogDBController.findOne({ _id: new ObjectId(id) });
+            const blog = await blogsDBCollection.findOne({ _id: new ObjectId(id) });
 
             return blog ? {
                 id: blog._id.toString(),
@@ -52,7 +52,7 @@ export const BlogsDBController = {
         };
 
         try {
-            const result = await blogDBController.insertOne(newBlog);
+            const result = await blogsDBCollection.insertOne(newBlog);
             if (!result.acknowledged) return undefined;
 
             return {
@@ -73,7 +73,7 @@ export const BlogsDBController = {
         if (!id) return false;
 
         try {
-            const result = await blogDBController.deleteOne({ _id: new ObjectId(id) });
+            const result = await blogsDBCollection.deleteOne({ _id: new ObjectId(id) });
             return result.deletedCount > 0;
         } catch (error) {
             console.error("Error deleting blog by ID:", error);
@@ -85,7 +85,7 @@ export const BlogsDBController = {
         if (!id) return undefined;
 
         try {
-            const updateResult = await blogDBController.findOneAndUpdate(
+            const updateResult = await blogsDBCollection.findOneAndUpdate(
                 { _id: new ObjectId(id) },
                 { $set: blog },
                 { returnDocument: "after" }
