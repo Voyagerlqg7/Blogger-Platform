@@ -1,6 +1,7 @@
 import { PostsDB } from "../Objects/Posts";
 import { BlogsDB } from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
+import { ObjectId } from "mongodb";
 
 const postsCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
 const blogsCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
@@ -24,7 +25,8 @@ export const PostDBController = {
         return await postsCollection.findOne({ id: id }) || undefined;
     },
     async AddNewPost(post: Omit<PostsDB, "id">): Promise<PostsDB | undefined> {
-        const IfBlogExist = await blogsCollection.findOne({ id: post.blogId });
+        const IfBlogExist = await blogsCollection.findOne({ _id: new ObjectId(post.blogId) });
+
         if (!IfBlogExist) {
             console.error(`Blog with ID ${post.blogId} not found`);
             return undefined;
@@ -39,6 +41,7 @@ export const PostDBController = {
             createdAt: new Date().toISOString(),
             blogName: IfBlogExist.name,
         };
+
         const result = await postsCollection.insertOne(newPost);
         return result.acknowledged ? newPost : undefined;
     },
