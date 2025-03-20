@@ -120,7 +120,6 @@ export const PostDBController = {
             console.error("Invalid post ID:", id);
             return false;
         }
-
         try {
             const deleteResult = await postsDBCollection.deleteOne({ _id: new ObjectId(id) });
             return deleteResult.deletedCount > 0;
