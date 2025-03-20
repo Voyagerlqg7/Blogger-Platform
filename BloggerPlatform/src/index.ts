@@ -15,9 +15,15 @@ const startApp = async () => {
     await connectDB();
 
     app.delete('/testing/all-data', async (request: Request, response: Response) => {
-        await client.db("BloggerPlatform").collection("blogs").deleteMany({});
-        await client.db("BloggerPlatform").collection("posts").deleteMany({});
-        response.status(204).send();
+        try {
+            const db = client.db("BloggerPlatform");
+            await db.collection("blogs").deleteMany({});
+            await db.collection("posts").deleteMany({});
+            response.status(204).send();
+        } catch (error) {
+            console.error("Error deleting data:", error);
+            response.status(500).json({ error: "Error deleting data" });
+        }
     });
 
     app.listen(port, () => {
