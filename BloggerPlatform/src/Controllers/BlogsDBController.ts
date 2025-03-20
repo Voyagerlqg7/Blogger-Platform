@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb'; // Добавьте импорт ObjectId
+import { ObjectId } from 'mongodb';
 import { BlogsDB } from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
 
@@ -45,7 +45,7 @@ export const BlogsDBController = {
         const result = await blogDBController.insertOne(newBlog);
 
         return result.acknowledged ? {
-            id: result.insertedId.toString(),
+            id: result.insertedId.toString(), // Используем insertedId как id
             ...newBlog
         } : undefined;
     },
@@ -66,7 +66,7 @@ export const BlogsDBController = {
             { returnDocument: "after" }
         );
         return updateResult ? {
-            id: updateResult._id.toString(),
+            id: updateResult._id.toString(), // Преобразуем _id в id
             name: updateResult.name,
             description: updateResult.description,
             websiteUrl: updateResult.websiteUrl,
