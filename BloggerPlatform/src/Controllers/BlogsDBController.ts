@@ -4,14 +4,12 @@ import { client } from "../mongo/ConnectDB";
 
 const blogDBController = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
-const COLLECTION_NAME = "blogs"; // Константа для имени коллекции
-
 export const BlogsDBController = {
     async GetAllBlogs(): Promise<BlogsDB[]> {
         try {
             const blogs = await blogDBController.find().toArray();
             return blogs.map(blog => ({
-                _id: blog._id.toString(),
+                id: blog._id.toString(),
                 name: blog.name,
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
@@ -87,13 +85,13 @@ export const BlogsDBController = {
                 { returnDocument: "after" }
             );
 
-            return updateResult.value ? {
-                id: updateResult.value._id.toString(),
-                name: updateResult.value.name,
-                description: updateResult.value.description,
-                websiteUrl: updateResult.value.websiteUrl,
-                createdAt: updateResult.value.createdAt,
-                isMembership: updateResult.value.isMembership
+            return updateResult ? {
+                id: updateResult._id.toString(),
+                name: updateResult.name,
+                description: updateResult.description,
+                websiteUrl: updateResult.websiteUrl,
+                createdAt: updateResult.createdAt,
+                isMembership: updateResult.isMembership
             } : undefined;
         } catch (error) {
             console.error("Error updating blog by ID:", error);
