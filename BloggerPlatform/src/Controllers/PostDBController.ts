@@ -24,23 +24,21 @@ export const PostDBController = {
             throw new Error("Failed to fetch posts");
         }
     },
-    async GetPostByID(id: string): Promise<PostsDB | undefined> {
-        if (!id) return undefined;
-        try {
-            const post = await postsDBCollection.findOne({id: id}) || undefined;
-            return post ? {
-                id: post._id.toString(),
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId,
-                blogName: post.blogName,
-                createdAt: post.createdAt
-            } : undefined;
-        } catch (error) {
-            console.error('Error fetching post', error);
-            throw new Error("Failed to fetch post");
-        }
+    async GetPostByID(id: string): Promise<PostsDB | null> {
+        if (!ObjectId.isValid(id)) return null;
+
+        const post = await postsDBCollection.findOne({ _id: new ObjectId(id) });
+        if (!post) return null;
+
+        return {
+            id: post._id.toString(), // ✅ Возвращаем id в строковом формате
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            blogId: post.blogId.toString(), // ✅ Приводим blogId к строке
+            blogName: post.blogName,
+            createdAt: post.createdAt,
+        };
     },
     async AddNewPost(post: PostsDB): Promise<PostsDB | undefined> {
         if (!ObjectId.isValid(post.blogId)) {
