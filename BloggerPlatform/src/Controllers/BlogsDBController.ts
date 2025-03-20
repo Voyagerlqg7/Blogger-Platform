@@ -53,10 +53,16 @@ export const BlogsDBController = {
 
         try {
             const result = await blogDBController.insertOne(newBlog);
-            return result.acknowledged ? {
+            if (!result.acknowledged) return undefined;
+
+            return {
                 id: result.insertedId.toString(),
-                ...newBlog
-            } : undefined;
+                name: newBlog.name,
+                description: newBlog.description,
+                websiteUrl: newBlog.websiteUrl,
+                createdAt: newBlog.createdAt,
+                isMembership: newBlog.isMembership
+            };
         } catch (error) {
             console.error("Error adding new blog:", error);
             throw new Error("Failed to add blog");
