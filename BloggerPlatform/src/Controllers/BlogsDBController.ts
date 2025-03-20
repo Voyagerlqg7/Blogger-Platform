@@ -7,17 +7,15 @@ const blogDBController = client.db("BloggerPlatform").collection<BlogsDB>("blogs
 export const BlogsDBController = {
     async GetAllBlogs(): Promise<BlogsDB[]> {
         const blogs = await blogDBController.find().toArray();
-        return blogs;
-        /*return blogs.map(blog => ({
-            id: blog._id.toString(), // Преобразуем _id в id
+        return blogs.map(blog => ({
+            _id: blog._id.toString(),
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl,
             createdAt: blog.createdAt,
             isMembership: blog.isMembership
-        }));*/
+        }));
     },
-
     async GetBlogByID(id: string): Promise<BlogsDB | undefined> {
         if (!id) return undefined;
 
