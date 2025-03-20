@@ -4,31 +4,44 @@ import { client } from "../mongo/ConnectDB";
 
 const blogDBController = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
+const COLLECTION_NAME = "blogs"; // Константа для имени коллекции
+
 export const BlogsDBController = {
     async GetAllBlogs(): Promise<BlogsDB[]> {
-        const blogs = await blogDBController.find().toArray();
-        return blogs.map(blog => ({
-            _id: blog._id.toString(),
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: blog.createdAt,
-            isMembership: blog.isMembership
-        }));
+        try {
+            const blogs = await blogDBController.find().toArray();
+            return blogs.map(blog => ({
+                _id: blog._id.toString(),
+                name: blog.name,
+                description: blog.description,
+                websiteUrl: blog.websiteUrl,
+                createdAt: blog.createdAt,
+                isMembership: blog.isMembership
+            }));
+        } catch (error) {
+            console.error("Error fetching blogs:", error);
+            throw new Error("Failed to fetch blogs");
+        }
     },
+
     async GetBlogByID(id: string): Promise<BlogsDB | undefined> {
         if (!id) return undefined;
 
-        const blog = await blogDBController.findOne({ _id: new ObjectId(id) });
+        try {
+            const blog = await blogDBController.findOne({ _id: new ObjectId(id) });
 
-        return blog ? {
-            id: blog._id.toString(), // Преобразуем _id в id
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: blog.createdAt,
-            isMembership: blog.isMembership
-        } : undefined;
+            return blog ? {
+                id: blog._id.toString(),
+                name: blog.name,
+                description: blog.description,
+                websiteUrl: blog.websiteUrl,
+                createdAt: blog.createdAt,
+                isMembership: blog.isMembership
+            } : undefined;
+        } catch (error) {
+            console.error("Error fetching blog by ID:", error);
+            throw new Error("Failed to fetch blog");
+        }
     },
 
     async AddNewBlog(blog: BlogsDB): Promise<BlogsDB | undefined> {
@@ -40,36 +53,51 @@ export const BlogsDBController = {
             isMembership: false
         };
 
-        const result = await blogDBController.insertOne(newBlog);
-
-        return result.acknowledged ? {
-            id: result.insertedId.toString(), // Используем insertedId как id
-            ...newBlog
-        } : undefined;
+        try {
+            const result = await blogDBController.insertOne(newBlog);
+            return result.acknowledged ? {
+                id: result.insertedId.toString(),
+                ...newBlog
+            } : undefined;
+        } catch (error) {
+            console.error("Error adding new blog:", error);
+            throw new Error("Failed to add blog");
+        }
     },
 
     async DeleteBlogByID(id: string | null): Promise<boolean> {
         if (!id) return false;
 
-        const result = await blogDBController.deleteOne({ _id: new ObjectId(id) });
-        return result.deletedCount > 0;
+        try {
+            const result = await blogDBController.deleteOne({ _id: new ObjectId(id) });
+            return result.deletedCount > 0;
+        } catch (error) {
+            console.error("Error deleting blog by ID:", error);
+            throw new Error("Failed to delete blog");
+        }
     },
 
     async UpdateBlogByID(id: string, blog: BlogsDB): Promise<BlogsDB | undefined> {
         if (!id) return undefined;
 
-        const updateResult = await blogDBController.findOneAndUpdate(
-            { _id: new ObjectId(id) },
-            { $set: blog },
-            { returnDocument: "after" }
-        );
-        return updateResult ? {
-            id: updateResult._id.toString(), // Преобразуем _id в id
-            name: updateResult.name,
-            description: updateResult.description,
-            websiteUrl: updateResult.websiteUrl,
-            createdAt: updateResult.createdAt,
-            isMembership: updateResult.isMembership
-        } : undefined;
+        try {
+            const updateResult = await blogDBController.findOneAndUpdate(
+                { _id: new ObjectId(id) },
+                { $set: blog },
+                { returnDocument: "after" }
+            );
+
+            return updateResult.value ? {
+                id: updateResult.value._id.toString(),
+                name: updateResult.value.name,
+                description: updateResult.value.description,
+                websiteUrl: updateResult.value.websiteUrl,
+                createdAt: updateResult.value.createdAt,
+                isMembership: updateResult.value.isMembership
+            } : undefined;
+        } catch (error) {
+            console.error("Error updating blog by ID:", error);
+            throw new Error("Failed to update blog");
+        }
     }
 };
