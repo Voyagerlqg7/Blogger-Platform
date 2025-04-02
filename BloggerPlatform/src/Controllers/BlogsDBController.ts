@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { BlogsDB } from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
 
-const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
+export const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const BlogsDBController = {
     async GetAllBlogs(): Promise<BlogsDB[]> {
@@ -42,14 +42,7 @@ export const BlogsDBController = {
         }
     },
 
-    async AddNewBlog(blog: BlogsDB): Promise<BlogsDB | undefined> {
-        const newBlog = {
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: new Date().toISOString(),
-            isMembership: false
-        };
+    async AddNewBlog(newBlog: BlogsDB): Promise<BlogsDB | undefined> {
 
         try {
             const result = await blogsDBCollection.insertOne(newBlog);

@@ -1,10 +1,9 @@
 import { PostsDB } from "../Objects/Posts";
-import { BlogsDB } from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
 import {ObjectId} from "mongodb";
+import {blogsDBCollection} from "./BlogsDBController";
 
-const postsDBCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
-const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
+export const postsDBCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
 
 export const PostDBController = {
     async GetAllPosts(): Promise<PostsDB[]> {
@@ -24,42 +23,23 @@ export const PostDBController = {
             throw new Error("Failed to fetch posts");
         }
     },
-    async GetPostByID(id: string): Promise<PostsDB | null> {
-        if (!ObjectId.isValid(id)) return null;
+    async GetPostByID(id: string): Promise<PostsDB | undefined> {
+        if (!ObjectId.isValid(id)) return undefined;
 
         const post = await postsDBCollection.findOne({ _id: new ObjectId(id) });
-        if (!post) return null;
+        if (!post) return undefined;
 
         return {
-            id: post._id.toString(), // ✅ Возвращаем id в строковом формате
+            id: post._id.toString(),
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,
-            blogId: post.blogId.toString(), // ✅ Приводим blogId к строке
+            blogId: post.blogId.toString(),
             blogName: post.blogName,
             createdAt: post.createdAt,
         };
     },
-    async AddNewPost(post: PostsDB): Promise<PostsDB | undefined> {
-        if (!ObjectId.isValid(post.blogId)) {
-            console.error("Invalid blogId:", post.blogId);
-            return undefined;
-        }
-        const blog = await blogsDBCollection.findOne({_id: new ObjectId(post.blogId)});
-        if (!blog) {
-            console.error("Blog not found for blogId:", post.blogId);
-            return undefined;
-        }
-
-        const newPost = {
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            blogId: post.blogId,
-            blogName: blog.name,
-            createdAt: new Date().toISOString(),
-        };
-
+    async AddNewPost(newPost: PostsDB): Promise<PostsDB | undefined> {
         try {
             const result = await postsDBCollection.insertOne(newPost);
             if (!result.acknowledged) return undefined;
@@ -115,7 +95,8 @@ export const PostDBController = {
             throw new Error("Failed to update post");
         }
     },
-    async DeletePostByID(id: string): Promise<boolean> {
+    async DeletePostByID(id: string | null): Promise<boolean> {
+        if(!id) return false;
         if (!ObjectId.isValid(id)) {
             console.error("Invalid post ID:", id);
             return false;
