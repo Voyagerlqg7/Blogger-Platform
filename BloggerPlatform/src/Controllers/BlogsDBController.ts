@@ -1,15 +1,40 @@
 import { ObjectId } from 'mongodb';
-import { BlogsDB } from "../Objects/Blogs";
+import {BlogsDB, BlogsPage} from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
 import {BlogsQueryParams} from "../routes/BlogsRoutes";
-
 export const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const BlogsDBController = {
-    async GetAllBlogs(BlogsQueryObjectParameters:BlogsQueryParams): Promise<BlogsDB[]> {
+    async GetAllBlogs(params: BlogsQueryParams): Promise<BlogsPage | undefined>{
         try {
-            const blogs = await blogsDBCollection.find().toArray();
-            return blogs.map(blog => ({
+            const {
+                searchNameTerm,
+                sortBy,
+                sortDirection,
+                pageNumber,
+                pageSize
+            } = params; //Тот самый квери
+
+            //как это всё сортировать
+            const filter = searchNameTerm
+                ? { name: { $regex: searchNameTerm, $options: 'i' } }
+                : {};
+
+            const sort: Record<string, 1 | -1> = {
+                [sortBy]: sortDirection === 'asc' ? 1 : -1
+            };
+
+            const totalCount = await blogsDBCollection.countDocuments(filter);
+            const pagesCount = Math.ceil(totalCount / pageSize);
+
+            const blogs = await blogsDBCollection
+                .find(filter)
+                .sort(sort)
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize)
+                .toArray();
+
+            const items = blogs.map(blog => ({
                 id: blog._id.toString(),
                 name: blog.name,
                 description: blog.description,
@@ -17,12 +42,19 @@ export const BlogsDBController = {
                 createdAt: blog.createdAt,
                 isMembership: blog.isMembership
             }));
+
+            return {
+                pagesCount,
+                page: pageNumber,
+                pageSize,
+                totalCount,
+                items
+            };
         } catch (error) {
             console.error("Error fetching blogs:", error);
             throw new Error("Failed to fetch blogs");
         }
     },
-
     async GetBlogByID(id: string): Promise<BlogsDB | undefined> {
         if (!id) return undefined;
 

@@ -7,3 +7,10 @@ export type BlogsDB = {
     isMembership?: boolean;
 }
 
+export type BlogsPage = {
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: BlogsDB[];
+}
