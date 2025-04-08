@@ -15,7 +15,7 @@ export const BlogsDBController = {
                 pageSize
             } = params; //Тот самый квери
 
-            //как это всё сортировать
+            //как это всё обработать
             const filter = searchNameTerm
                 ? { name: { $regex: searchNameTerm, $options: 'i' } }
                 : {};

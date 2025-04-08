@@ -1,4 +1,4 @@
-import { PostsDB } from "../Objects/Posts";
+import {PostsDB, PostsPage} from "../Objects/Posts";
 import { client } from "../mongo/ConnectDB";
 import {ObjectId} from "mongodb";
 import {blogsDBCollection} from "./BlogsDBController";
@@ -7,18 +7,46 @@ import {PostsQueryParams} from "../routes/PostsRoutes";
 export const postsDBCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
 
 export const PostDBController = {
-    async GetAllPosts(queryParams:PostsQueryParams): Promise<PostsDB[]> {
+    async GetAllPosts(queryParams:PostsQueryParams): Promise<PostsPage | undefined> {
         try {
-            const posts = await postsDBCollection.find().toArray();
-            return posts.map(posts => ({
-                id: posts._id.toString(),
-                title: posts.title,
-                shortDescription: posts.shortDescription,
-                content: posts.content,
-                blogId: posts.blogId,
-                blogName: posts.blogName,
-                createdAt: posts.createdAt,
+            const {
+                sortBy,
+                sortDirection,
+                pageNumber,
+                pageSize,
+            } = queryParams; //Опять-таки тот самый квери
+
+
+            //как это всё обработать
+            const totalCount = await postsDBCollection.countDocuments()
+            const pagesCount = Math.ceil(pageNumber / pageSize);
+            const sort: Record<string, 1|-1> = {
+                [sortBy]:sortDirection === 'asc'? 1: -1
+            };
+
+            const posts = await postsDBCollection
+                .find()
+                .sort(sort)
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize)
+                .toArray();
+            const items = posts.map(post => ({
+                id: post._id.toString(),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: post.createdAt,
             }));
+            return {
+                pagesCount,
+                page: pageNumber,
+                pageSize,
+                totalCount,
+                items
+            };
+
         } catch (error) {
             console.error('Error fetching blogs', error);
             throw new Error("Failed to fetch posts");

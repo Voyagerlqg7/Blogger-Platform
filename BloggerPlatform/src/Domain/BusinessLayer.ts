@@ -1,17 +1,17 @@
 import {BlogsDBController} from "../Controllers/BlogsDBController";
 import {PostDBController} from "../Controllers/PostDBController";
 import {blogsDBCollection} from "../Controllers/BlogsDBController";
-import {BlogsDB} from "../Objects/Blogs";
-import {PostsDB} from "../Objects/Posts";
+import {BlogsDB, BlogsPage} from "../Objects/Blogs";
+import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {BlogsQueryParams} from "../routes/BlogsRoutes";
 import {PostsQueryParams} from "../routes/PostsRoutes";
 
 export const BusinessLayer = {
-    async GetAllBlogs(queryParams:BlogsQueryParams): Promise<BlogsDB[]> {
+    async GetAllBlogs(queryParams:BlogsQueryParams): Promise<BlogsPage | undefined> {
         return BlogsDBController.GetAllBlogs(queryParams);
     },
-    async GetAllPosts(queryParams:PostsQueryParams): Promise<PostsDB[]> {
+    async GetAllPosts(queryParams:PostsQueryParams): Promise<PostsPage | undefined> {
         return PostDBController.GetAllPosts(queryParams);
     },
 
