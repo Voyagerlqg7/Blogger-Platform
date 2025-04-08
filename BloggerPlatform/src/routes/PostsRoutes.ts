@@ -7,22 +7,28 @@ import {inputValidationMiddleware} from "../Validator/input-validation-middlewar
 
 
 export const PostRouter = Router();
+export interface PostsQueryParams {
+    sortBy: string;
+    sortDirection: 'asc' | 'desc';
+    pageNumber: number;
+    pageSize: number;
+}
 
-// Public routes
 PostRouter.get('/', async (request: Request, response: Response) => {
-    const sortBy_q = request.query.sortBy as string || 'createdAt';
-    const sortDirection_q = request.query.sortDirection as string || 'desc';
-    const pageNumber_q = parseInt(request.query.page as string) || 1;
-    const pageSize_q = parseInt(request.query.limit as string) || 10;
+    const sortBy = request.query.sortBy as string || 'createdAt';
+    const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
+        ? request.query.sortDirection
+        : 'desc';    const pageNumber = parseInt(request.query.page as string) || 1;
+    const pageSize = parseInt(request.query.limit as string) || 10;
 
-    const PostsQueryObjectParameters = {
-        page: Number(pageNumber_q),
-        pageSz: Number(pageSize_q),
-        sortBy: sortBy_q,
-        sortDirection: sortDirection_q,
+    const queryParams:PostsQueryParams = {
+        sortBy,
+        sortDirection: sortDirection as 'asc' | 'desc',
+        pageNumber,
+        pageSize
     }
 
-    const blogs = await BusinessLayer.GetAllPosts();
+    const blogs = await BusinessLayer.GetAllPosts(queryParams);
     response.status(200).send(blogs);
 });
 

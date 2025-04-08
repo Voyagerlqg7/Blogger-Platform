@@ -7,28 +7,34 @@ import {inputValidationMiddleware} from "../Validator/input-validation-middlewar
 
 
 export const BlogsRouter = Router();
+export interface BlogsQueryParams {
+    searchNameTerm: string | null;
+    sortBy: string;
+    sortDirection: 'asc' | 'desc';
+    pageNumber: number;
+    pageSize: number;
+}
+BlogsRouter.get('/', async (request: Request, response: Response) => {
+    const searchNameTerm = request.query.search as string || null;
+    const sortBy = request.query.sortBy as string || 'createdAt';
+    const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
+        ? request.query.sortDirection
+        : 'desc';
+    const pageNumber = parseInt(request.query.page as string) || 1;
+    const pageSize = parseInt(request.query.limit as string) || 10;
 
+    const queryParams: BlogsQueryParams = {
+        pageNumber,
+        pageSize,
+        searchNameTerm,
+        sortBy,
+        sortDirection: sortDirection as 'asc' | 'desc'
+    };
 
-
-BlogsRouter.get('/',  async ( request: Request, response: Response) => {
-    const searchNameTerm_q = request.query.search as string || null;
-    const sortBy_q = request.query.sortBy as string || 'createdAt';
-    const sortDirection_q = request.query.sortDirection as string || 'desc';
-    const pageNumber_q = parseInt(request.query.page as string) || 1;
-    const pageSize_q = parseInt(request.query.limit as string) || 10;
-
-
-    const BlogsQueryObjectParameters = {
-        searchNameTerm: searchNameTerm_q,
-        sortBy: sortBy_q,
-        sortDirection: sortDirection_q,
-        pageNumber: pageNumber_q,
-        pageSize: pageSize_q,
-    }
-
-    const blogs = await BusinessLayer.GetAllBlogs();
+    const blogs = await BusinessLayer.GetAllBlogs(queryParams);
     response.status(200).send(blogs);
 });
+
 
 BlogsRouter.get('/:id', async (request: Request, response: Response) => {
     const blog = await BusinessLayer.GetBlogByID(request.params.id);

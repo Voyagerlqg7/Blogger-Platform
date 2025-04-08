@@ -1,11 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { BlogsDB } from "../Objects/Blogs";
 import { client } from "../mongo/ConnectDB";
+import {BlogsQueryParams} from "../routes/BlogsRoutes";
 
 export const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const BlogsDBController = {
-    async GetAllBlogs(): Promise<BlogsDB[]> {
+    async GetAllBlogs(BlogsQueryObjectParameters:BlogsQueryParams): Promise<BlogsDB[]> {
         try {
             const blogs = await blogsDBCollection.find().toArray();
             return blogs.map(blog => ({

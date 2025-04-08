@@ -4,13 +4,15 @@ import {blogsDBCollection} from "../Controllers/BlogsDBController";
 import {BlogsDB} from "../Objects/Blogs";
 import {PostsDB} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
+import {BlogsQueryParams} from "../routes/BlogsRoutes";
+import {PostsQueryParams} from "../routes/PostsRoutes";
 
 export const BusinessLayer = {
-    async GetAllBlogs(): Promise<BlogsDB[]> {
-        return BlogsDBController.GetAllBlogs();
+    async GetAllBlogs(queryParams:BlogsQueryParams): Promise<BlogsDB[]> {
+        return BlogsDBController.GetAllBlogs(queryParams);
     },
-    async GetAllPosts(): Promise<PostsDB[]> {
-        return PostDBController.GetAllPosts();
+    async GetAllPosts(queryParams:PostsQueryParams): Promise<PostsDB[]> {
+        return PostDBController.GetAllPosts(queryParams);
     },
 
     async GetBlogByID(id: string): Promise<BlogsDB | undefined> {
