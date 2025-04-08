@@ -10,6 +10,18 @@ export const PostRouter = Router();
 
 // Public routes
 PostRouter.get('/', async (request: Request, response: Response) => {
+    const sortBy_q = request.query.sortBy as string || 'createdAt';
+    const sortDirection_q = request.query.sortDirection as string || 'desc';
+    const pageNumber_q = parseInt(request.query.page as string) || 1;
+    const pageSize_q = parseInt(request.query.limit as string) || 10;
+
+    const PostsQueryObjectParameters = {
+        page: Number(pageNumber_q),
+        pageSz: Number(pageSize_q),
+        sortBy: sortBy_q,
+        sortDirection: sortDirection_q,
+    }
+
     const blogs = await BusinessLayer.GetAllPosts();
     response.status(200).send(blogs);
 });

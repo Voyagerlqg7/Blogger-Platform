@@ -8,7 +8,24 @@ import {inputValidationMiddleware} from "../Validator/input-validation-middlewar
 
 export const BlogsRouter = Router();
 
-BlogsRouter.get('/',  async (request: Request, response: Response) => {
+
+
+BlogsRouter.get('/',  async ( request: Request, response: Response) => {
+    const searchNameTerm_q = request.query.search as string || null;
+    const sortBy_q = request.query.sortBy as string || 'createdAt';
+    const sortDirection_q = request.query.sortDirection as string || 'desc';
+    const pageNumber_q = parseInt(request.query.page as string) || 1;
+    const pageSize_q = parseInt(request.query.limit as string) || 10;
+
+
+    const BlogsQueryObjectParameters = {
+        searchNameTerm: searchNameTerm_q,
+        sortBy: sortBy_q,
+        sortDirection: sortDirection_q,
+        pageNumber: pageNumber_q,
+        pageSize: pageSize_q,
+    }
+
     const blogs = await BusinessLayer.GetAllBlogs();
     response.status(200).send(blogs);
 });
