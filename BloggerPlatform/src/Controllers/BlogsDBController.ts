@@ -1,7 +1,10 @@
 import { ObjectId } from 'mongodb';
 import {BlogsDB, BlogsPage} from "../Objects/Blogs";
+import {PostsPage} from "../Objects/Posts";
 import { client } from "../mongo/ConnectDB";
 import {BlogsQueryParams} from "../routes/BlogsRoutes";
+import {postsDBCollection} from "./PostDBController";
+import {PostsQueryParams} from "../routes/PostsRoutes"
 export const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const BlogsDBController = {
@@ -74,7 +77,53 @@ export const BlogsDBController = {
             throw new Error("Failed to fetch blog");
         }
     },
+    async GetAllPostsByBlogID(blogId: string, params: PostsQueryParams): Promise<PostsPage | undefined> {
+        try {
+            const {
+                sortBy,
+                sortDirection,
+                pageNumber,
+                pageSize
+            } = params;
 
+            const filter: any = { blogId };
+
+            const sort: Record<string, 1 | -1> = {
+                [sortBy]: sortDirection === 'asc' ? 1 : -1
+            };
+
+            const totalCount = await postsDBCollection.countDocuments(filter);
+            const pagesCount = Math.ceil(totalCount / pageSize);
+
+            const posts = await postsDBCollection
+                .find(filter)
+                .sort(sort)
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize)
+                .toArray();
+
+            const items = posts.map(post => ({
+                id: post._id.toString(),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: post.createdAt,
+            }));
+
+            return {
+                pagesCount,
+                page: pageNumber,
+                pageSize,
+                totalCount,
+                items
+            };
+        } catch (error) {
+            console.error('Error fetching posts by blogId:', error);
+            throw new Error('Failed to fetch posts by blogId');
+        }
+    },
     async AddNewBlog(newBlog: BlogsDB): Promise<BlogsDB | undefined> {
 
         try {

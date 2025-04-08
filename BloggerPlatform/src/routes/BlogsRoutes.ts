@@ -4,8 +4,6 @@ import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
-
-
 export const BlogsRouter = Router();
 export interface BlogsQueryParams {
     searchNameTerm: string | null;
@@ -34,8 +32,6 @@ BlogsRouter.get('/', async (request: Request, response: Response) => {
     const blogs = await BusinessLayer.GetAllBlogs(queryParams);
     response.status(200).send(blogs);
 });
-
-
 BlogsRouter.get('/:id', async (request: Request, response: Response) => {
     const blog = await BusinessLayer.GetBlogByID(request.params.id);
     if (blog) {
@@ -43,6 +39,26 @@ BlogsRouter.get('/:id', async (request: Request, response: Response) => {
     } else {
         response.status(404).send();
     }
+});
+BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
+    const blogId = request.params.blogId;
+    const searchNameTerm = request.query.search as string || null;
+    const sortBy = request.query.sortBy as string || 'createdAt';
+    const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
+        ? request.query.sortDirection
+        : 'desc';
+    const pageNumber = parseInt(request.query.page as string) || 1;
+    const pageSize = parseInt(request.query.limit as string) || 10;
+
+    const queryParams: BlogsQueryParams = {
+        pageNumber,
+        pageSize,
+        searchNameTerm,
+        sortBy,
+        sortDirection: sortDirection as 'asc' | 'desc'
+    };
+    const blogs = await BusinessLayer.GetAllPostsByBlogID(blogId, queryParams);
+    response.status(200).send(blogs);
 });
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const newBlog = await BusinessLayer.AddNewBlog(request.body);

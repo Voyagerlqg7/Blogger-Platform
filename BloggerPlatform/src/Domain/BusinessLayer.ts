@@ -18,6 +18,9 @@ export const BusinessLayer = {
     async GetBlogByID(id: string): Promise<BlogsDB | undefined> {
         return BlogsDBController.GetBlogByID(id);
     },
+    async GetAllPostsByBlogID(blogId :string, queryParams:PostsQueryParams): Promise<PostsPage | undefined> {
+        return BlogsDBController.GetAllPostsByBlogID(blogId, queryParams);
+    },
     async GetPostByID(id: string): Promise<PostsDB | undefined> {
         return PostDBController.GetPostByID(id);
     },
