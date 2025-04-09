@@ -68,13 +68,18 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
     }
 });
 BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
-    const blogId = request.params.blogId;
-    const UpdatedBlog = await BusinessLayer.AddNewPostUsingBlogId(blogId, request.body);
-    if(UpdatedBlog){
-        response.status(201).send(UpdatedBlog);
-    }
-    else {
-        response.status(400).send();
+    try {
+        const blogId = request.params.blogId;
+        const updatedPost = await BusinessLayer.AddNewPostUsingBlogId(blogId, request.body);
+
+        if (updatedPost) {
+            response.status(201).send(updatedPost);
+        } else {
+            response.status(404).send({ error: "Failed to create post" });
+        }
+    } catch (error) {
+        console.error("Error creating post:", error);
+        response.status(500).send({ error: "A server error has occurred" });
     }
 });
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {

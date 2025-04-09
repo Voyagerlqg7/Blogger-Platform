@@ -62,18 +62,25 @@ export const BlogsDBController = {
         if (!id) return undefined;
 
         try {
+            console.log(`Fetching blog with ID: ${id}`);
             const blog = await blogsDBCollection.findOne({ _id: new ObjectId(id) });
 
-            return blog ? {
+            if (!blog) {
+                console.error(`Blog not found for ID: ${id}`);
+                return undefined;
+            }
+
+            console.log(`Blog found: ${JSON.stringify(blog)}`);
+            return {
                 id: blog._id.toString(),
                 name: blog.name,
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
                 createdAt: blog.createdAt,
                 isMembership: blog.isMembership
-            } : undefined;
+            };
         } catch (error) {
-            console.error("Error fetching blog by ID:", error);
+            console.error("Error fetching blog by ID:", error); // Логируем подробности ошибки
             throw new Error("Failed to fetch blog");
         }
     },
@@ -125,11 +132,16 @@ export const BlogsDBController = {
         }
     },
     async AddNewBlog(newBlog: BlogsDB): Promise<BlogsDB | undefined> {
-
         try {
+            console.log("Adding new blog:", newBlog); // Логируем запрос на добавление
             const result = await blogsDBCollection.insertOne(newBlog);
-            if (!result.acknowledged) return undefined;
 
+            if (!result.acknowledged) {
+                console.error("Blog insertion failed:", result);
+                return undefined;
+            }
+
+            console.log(`Blog added successfully with ID: ${result.insertedId}`);
             return {
                 id: result.insertedId.toString(),
                 name: newBlog.name,
@@ -143,7 +155,6 @@ export const BlogsDBController = {
             throw new Error("Failed to add blog");
         }
     },
-
     async DeleteBlogByID(id: string | null): Promise<boolean> {
         if (!id) return false;
 
@@ -155,7 +166,6 @@ export const BlogsDBController = {
             throw new Error("Failed to delete blog");
         }
     },
-
     async UpdateBlogByID(id: string, blog: BlogsDB): Promise<BlogsDB | undefined> {
         if (!id) return undefined;
 
