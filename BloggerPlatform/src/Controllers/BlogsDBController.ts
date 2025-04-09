@@ -18,12 +18,11 @@ export const BlogsDBController = {
                 pageSize
             } = params;
 
-
-            const filter: any = {};
+            const filter: { name?: { $regex: string; $options: string } } = {};
             if (searchNameTerm) {
                 filter.name = {
                     $regex: searchNameTerm,
-                    $options: 'i'
+                    $options: 'i'  // Case-insensitive
                 };
             }
 
