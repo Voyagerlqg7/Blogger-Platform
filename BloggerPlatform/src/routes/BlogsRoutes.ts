@@ -61,7 +61,7 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
     const blogs = await BusinessLayer.GetAllPostsByBlogID(blogId, queryParams);
     response.status(200).send(blogs);
 });
-BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, async (request: Request, response: Response) => {
     const blogId = request.params.blogId;
     const UpdatedBlog = await BusinessLayer.AddNewPostUsingBlogId(blogId, request.body);
     response.status(201).send(UpdatedBlog);
