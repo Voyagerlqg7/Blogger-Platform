@@ -24,7 +24,26 @@ export const BusinessLayer = {
     async GetPostByID(id: string): Promise<PostsDB | undefined> {
         return PostDBController.GetPostByID(id);
     },
-
+    async AddNewPostUsingBlogId(blogId:string, post: PostsDB): Promise<PostsDB | undefined> {
+        if (!ObjectId.isValid(blogId)) {
+            console.error("Invalid blogId:", blogId);
+            return undefined;
+        }
+        const blog = await blogsDBCollection.findOne({_id: new ObjectId(blogId)});
+        if (!blog) {
+            console.error("Blog not found for blogId:", post.blogId);
+            return undefined;
+        }
+        const newPost = {
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            blogId: blogId,
+            blogName: blog.name,
+            createdAt: new Date().toISOString(),
+        };
+        return await PostDBController.AddNewPostUsingBlogId(newPost);
+    },
     async AddNewBlog(blog: BlogsDB): Promise<BlogsDB | undefined> {
         const newBlog = {
             name: blog.name,
@@ -55,14 +74,12 @@ export const BusinessLayer = {
         };
         return await PostDBController.AddNewPost(newPost);
     },
-
     async DeleteBlogByID(id: string | null): Promise<boolean> {
         return await BlogsDBController.DeleteBlogByID(id);
     },
     async DeletePostByID(id: string | null): Promise<boolean> {
         return await PostDBController.DeletePostByID(id);
     },
-
     async UpdateBlogByID(id: string, blog: BlogsDB): Promise<BlogsDB | undefined> {
         return await BlogsDBController.UpdateBlogByID(id, blog);
     },

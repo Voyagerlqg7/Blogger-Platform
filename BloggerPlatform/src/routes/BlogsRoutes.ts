@@ -1,6 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {BusinessLayer} from "../Domain/BusinessLayer";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
+import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
@@ -59,6 +60,11 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
     };
     const blogs = await BusinessLayer.GetAllPostsByBlogID(blogId, queryParams);
     response.status(200).send(blogs);
+});
+BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, async (request: Request, response: Response) => {
+    const blogId = request.params.blogId;
+    const UpdatedBlog = await BusinessLayer.AddNewPostUsingBlogId(blogId, request.body);
+    response.status(201).send(UpdatedBlog);
 });
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const newBlog = await BusinessLayer.AddNewBlog(request.body);

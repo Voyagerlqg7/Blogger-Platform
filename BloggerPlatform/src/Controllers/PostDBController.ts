@@ -87,6 +87,25 @@ export const PostDBController = {
             throw new Error("Failed to add post");
         }
     },
+    async AddNewPostUsingBlogId(newPost: PostsDB): Promise<PostsDB | undefined> {
+        try {
+            const result = await postsDBCollection.insertOne(newPost);
+            if (!result.acknowledged) return undefined;
+
+            return {
+                id: result.insertedId.toString(),
+                title: newPost.title,
+                shortDescription: newPost.shortDescription,
+                content: newPost.content,
+                blogId: newPost.blogId,
+                blogName: newPost.blogName,
+                createdAt: newPost.createdAt,
+            };
+        } catch (error) {
+            console.error("Error adding new post:", error);
+            throw new Error("Failed to add post");
+        }
+    },
     async UpdatePostByID(id: string, post: Partial<PostsDB>): Promise<PostsDB | undefined> {
         if (!ObjectId.isValid(id)) {
             console.error("Invalid post ID:", id);

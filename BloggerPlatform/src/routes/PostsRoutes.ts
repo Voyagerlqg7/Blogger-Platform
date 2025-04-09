@@ -31,7 +31,6 @@ PostRouter.get('/', async (request: Request, response: Response) => {
     const blogs = await BusinessLayer.GetAllPosts(queryParams);
     response.status(200).send(blogs);
 });
-
 PostRouter.get('/:id', async (request: Request, response: Response) => {
     const blog = await BusinessLayer.GetPostByID(request.params.id);
     if (blog) {
@@ -40,14 +39,10 @@ PostRouter.get('/:id', async (request: Request, response: Response) => {
         response.status(404).send();
     }
 });
-
-// Protected routes
 PostRouter.post('/', authMiddleware, postValidationMiddleware,inputValidationMiddleware, async  (request: Request, response: Response) => {
     const newPost = await BusinessLayer.AddNewPost(request.body);
     response.status(201).send(newPost);
 });
-
-
 PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const updatedPost = await BusinessLayer.UpdatePostByID(request.params.id, request.body);
     if (updatedPost) {
@@ -56,7 +51,6 @@ PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidation
         response.status(404).send();
     }
 });
-
 PostRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
     const postToDelete = await BusinessLayer.DeletePostByID(request.params.id);
     if (postToDelete) {
