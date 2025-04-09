@@ -19,8 +19,8 @@ BlogsRouter.get('/', async (request: Request, response: Response) => {
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection
         : 'desc';
-    const pageNumber = parseInt(request.query.page as string) || 1;
-    const pageSize = parseInt(request.query.limit as string) || 10;
+    const pageNumber = parseInt(request.query.pageNumber as string) || 1;
+    const pageSize = parseInt(request.query.pageNumber as string) || 10;
 
     const queryParams: BlogsQueryParams = {
         pageNumber,
@@ -60,7 +60,12 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
         sortDirection: sortDirection as 'asc' | 'desc'
     };
     const blogs = await BusinessLayer.GetAllPostsByBlogID(blogId, queryParams);
-    response.status(200).send(blogs);
+    if(!blogs){
+        response.status(404).send();
+    }
+    else {
+        response.status(200).send(blogs);
+    }
 });
 BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, async (request: Request, response: Response) => {
     const blogId = request.params.blogId;
