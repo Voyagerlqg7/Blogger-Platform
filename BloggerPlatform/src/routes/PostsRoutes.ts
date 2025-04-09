@@ -18,8 +18,9 @@ PostRouter.get('/', async (request: Request, response: Response) => {
     const sortBy = request.query.sortBy as string || 'createdAt';
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection
-        : 'desc';    const pageNumber = parseInt(request.query.page as string) || 1;
-    const pageSize = parseInt(request.query.limit as string) || 10;
+        : 'desc';
+    const pageNumber = parseInt(request.query.pageNumber as string) || 1;
+    const pageSize = parseInt(request.query.pageSize as string) || 10;
 
     const queryParams:PostsQueryParams = {
         sortBy,

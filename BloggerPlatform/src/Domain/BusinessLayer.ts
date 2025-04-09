@@ -31,7 +31,7 @@ export const BusinessLayer = {
         }
         const blog = await blogsDBCollection.findOne({_id: new ObjectId(blogId)});
         if (!blog) {
-            console.error("Blog not found for blogId:", post.blogId);
+            console.error("Blog not found for blogId:", blogId);
             return undefined;
         }
         const newPost = {

@@ -48,8 +48,9 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection
         : 'desc';
-    const pageNumber = parseInt(request.query.page as string) || 1;
-    const pageSize = parseInt(request.query.limit as string) || 10;
+    const pageNumber = parseInt(request.query.pageNumber as string) || 1;
+    const pageSize = parseInt(request.query.pageSize as string) || 10;
+
 
     const queryParams: BlogsQueryParams = {
         pageNumber,
@@ -64,7 +65,12 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
 BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, async (request: Request, response: Response) => {
     const blogId = request.params.blogId;
     const UpdatedBlog = await BusinessLayer.AddNewPostUsingBlogId(blogId, request.body);
-    response.status(201).send(UpdatedBlog);
+    if(!UpdatedBlog){
+        response.status(404).send();
+    }
+    else {
+        response.status(201).send(UpdatedBlog);
+    }
 });
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const newBlog = await BusinessLayer.AddNewBlog(request.body);
