@@ -74,7 +74,7 @@ BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, input
         response.status(201).send(UpdatedBlog);
     }
     else {
-        response.status(404).send();
+        response.status(400).send();
     }
 });
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
