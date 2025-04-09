@@ -19,7 +19,7 @@ export const PostDBController = {
 
             //как это всё обработать
             const totalCount = await postsDBCollection.countDocuments()
-            const pagesCount = Math.ceil(pageNumber / pageSize);
+            const pagesCount = Math.ceil(totalCount / pageSize);
             const sort: Record<string, 1|-1> = {
                 [sortBy]:sortDirection === 'asc'? 1: -1
             };
@@ -30,6 +30,7 @@ export const PostDBController = {
                 .skip((pageNumber - 1) * pageSize)
                 .limit(pageSize)
                 .toArray();
+
             const items = posts.map(post => ({
                 id: post._id.toString(),
                 title: post.title,
