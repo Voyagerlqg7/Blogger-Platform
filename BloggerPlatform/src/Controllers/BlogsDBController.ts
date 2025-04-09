@@ -15,20 +15,17 @@ export const BlogsDBController = {
                 sortBy,
                 sortDirection,
                 pageNumber,
-                pageSize
+                pageSize,
             } = params;
 
             const filter: { name?: { $regex: string; $options: string } } = {};
             if (searchNameTerm) {
-                filter.name = {
-                    $regex: searchNameTerm,
-                    $options: 'i'  // Case-insensitive
-                };
+                filter.name = { $regex: searchNameTerm, $options: "i" };
             }
 
-            const sort: Record<string, 1 | -1> = {
-                [sortBy]: sortDirection === 'asc' ? 1 : -1
-            };
+            const sort: Record<string, 1 | -1> = {};
+            sort[sortBy] = sortDirection === "asc" ? 1 : -1;
+
 
             const totalCount = await blogsDBCollection.countDocuments(filter);
             const pagesCount = Math.ceil(totalCount / pageSize);
@@ -46,7 +43,7 @@ export const BlogsDBController = {
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
                 createdAt: blog.createdAt,
-                isMembership: blog.isMembership
+                isMembership: blog.isMembership,
             }));
 
             return {
@@ -54,7 +51,7 @@ export const BlogsDBController = {
                 page: pageNumber,
                 pageSize,
                 totalCount,
-                items
+                items,
             };
         } catch (error) {
             console.error("Error fetching blogs:", error);

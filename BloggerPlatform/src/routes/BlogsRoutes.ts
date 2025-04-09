@@ -14,7 +14,7 @@ export interface BlogsQueryParams {
     pageSize: number;
 }
 BlogsRouter.get('/', async (request: Request, response: Response) => {
-    const searchNameTerm = request.query.search as string || null;
+    const searchNameTerm = request.query.searchNameTerm as string || null;
     const sortBy = request.query.sortBy as string || 'createdAt';
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection
@@ -43,7 +43,7 @@ BlogsRouter.get('/:id', async (request: Request, response: Response) => {
 });
 BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
     const blogId = request.params.blogId;
-    const searchNameTerm = request.query.search as string || null;
+    const searchNameTerm = request.query.searchNameTerm as string || null;
     const sortBy = request.query.sortBy as string || 'createdAt';
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection
