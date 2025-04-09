@@ -8,7 +8,7 @@ import {PostsQueryParams} from "../routes/PostsRoutes"
 export const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const BlogsDBController = {
-    async GetAllBlogs(params: BlogsQueryParams): Promise<BlogsPage | undefined>{
+    async GetAllBlogs(params: BlogsQueryParams): Promise<BlogsPage | undefined> {
         try {
             const {
                 searchNameTerm,
@@ -16,12 +16,16 @@ export const BlogsDBController = {
                 sortDirection,
                 pageNumber,
                 pageSize
-            } = params; //Тот самый квери
+            } = params;
 
-            //как это всё обработать
-            const filter = searchNameTerm
-                ? { name: { $regex: searchNameTerm, $options: 'i' } }
-                : {};
+
+            const filter: any = {};
+            if (searchNameTerm) {
+                filter.name = {
+                    $regex: searchNameTerm,
+                    $options: 'i'
+                };
+            }
 
             const sort: Record<string, 1 | -1> = {
                 [sortBy]: sortDirection === 'asc' ? 1 : -1
