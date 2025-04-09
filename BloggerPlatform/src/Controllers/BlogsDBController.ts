@@ -86,6 +86,12 @@ export const BlogsDBController = {
     },
     async GetAllPostsByBlogID(blogId: string, params: PostsQueryParams): Promise<PostsPage | undefined> {
         try {
+            const blog = await blogsDBCollection.findOne({ _id: new ObjectId(blogId) });
+
+            if (!blog) {
+                console.error(`Blog not found for ID: ${blogId}`);
+                return undefined;
+            }
             const {
                 sortBy,
                 sortDirection,
