@@ -1,4 +1,4 @@
-import { body,param, ValidationChain } from "express-validator";
+import { body, ValidationChain } from "express-validator";
 import { client } from "../mongo/ConnectDB";
 import {ObjectId} from "mongodb";
 
