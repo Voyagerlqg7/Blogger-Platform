@@ -23,7 +23,6 @@ export const PostDBController = {
             const sort: Record<string, 1|-1> = {
                 [sortBy]:sortDirection === 'asc'? 1: -1
             };
-
             const posts = await postsDBCollection
                 .find()
                 .sort(sort)

@@ -1,6 +1,8 @@
 import express, {Request, Response} from 'express';
 import {BlogsRouter} from "./routes/BlogsRoutes";
 import {PostRouter} from "./routes/PostsRoutes";
+import {UserRouter} from "./routes/UserRouter";
+import {AuthRouter} from "./Auth/Auth"
 import {connectDB}from "./mongo/ConnectDB";
 import {client} from "./mongo/ConnectDB";
 
@@ -9,7 +11,9 @@ const port = process.env.PORT || 6419;
 app.use(express.json());
 
 app.use("/blogs", BlogsRouter);
-app.use("/posts", PostRouter)
+app.use("/posts", PostRouter);
+app.use("/users", UserRouter);
+app.use("/auth", AuthRouter);
 
 const startApp = async () => {
     await connectDB();
