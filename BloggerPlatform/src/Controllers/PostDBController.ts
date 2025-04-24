@@ -48,7 +48,7 @@ export const PostDBController = {
             };
 
         } catch (error) {
-            console.error('Error fetching blogs', error);
+            console.error('Error fetching users', error);
             throw new Error("Failed to fetch posts");
         }
     },

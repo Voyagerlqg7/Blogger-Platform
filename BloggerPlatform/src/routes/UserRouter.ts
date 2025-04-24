@@ -1,5 +1,7 @@
 import express = require('express');
 import {usersValidationMiddleware} from "../Validator/UserValidation";
+import {authMiddleware} from "../BasicAuthorization/authMiddleware";
+import {BusinessLayer} from "../Domain/BusinessLayer";
 
 
 export const UserRouter = express.Router();
@@ -13,7 +15,8 @@ export interface UserQueryParams {
     searchEmailTerm: string;
 }
 
-UserRouter.get('/', (request: express.Request, response: express.Response) => {
+
+UserRouter.get('/', authMiddleware, async (request: express.Request, response: express.Response) => {
     const sortBy = request.query.sortBy as string || 'createdAt';
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection
@@ -31,12 +34,12 @@ UserRouter.get('/', (request: express.Request, response: express.Response) => {
         searchLoginTerm: searchLoginTerm as string,
         searchEmailTerm: searchEmailTerm as string,
     }
-
+    const users = await BusinessLayer.GetAllUsers(queryParams);
+    response.status(200).send(users);
+})
+UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (req: express.Request, res: express.Response) => {
 
 })
-UserRouter.post('/', usersValidationMiddleware,(req: express.Request, res: express.Response) => {
-
-})
-UserRouter.delete('/:id', (req: express.Request, res: express.Response) => {
+UserRouter.delete('/:id', authMiddleware, async (req: express.Request, res: express.Response) => {
 
 })

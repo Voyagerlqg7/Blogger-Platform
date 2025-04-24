@@ -1,11 +1,14 @@
 import {BlogsDBController} from "../Controllers/BlogsDBController";
 import {PostDBController} from "../Controllers/PostDBController";
 import {blogsDBCollection} from "../Controllers/BlogsDBController";
+import {UsersDBController} from "../Controllers/UserDBController";
 import {BlogsDB, BlogsPage} from "../Objects/Blogs";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {BlogsQueryParams} from "../routes/BlogsRoutes";
 import {PostsQueryParams} from "../routes/PostsRoutes";
+import {UserQueryParams} from "../routes/UserRouter";
+import {UsersPage} from "../Objects/User";
 
 export const BusinessLayer = {
     async GetAllBlogs(queryParams:BlogsQueryParams): Promise<BlogsPage | undefined> {
@@ -84,5 +87,8 @@ export const BusinessLayer = {
     },
     async UpdatePostByID(id: string, post: PostsDB): Promise<PostsDB | undefined> {
         return await PostDBController.UpdatePostByID(id, post);
-    }
+    },
+    async GetAllUsers(queryParams:UserQueryParams): Promise<UsersPage | undefined> {
+        return UsersDBController.GetAllUsers(queryParams);
+    },
 };

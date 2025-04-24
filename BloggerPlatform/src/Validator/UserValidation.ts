@@ -1,8 +1,5 @@
 import {body, ValidationChain} from "express-validator";
-import {client} from "../mongo/ConnectDB";
-import {ObjectId} from "mongodb";
 
-//const UsersDBCollection = client.db("BloggerPlatform").collection("users");
 
 export const usersValidationMiddleware : ValidationChain[] = [
     body('login')
@@ -23,13 +20,6 @@ export const usersValidationMiddleware : ValidationChain[] = [
         .trim()
         .notEmpty()
         .withMessage('password is required'),
-
-
-
-
-
-    //must be unique!!!!!!!!!!!!!!
-
     body('email')
         .isString()
         .withMessage('email is required')
