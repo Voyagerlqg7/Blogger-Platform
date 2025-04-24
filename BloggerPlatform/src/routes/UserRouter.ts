@@ -14,6 +14,11 @@ export interface UserQueryParams {
     searchLoginTerm: string;
     searchEmailTerm: string;
 }
+export interface NewUserTemplate {
+    login: string;
+    password: string;
+    email: string;
+}
 
 
 UserRouter.get('/', authMiddleware, async (request: express.Request, response: express.Response) => {
@@ -37,8 +42,19 @@ UserRouter.get('/', authMiddleware, async (request: express.Request, response: e
     const users = await BusinessLayer.GetAllUsers(queryParams);
     response.status(200).send(users);
 })
-UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (req: express.Request, res: express.Response) => {
+UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: express.Request, response: express.Response) => {
+    const userLogin = request.body.userLogin;
+    const userPassword = request.body.userPassword;
+    const userEmail = request.body.userEmail;
 
+    const newUser:NewUserTemplate ={
+        login: userLogin,
+        password: userPassword,
+        email: userEmail
+    }
+
+    const createdUser = await BusinessLayer.CreateNewUser(newUser);
+    response.status(201).send(newUser);
 })
 UserRouter.delete('/:id', authMiddleware, async (req: express.Request, res: express.Response) => {
 

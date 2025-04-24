@@ -1,7 +1,7 @@
 import { client } from "../mongo/ConnectDB";
 import {User} from  '../Objects/User';
 import {UsersPage} from "../Objects/User";
-import {UserQueryParams} from "../routes/UserRouter";
+import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
 import {ObjectId} from "mongodb";
 
 export const userDBcollection = client.db("BloggerPlatform").collection<User>("users");
@@ -52,4 +52,15 @@ export const UsersDBController = {
             throw new Error("Failed to fetch users");
         }
     },
+    async CreateNewUser(newUser:NewUserTemplate):Promise<User | undefined>{
+        try{
+
+
+
+        }
+        catch (error) {
+            console.error('Error adding new user', error);
+            throw new Error("Failed to add new user");
+        }
+    }
 }

@@ -7,8 +7,8 @@ import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {BlogsQueryParams} from "../routes/BlogsRoutes";
 import {PostsQueryParams} from "../routes/PostsRoutes";
-import {UserQueryParams} from "../routes/UserRouter";
-import {UsersPage} from "../Objects/User";
+import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
+import {User, UsersPage} from "../Objects/User";
 
 export const BusinessLayer = {
     async GetAllBlogs(queryParams:BlogsQueryParams): Promise<BlogsPage | undefined> {
@@ -91,4 +91,12 @@ export const BusinessLayer = {
     async GetAllUsers(queryParams:UserQueryParams): Promise<UsersPage | undefined> {
         return UsersDBController.GetAllUsers(queryParams);
     },
+    async CreateNewUser(User: NewUserTemplate): Promise<User | undefined> {
+        const newUser={
+            login: User.login,
+            password: User.password,
+            email: User.email,
+        };
+        return await UsersDBController.CreateNewUser(newUser);
+    }
 };
