@@ -1,9 +1,9 @@
 import { client } from "../mongo/ConnectDB";
-import {User} from  '../Objects/User';
+import {User, UserDBType} from '../Objects/User';
 import {UsersPage} from "../Objects/User";
-import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
+import {UserQueryParams} from "../routes/UserRouter";
 
-export const userDBcollection = client.db("BloggerPlatform").collection<User>("users");
+export const userDBcollection = client.db("BloggerPlatform").collection<UserDBType>("users");
 
 export const UsersDBController = {
     async GetAllUsers(queryParams:UserQueryParams): Promise<UsersPage | undefined> {
@@ -34,7 +34,7 @@ export const UsersDBController = {
 
             const items = users.map(user => ({
                 id: user._id.toString(),
-                login: user.login,
+                login: user.userName,
                 email: user.email,
                 createdAt: user.createdAt,
             }));

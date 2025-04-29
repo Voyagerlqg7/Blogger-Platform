@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt-ts'
 import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
 import {userDBcollection, UsersDBController} from "../Repository/UserDBController";
 import {UsersPage} from "../Objects/User";
+import {UserDBType} from "../Objects/User";
 
 
 export const UserService = {
@@ -13,7 +14,6 @@ export const UserService = {
       const passwordSalt = await bcrypt.genSalt(10);
       const passwordHash = await this._generateHash(user.password, passwordSalt);
 
-      //UserDBType!!!!!!!!!!!!
       const newUser:UserDBType ={
           _id: new ObjectId(),
           userName: user.login,
@@ -22,12 +22,12 @@ export const UserService = {
           passwordSalt,
           createdAt: new Date(),
       }
-      return UsersDBController.CreateNewUser(newUser);
+      return UsersDBController.createNewUser(newUser);
     },
     async checkCredentials(loginOrEmail:string, password:string){
         const user = await UsersDBController.findByLoginOrEmail(loginOrEmail);
         if(!user) return false;
-        const passwordHash = await this._generateHash(password, user.passwordSalt);
+        const passwordHash = await this._generateHash(password, user.);
         if(user.passwordHash !== passwordHash){
             return false;
         }

@@ -1,3 +1,5 @@
+import {ObjectId} from "mongodb";
+
 export type User ={
     id?: string,
     login: string,
@@ -10,4 +12,13 @@ export type UsersPage = {
     pageSize: number;
     totalCount: number;
     items: User[];
+};
+
+export type UserDBType ={
+    _id: ObjectId,
+    userName: string,
+    email: string,
+    passwordHash: string,
+    passwordSalt: string;
+    createdAt: Date;
 }
