@@ -1,7 +1,4 @@
 import { body, ValidationChain } from "express-validator";
-import { client } from "../mongo/ConnectDB";
-
-const blogsDBCollection = client.db("BloggerPlatform").collection("blogs");
 
 export const postValidationMiddleware: ValidationChain[] = [
     body('title')

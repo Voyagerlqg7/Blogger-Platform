@@ -1,7 +1,7 @@
-import {BlogsDBController} from "../Controllers/BlogsDBController";
-import {PostDBController} from "../Controllers/PostDBController";
-import {blogsDBCollection} from "../Controllers/BlogsDBController";
-import {UsersDBController} from "../Controllers/UserDBController";
+import {BlogsDBController} from "../Repository/BlogsDBController";
+import {PostDBController} from "../Repository/PostDBController";
+import {blogsDBCollection} from "../Repository/BlogsDBController";
+import {UsersDBController} from "../Repository/UserDBController";
 import {BlogsDB, BlogsPage} from "../Objects/Blogs";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";

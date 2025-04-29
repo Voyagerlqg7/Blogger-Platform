@@ -54,7 +54,7 @@ UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: e
     }
 
     const createdUser = await BusinessLayer.CreateNewUser(newUser);
-    response.status(201).send(newUser);
+    response.status(201).send(createdUser);
 })
 UserRouter.delete('/:id', authMiddleware, async (req: express.Request, res: express.Response) => {
 
