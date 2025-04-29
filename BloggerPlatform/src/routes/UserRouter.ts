@@ -1,7 +1,7 @@
 import express = require('express');
 import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
-import {BusinessLayer} from "../Domain/BusinessLayer";
+import {UserService} from "../Domain/UserService";
 
 
 export const UserRouter = express.Router();
@@ -39,7 +39,7 @@ UserRouter.get('/', authMiddleware, async (request: express.Request, response: e
         searchLoginTerm: searchLoginTerm as string,
         searchEmailTerm: searchEmailTerm as string,
     }
-    const users = await BusinessLayer.GetAllUsers(queryParams);
+    const users = await UserService.GetAllUsers(queryParams);
     response.status(200).send(users);
 })
 UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: express.Request, response: express.Response) => {
@@ -53,7 +53,7 @@ UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: e
         email: userEmail
     }
 
-    const createdUser = await BusinessLayer.CreateNewUser(newUser);
+    const createdUser = await UserService.createUser(newUser);
     response.status(201).send(createdUser);
 })
 UserRouter.delete('/:id', authMiddleware, async (req: express.Request, res: express.Response) => {

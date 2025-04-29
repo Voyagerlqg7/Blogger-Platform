@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {BusinessLayer} from "../Domain/BusinessLayer";
+import {BlogsService} from "../Domain/BlogsService";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
@@ -30,11 +30,11 @@ BlogsRouter.get('/', async (request: Request, response: Response) => {
         sortDirection: sortDirection as 'asc' | 'desc'
     };
 
-    const blogs = await BusinessLayer.GetAllBlogs(queryParams);
+    const blogs = await BlogsService.GetAllBlogs(queryParams);
     response.status(200).send(blogs);
 });
 BlogsRouter.get('/:id', async (request: Request, response: Response) => {
-    const blog = await BusinessLayer.GetBlogByID(request.params.id);
+    const blog = await BlogsService.GetBlogByID(request.params.id);
     if (blog) {
         response.status(200).send(blog);
     } else {
@@ -59,7 +59,7 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
         sortBy,
         sortDirection: sortDirection as 'asc' | 'desc'
     };
-    const blogs = await BusinessLayer.GetAllPostsByBlogID(blogId, queryParams);
+    const blogs = await BlogsService.GetAllPostsByBlogID(blogId, queryParams);
     if(!blogs){
         response.status(404).send();
     }
@@ -70,7 +70,7 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
 BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     try {
         const blogId = request.params.blogId;
-        const updatedPost = await BusinessLayer.AddNewPostUsingBlogId(blogId, request.body);
+        const updatedPost = await BlogsService.AddNewPostUsingBlogId(blogId, request.body);
 
         if (updatedPost) {
             response.status(201).send(updatedPost);
@@ -83,11 +83,11 @@ BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, input
     }
 });
 BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
-    const newBlog = await BusinessLayer.AddNewBlog(request.body);
+    const newBlog = await BlogsService.AddNewBlog(request.body);
     response.status(201).send(newBlog);
 });
 BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
-    const updatedBlog = await BusinessLayer.UpdateBlogByID(request.params.id, request.body);
+    const updatedBlog = await BlogsService.UpdateBlogByID(request.params.id, request.body);
     if ( updatedBlog) {
         response.status(204).send();
     } else {
@@ -96,7 +96,7 @@ BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidatio
 
 });
 BlogsRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
-    const blogToDelete = await BusinessLayer.DeleteBlogByID(request.params.id);
+    const blogToDelete = await BlogsService.DeleteBlogByID(request.params.id);
     if (blogToDelete) {
         response.status(204).send();
     } else {

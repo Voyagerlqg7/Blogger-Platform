@@ -5,9 +5,7 @@ import {PostsQueryParams} from "../routes/PostsRoutes";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {PostDBController} from "../Repository/PostDBController";
 import {ObjectId} from "mongodb";
-import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
-import {UsersPage} from "../Objects/User";
-import {UsersDBController} from "../Repository/UserDBController";
+
 
 
 export const BlogsService = {
@@ -29,6 +27,26 @@ export const BlogsService = {
             isMembership: false
         };
         return await BlogsDBController.AddNewBlog(newBlog);
+    },
+    async AddNewPostUsingBlogId(blogId:string, post: PostsDB): Promise<PostsDB | undefined> {
+        if (!ObjectId.isValid(blogId)) {
+            console.error("Invalid blogId:", blogId);
+            return undefined;
+        }
+        const blog = await blogsDBCollection.findOne({_id: new ObjectId(blogId)});
+        if (!blog) {
+            console.error("Blog not found for blogId:", blogId);
+            return undefined;
+        }
+        const newPost = {
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            blogId: blogId,
+            blogName: blog.name,
+            createdAt: new Date().toISOString(),
+        };
+        return await PostDBController.AddNewPostUsingBlogId(newPost);
     },
     async DeleteBlogByID(id: string | null): Promise<boolean> {
         return await BlogsDBController.DeleteBlogByID(id);

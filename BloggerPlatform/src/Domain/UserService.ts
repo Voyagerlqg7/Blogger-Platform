@@ -1,10 +1,14 @@
 import {ObjectId} from "mongodb";
 import bcrypt from 'bcrypt-ts'
-import {NewUserTemplate} from "../routes/UserRouter";
+import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
 import {userDBcollection, UsersDBController} from "../Repository/UserDBController";
+import {UsersPage} from "../Objects/User";
 
 
 export const UserService = {
+    async GetAllUsers(queryParams:UserQueryParams): Promise<UsersPage | undefined> {
+        return UsersDBController.GetAllUsers(queryParams);
+    },
     async createUser(user:NewUserTemplate){
       const passwordSalt = await bcrypt.genSalt(10);
       const passwordHash = await this._generateHash(user.password, passwordSalt);

@@ -1,8 +1,8 @@
 import {Request, Response, Router} from 'express';
-import {BusinessLayer} from '../Domain/BusinessLayer'
 import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
+import {PostsService} from "../Domain/PostsService";
 
 
 
@@ -29,11 +29,11 @@ PostRouter.get('/', async (request: Request, response: Response) => {
         pageSize
     }
 
-    const blogs = await BusinessLayer.GetAllPosts(queryParams);
+    const blogs = await PostsService.GetAllPosts(queryParams);
     response.status(200).send(blogs);
 });
 PostRouter.get('/:id', async (request: Request, response: Response) => {
-    const blog = await BusinessLayer.GetPostByID(request.params.id);
+    const blog = await PostsService.GetPostByID(request.params.id);
     if (blog) {
         response.status(200).send(blog);
     } else {
@@ -41,11 +41,11 @@ PostRouter.get('/:id', async (request: Request, response: Response) => {
     }
 });
 PostRouter.post('/', authMiddleware, postValidationMiddleware,inputValidationMiddleware, async  (request: Request, response: Response) => {
-    const newPost = await BusinessLayer.AddNewPost(request.body);
+    const newPost = await PostsService.AddNewPost(request.body);
     response.status(201).send(newPost);
 });
 PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
-    const updatedPost = await BusinessLayer.UpdatePostByID(request.params.id, request.body);
+    const updatedPost = await PostsService.UpdatePostByID(request.params.id, request.body);
     if (updatedPost) {
         response.status(204).send();
     } else {
@@ -53,7 +53,7 @@ PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidation
     }
 });
 PostRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
-    const postToDelete = await BusinessLayer.DeletePostByID(request.params.id);
+    const postToDelete = await PostsService.DeletePostByID(request.params.id);
     if (postToDelete) {
         response.status(204).send();
     } else {
