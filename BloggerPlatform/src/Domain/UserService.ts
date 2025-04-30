@@ -22,15 +22,16 @@ export const UserService = {
           passwordSalt,
           createdAt: new Date(),
       }
-      return UsersDBController.createNewUser(newUser);
+      return UsersDBController.AddNewUser(newUser);
     },
-    async checkCredentials(loginOrEmail:string, password:string){
+    async checkCredentials(loginOrEmail: string, password: string) {
         const user = await UsersDBController.findByLoginOrEmail(loginOrEmail);
-        if(!user) return false;
-        const passwordHash = await this._generateHash(password, user.);
-        if(user.passwordHash !== passwordHash){
+        if (!user) return false;
+        const passwordHash = await this._generateHash(password, user.passwordSalt);
+        if (user.passwordHash !== passwordHash) {
             return false;
         }
+        else {return true;}
     },
     async _generateHash(password:string, salt:string){
         const hash = await bcrypt.hash(password, salt);
