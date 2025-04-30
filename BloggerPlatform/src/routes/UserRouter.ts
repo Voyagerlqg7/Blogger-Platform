@@ -1,4 +1,5 @@
-import express = require('express');
+import express = require("express");
+import {Request, Response} from "express";
 import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {UserService} from "../Domain/UserService";
@@ -59,6 +60,11 @@ UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: e
     }
     else{response.status(400).send();}
 })
-UserRouter.delete('/:id', authMiddleware, async (req: express.Request, res: express.Response) => {
-
+UserRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
+    const userToDelete = await UserService.DeleteUserByID(request.params.id);
+    if (userToDelete) {
+        response.status(204).send();
+    } else {
+        response.status(404).send();
+    }
 })

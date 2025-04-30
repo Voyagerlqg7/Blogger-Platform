@@ -2,6 +2,7 @@ import { client } from "../mongo/ConnectDB";
 import {User, UserDBType} from '../Objects/User';
 import {UsersPage} from "../Objects/User";
 import {UserQueryParams} from "../routes/UserRouter";
+import {ObjectId} from "mongodb";
 
 export const userDBcollection = client.db("BloggerPlatform").collection<UserDBType>("users");
 
@@ -72,5 +73,19 @@ export const UsersDBController = {
     async findByLoginOrEmail(loginOrEmail:string) {
         const user = await userDBcollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]});
         return user;
+    },
+    async DeleteUserByID(id: string | null): Promise<boolean>{
+        if(!id) return false;
+        if (!ObjectId.isValid(id)) {
+            console.error("Invalid user ID:", id);
+            return false;
+        }
+        try {
+            const deleteResult = await userDBcollection.deleteOne({ _id: new ObjectId(id) });
+            return deleteResult.deletedCount > 0;
+        } catch (error) {
+            console.error("Error deleting user by ID:", error);
+            throw new Error("Failed to delete user");
+        }
     }
 }
