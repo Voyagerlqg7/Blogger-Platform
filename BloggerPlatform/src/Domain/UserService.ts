@@ -14,13 +14,13 @@ export const UserService = {
       const passwordSalt = await bcrypt.genSalt(10);
       const passwordHash = await this._generateHash(user.password, passwordSalt);
 
-      const newUser:UserDBType ={
+      const newUser : UserDBType={
           _id: new ObjectId(),
           userName: user.login,
           email: user.email,
           passwordHash,
           passwordSalt,
-          createdAt: new Date(),
+          createdAt: new Date().toString(),
       }
       return UsersDBController.AddNewUser(newUser);
     },

@@ -54,7 +54,10 @@ UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: e
     }
 
     const createdUser = await UserService.createUser(newUser);
-    response.status(201).send(createdUser);
+    if(createdUser) {
+        response.status(201).send(createdUser);
+    }
+    else{response.status(400).send();}
 })
 UserRouter.delete('/:id', authMiddleware, async (req: express.Request, res: express.Response) => {
 

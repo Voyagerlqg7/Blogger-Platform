@@ -1,7 +1,7 @@
 import {ObjectId} from "mongodb";
 
 export type User ={
-    id?: string,
+    id: string,
     login: string,
     email: string,
     createdAt: string;
@@ -20,5 +20,5 @@ export type UserDBType ={
     email: string,
     passwordHash: string,
     passwordSalt: string;
-    createdAt: Date;
+    createdAt: string;
 }

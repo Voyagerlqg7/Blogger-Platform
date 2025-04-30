@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express';
 import {BlogsRouter} from "./routes/BlogsRoutes";
 import {PostRouter} from "./routes/PostsRoutes";
 import {UserRouter} from "./routes/UserRouter";
-import {AuthRouter} from "routes/authRouter"
+import {AuthRouter} from "./routes/authRouter"
 import {connectDB}from "./mongo/ConnectDB";
 import {client} from "./mongo/ConnectDB";
 

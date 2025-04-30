@@ -51,13 +51,26 @@ export const UsersDBController = {
             throw new Error("Failed to fetch users");
         }
     },
-    async CreateNewUser(){
+    async AddNewUser(newUser:UserDBType): Promise<User | undefined> {
+        try {
+            userDBcollection.insertOne(newUser);
+
+            const addedUser = {
+                id: newUser._id.toString(),
+                login: newUser.userName,
+                email: newUser.email,
+                createdAt: new Date().toISOString(),
+            }
+            return addedUser;
+        }
+        catch (error){
+            console.error(error);
+            throw new Error("something going wrong with adding new user");
+        }
 
     },
     async findByLoginOrEmail(loginOrEmail:string) {
         const user = await userDBcollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]});
         return user;
     }
-
-
 }
