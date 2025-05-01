@@ -69,7 +69,7 @@ export const UsersDBController = {
                 id: newUser._id.toString(),
                 login: newUser.login,
                 email: newUser.email,
-                createdAt: new Date().toISOString(),
+                createdAt: newUser.createdAt,
             }
             return addedUser;
         }

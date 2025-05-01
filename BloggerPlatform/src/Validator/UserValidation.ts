@@ -1,32 +1,20 @@
 import {body, ValidationChain} from "express-validator";
 
-
-export const usersValidationMiddleware : ValidationChain[] = [
+export const usersValidationMiddleware: ValidationChain[] = [
     body('login')
-        .isString()
-        .withMessage('Username is required')
-        .bail()
-        .isLength({ min: 3, max: 10 })
-        .withMessage('Login must be no longer than 30 and no less tha 3 characters')
         .trim()
-        .notEmpty()
-        .withMessage('login is required'),
+        .notEmpty().withMessage('Login is required')
+        .isString().withMessage('Login must be a string')
+        .isLength({ min: 3, max: 10 }).withMessage('Login must be between 3 and 10 characters'),
+
     body('password')
-        .isString()
-        .withMessage('password is required')
-        .bail()
-        .isLength({ min: 6, max: 20 })
-        .withMessage('password must be no longer than 20 and no less tha 6 characters')
         .trim()
-        .notEmpty()
-        .withMessage('password is required'),
+        .notEmpty().withMessage('Password is required')
+        .isString().withMessage('Password must be a string')
+        .isLength({ min: 6, max: 20 }).withMessage('Password must be between 6 and 20 characters'),
+
     body('email')
-        .isString()
-        .withMessage('email is required')
-        .bail()
-        .isEmail()
-        .withMessage('email is required')
         .trim()
-        .notEmpty()
-        .withMessage('email is required'),
-]
+        .notEmpty().withMessage('Email is required')
+        .isEmail().withMessage('Email must be valid'),
+];
