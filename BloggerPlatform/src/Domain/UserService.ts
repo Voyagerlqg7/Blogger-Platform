@@ -20,7 +20,7 @@ export const UserService = {
           email: user.email,
           passwordHash,
           passwordSalt,
-          createdAt: new Date().toString(),
+          createdAt: new Date().toISOString(),
       }
       return UsersDBController.AddNewUser(newUser);
     },
