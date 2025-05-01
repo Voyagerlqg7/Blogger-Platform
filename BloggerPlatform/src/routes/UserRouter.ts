@@ -1,11 +1,11 @@
 import express = require("express");
-import {Request, Response} from "express";
+import {Request, Response, Router} from "express";
 import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {UserService} from "../Domain/UserService";
 
 
-export const UserRouter = express.Router();
+export const UserRouter = Router();
 UserRouter.use(express.json());
 export interface UserQueryParams {
     sortBy: string;
@@ -22,7 +22,7 @@ export interface NewUserTemplate {
 }
 
 
-UserRouter.get('/', authMiddleware, async (request: express.Request, response: express.Response) => {
+UserRouter.get('/', authMiddleware, async (request: Request, response: Response) => {
     const sortBy = request.query.sortBy as string || 'createdAt';
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection

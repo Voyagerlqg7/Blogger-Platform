@@ -23,6 +23,7 @@ const startApp = async () => {
             const db = client.db("BloggerPlatform");
             await db.collection("blogs").deleteMany({});
             await db.collection("posts").deleteMany({});
+            await db.collection("users").deleteMany({});
             response.status(204).send();
         } catch (error) {
             console.error("Error deleting data:", error);

@@ -1,10 +1,9 @@
 import {ObjectId} from "mongodb";
 import bcrypt from 'bcrypt-ts'
 import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
-import {userDBcollection, UsersDBController} from "../Repository/UserDBController";
+import {UsersDBController} from "../Repository/UserDBController";
 import {UsersPage} from "../Objects/User";
 import {UserDBType} from "../Objects/User";
-import {PostDBController} from "../Repository/PostDBController";
 
 
 export const UserService = {
