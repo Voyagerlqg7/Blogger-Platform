@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import bcrypt from 'bcrypt-ts'
+import bcrypt from "bcryptjs"
 import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
 import {UsersDBController} from "../Repository/UserDBController";
 import {UsersPage} from "../Objects/User";
