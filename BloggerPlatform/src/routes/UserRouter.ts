@@ -3,6 +3,7 @@ import {Request, Response, Router} from "express";
 import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
 import {UserService} from "../Domain/UserService";
+import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
 
 export const UserRouter = Router();
@@ -42,7 +43,7 @@ UserRouter.get('/', authMiddleware, async (request: Request, response: Response)
     const users = await UserService.GetAllUsers(queryParams);
     response.status(200).send(users);
 })
-UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: Request, response: Response) => {
+UserRouter.post('/', usersValidationMiddleware,authMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const userLogin = request.body.login;
     const userPassword = request.body.password;
     const userEmail = request.body.email;

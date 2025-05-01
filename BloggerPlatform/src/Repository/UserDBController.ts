@@ -18,22 +18,20 @@ export const UsersDBController = {
                 searchEmailTerm,
             } = queryParams;
 
-
-            //как это всё обработать
-            const totalCount = await userDBcollection.countDocuments()
-            const pagesCount = Math.ceil(totalCount / pageSize);
-            const sort: Record<string, 1|-1> = {
-                [sortBy]:sortDirection === 'asc'? 1: -1
+            const sort: Record<string, 1 | -1> = {
+                [sortBy]: sortDirection === 'asc' ? 1 : -1
             };
+
             const filter: Record<string, any> = {};
 
             if (searchLoginTerm) {
-                filter.login = { $regex: searchLoginTerm, $options: 'i' }; // частичное совпадение + без учета регистра
+                filter.login = { $regex: searchLoginTerm, $options: 'i' };
             }
             if (searchEmailTerm) {
                 filter.email = { $regex: searchEmailTerm, $options: 'i' };
             }
-
+            const totalCount = await userDBcollection.countDocuments(filter);
+            const pagesCount = Math.ceil(totalCount / pageSize);
 
             const users = await userDBcollection
                 .find(filter)
