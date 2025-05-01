@@ -43,7 +43,7 @@ UserRouter.get('/', authMiddleware, async (request: Request, response: Response)
     response.status(200).send(users);
 })
 UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: Request, response: Response) => {
-    const userLogin = request.body.user.login;
+    const userLogin = request.body.login;
     const userPassword = request.body.password;
     const userEmail = request.body.email;
 
