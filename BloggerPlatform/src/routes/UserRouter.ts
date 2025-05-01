@@ -6,7 +6,6 @@ import {UserService} from "../Domain/UserService";
 
 
 export const UserRouter = Router();
-UserRouter.use(express.json());
 export interface UserQueryParams {
     sortBy: string;
     sortDirection: 'asc' | 'desc';
@@ -43,10 +42,10 @@ UserRouter.get('/', authMiddleware, async (request: Request, response: Response)
     const users = await UserService.GetAllUsers(queryParams);
     response.status(200).send(users);
 })
-UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: express.Request, response: express.Response) => {
-    const userLogin = request.body.userLogin;
-    const userPassword = request.body.userPassword;
-    const userEmail = request.body.userEmail;
+UserRouter.post('/', usersValidationMiddleware,authMiddleware, async (request: Request, response: Response) => {
+    const userLogin = request.body.user.login;
+    const userPassword = request.body.password;
+    const userEmail = request.body.email;
 
     const newUser:NewUserTemplate ={
         login: userLogin,
