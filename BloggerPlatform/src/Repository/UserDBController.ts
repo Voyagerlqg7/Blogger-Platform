@@ -24,12 +24,17 @@ export const UsersDBController = {
 
             const filter: Record<string, any> = {};
 
-            if (searchLoginTerm) {
+            if (searchLoginTerm && searchEmailTerm) { // Походу чтобы было хотя бы одно из условий
+                filter.$or = [
+                    { login: { $regex: searchLoginTerm, $options: 'i' } },
+                    { email: { $regex: searchEmailTerm, $options: 'i' } },
+                ];
+            } else if (searchLoginTerm) {
                 filter.login = { $regex: searchLoginTerm, $options: 'i' };
-            }
-            if (searchEmailTerm) {
+            } else if (searchEmailTerm) {
                 filter.email = { $regex: searchEmailTerm, $options: 'i' };
             }
+
             const totalCount = await userDBcollection.countDocuments(filter);
             const pagesCount = Math.ceil(totalCount / pageSize);
 
@@ -78,7 +83,7 @@ export const UsersDBController = {
 
     },
     async findByLoginOrEmail(loginOrEmail:string) {
-        const user = await userDBcollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]});
+        const user = await userDBcollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]});
         return user;
     },
     async DeleteUserByID(id: string | null): Promise<boolean>{
