@@ -1,4 +1,4 @@
-import express = require("express");
+import express from "express";
 import {Request, Response, Router} from "express";
 import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {authMiddleware} from "../BasicAuthorization/authMiddleware";
