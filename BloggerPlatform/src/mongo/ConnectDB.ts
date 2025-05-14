@@ -1,8 +1,9 @@
 import {MongoClient} from "mongodb";
 import * as dotenv from "dotenv";
+import {settings} from "../application/settings";
 dotenv.config();
 
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = settings.MONGODB_URI;
 
 if(!mongoURI){
     throw new Error("MongoDB URI is missing");
