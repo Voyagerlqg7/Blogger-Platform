@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import * as Buffer from "buffer";
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Basic')) {

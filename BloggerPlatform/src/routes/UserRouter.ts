@@ -1,7 +1,7 @@
 import express from "express";
 import {Request, Response, Router} from "express";
 import {usersValidationMiddleware} from "../Validator/UserValidation";
-import {authMiddleware} from "../BasicAuthorization/authMiddleware";
+import {basicAuthMiddleware} from "../Authorization/BasicAuthMiddleware";
 import {UserService} from "../Domain/UserService";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
@@ -22,7 +22,7 @@ export interface NewUserTemplate {
 }
 
 
-UserRouter.get('/', authMiddleware, async (request: Request, response: Response) => {
+UserRouter.get('/', basicAuthMiddleware, async (request: Request, response: Response) => {
     const sortBy = request.query.sortBy as string || 'createdAt';
     const sortDirection = (request.query.sortDirection === 'asc' || request.query.sortDirection === 'desc')
         ? request.query.sortDirection
@@ -43,7 +43,7 @@ UserRouter.get('/', authMiddleware, async (request: Request, response: Response)
     const users = await UserService.GetAllUsers(queryParams);
     response.status(200).send(users);
 })
-UserRouter.post('/', usersValidationMiddleware,authMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+UserRouter.post('/', usersValidationMiddleware,basicAuthMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const userLogin = request.body.login;
     const userPassword = request.body.password;
     const userEmail = request.body.email;
@@ -60,7 +60,7 @@ UserRouter.post('/', usersValidationMiddleware,authMiddleware, inputValidationMi
     }
     else{response.status(400).send();}
 })
-UserRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
+UserRouter.delete('/:id', basicAuthMiddleware, async (request: Request, response: Response) => {
     const userToDelete = await UserService.DeleteUserByID(request.params.id);
     if (userToDelete) {
         response.status(204).send();

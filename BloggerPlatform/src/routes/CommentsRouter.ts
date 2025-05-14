@@ -1,15 +1,15 @@
 import express, {Request, Response, Router} from "express";
 
 
-export const FeedBackRouter = Router();
+export const CommentRouter = Router();
 
-FeedBackRouter.use(express.json());
-FeedBackRouter.get('/', (req: Request, res: Response) => {
+CommentRouter.use(express.json());
+CommentRouter.get('/', (req: Request, res: Response) => {
 
 });
-FeedBackRouter.put('/', (req: Request, res: Response) => {
+CommentRouter.put('/', (req: Request, res: Response) => {
 
 })
-FeedBackRouter.delete('/:id', (req: Request, res: Response) => {
+CommentRouter.delete('/:id', (req: Request, res: Response) => {
 
 })

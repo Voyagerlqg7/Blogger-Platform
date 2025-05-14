@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express';
 import {BlogsService} from "../Domain/BlogsService";
 import {blogValidationMiddleware} from "../Validator/BlogsValidation";
 import {postValidationMiddleware} from "../Validator/PostsValidation";
-import {authMiddleware} from "../BasicAuthorization/authMiddleware";
+import {basicAuthMiddleware} from "../Authorization/BasicAuthMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
 export const BlogsRouter = Router();
@@ -67,7 +67,7 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
         response.status(200).send(blogs);
     }
 });
-BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+BlogsRouter.post('/:blogId/posts',basicAuthMiddleware,postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     try {
         const blogId = request.params.blogId;
         const updatedPost = await BlogsService.AddNewPostUsingBlogId(blogId, request.body);
@@ -82,11 +82,11 @@ BlogsRouter.post('/:blogId/posts',authMiddleware,postValidationMiddleware, input
         response.status(500).send({ error: "A server error has occurred" });
     }
 });
-BlogsRouter.post('/', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+BlogsRouter.post('/', basicAuthMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const newBlog = await BlogsService.AddNewBlog(request.body);
     response.status(201).send(newBlog);
 });
-BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+BlogsRouter.put('/:id', basicAuthMiddleware, blogValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const updatedBlog = await BlogsService.UpdateBlogByID(request.params.id, request.body);
     if ( updatedBlog) {
         response.status(204).send();
@@ -95,7 +95,7 @@ BlogsRouter.put('/:id', authMiddleware, blogValidationMiddleware, inputValidatio
     }
 
 });
-BlogsRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
+BlogsRouter.delete('/:id', basicAuthMiddleware, async (request: Request, response: Response) => {
     const blogToDelete = await BlogsService.DeleteBlogByID(request.params.id);
     if (blogToDelete) {
         response.status(204).send();

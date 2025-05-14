@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {postValidationMiddleware} from "../Validator/PostsValidation";
-import {authMiddleware} from "../BasicAuthorization/authMiddleware";
+import {basicAuthMiddleware} from "../Authorization/BasicAuthMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 import {PostsService} from "../Domain/PostsService";
 
@@ -40,11 +40,11 @@ PostRouter.get('/:id', async (request: Request, response: Response) => {
         response.status(404).send();
     }
 });
-PostRouter.post('/', authMiddleware, postValidationMiddleware,inputValidationMiddleware, async  (request: Request, response: Response) => {
+PostRouter.post('/', basicAuthMiddleware, postValidationMiddleware,inputValidationMiddleware, async  (request: Request, response: Response) => {
     const newPost = await PostsService.AddNewPost(request.body);
     response.status(201).send(newPost);
 });
-PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
+PostRouter.put('/:id', basicAuthMiddleware, postValidationMiddleware, inputValidationMiddleware, async (request: Request, response: Response) => {
     const updatedPost = await PostsService.UpdatePostByID(request.params.id, request.body);
     if (updatedPost) {
         response.status(204).send();
@@ -52,7 +52,7 @@ PostRouter.put('/:id', authMiddleware, postValidationMiddleware, inputValidation
         response.status(404).send();
     }
 });
-PostRouter.delete('/:id', authMiddleware, async (request: Request, response: Response) => {
+PostRouter.delete('/:id', basicAuthMiddleware, async (request: Request, response: Response) => {
     const postToDelete = await PostsService.DeletePostByID(request.params.id);
     if (postToDelete) {
         response.status(204).send();
