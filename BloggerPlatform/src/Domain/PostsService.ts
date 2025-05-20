@@ -3,6 +3,7 @@ import {blogsDBCollection} from "../Repository/BlogsDBController";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";
+import {CommentDB, NewComment} from "../Objects/Comments";
 
 
 export const PostsService = {
@@ -37,5 +38,21 @@ export const PostsService = {
     },
     async UpdatePostByID(id: string, post: PostsDB): Promise<PostsDB | undefined> {
         return await PostDBController.UpdatePostByID(id, post);
+    },
+    async CreateComment(text:NewComment):Promise<CommentDB| undefined>{
+
+        const newComment:CommentDB = {
+            id: string,
+            content: text.content,
+            commentatorInfo: {
+                userId: string,
+                userLogin: string
+            },
+            createdAt: new Date().toISOString(),
+        }
+
+
+        const result = await PostDBController.AddCommentUnderPost();
+        return result;
     }
 };

@@ -3,6 +3,8 @@ import {postValidationMiddleware} from "../Validator/PostsValidation";
 import {basicAuthMiddleware} from "../Authorization/BasicAuthMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 import {PostsService} from "../Domain/PostsService";
+import {commentsValidationMiddleware} from "../Validator/CommentsValidation";
+import {AuthMiddleware} from "../Authorization/AuthMiddleware";
 
 
 
@@ -63,6 +65,12 @@ PostRouter.delete('/:id', basicAuthMiddleware, async (request: Request, response
 PostRouter.get('/:postId/comments', async (request: Request, response: Response) => {
 
 })
-PostRouter.post('/:postId/comments', async (request: Request, response: Response) => {
-
+PostRouter.post('/:postId/comments', AuthMiddleware, commentsValidationMiddleware,inputValidationMiddleware, async (request: Request, response: Response) => {
+    const newComment = await PostsService.CreateComment(request.body, request.userId!._id);
+    if(newComment){
+        response.status(201).send(newComment);
+    }
+    else{
+        response.status(404).send();
+    }
 })

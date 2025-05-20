@@ -7,6 +7,9 @@ export type CommentDB = {
     },
     createdAt?: string;
 }
+export type NewComment={
+    content: string
+}
 
 //for future pagination
 export type CommentPage = {

@@ -3,6 +3,7 @@ import { client } from "../mongo/ConnectDB";
 import {ObjectId} from "mongodb";
 import {blogsDBCollection} from "./BlogsDBController";
 import {PostsQueryParams} from "../routes/PostsRoutes";
+import {CommentDB, NewComment} from "../Objects/Comments";
 
 export const postsDBCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
 
@@ -155,6 +156,10 @@ export const PostDBController = {
         } catch (error) {
             console.error("Error deleting post by ID:", error);
             throw new Error("Failed to delete post");
+        }
+    },
+    async AddCommentUnderPost():Promise<CommentDB | undefined>{
+
         }
     }
 };

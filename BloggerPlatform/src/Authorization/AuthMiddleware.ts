@@ -4,16 +4,14 @@ import {UserService} from "../Domain/UserService";
 
 
 export const AuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    if(!req.body.authorization){
+    if(!req.headers.authorization){
         res.status(401).send();
     }
-    const token = req.body.authorization.split(" ")[1];
+    const token = req.headers.authorization.split(" ")[1];
     const userId = await JWTService.GetUserIdByToken(token)
-    if(!userId){
-        res.status(401).send();
-    }
-    else{
-        const user = UserService.findUserById(userId);
+    if(userId){
+        const user  = UserService.findUserById(userId);
         next();
     }
+    res.status(401).send();
 }
