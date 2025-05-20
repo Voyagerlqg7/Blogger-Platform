@@ -2,7 +2,8 @@ import express, {Request, Response} from 'express';
 import {BlogsRouter} from "./routes/BlogsRoutes";
 import {PostRouter} from "./routes/PostsRoutes";
 import {UserRouter} from "./routes/UserRouter";
-import {AuthRouter} from "./routes/authRouter"
+import {AuthRouter} from "./routes/authRouter";
+import {CommentRouter} from "./routes/CommentsRouter";
 import {connectDB}from "./mongo/ConnectDB";
 import {client} from "./mongo/ConnectDB";
 
@@ -14,6 +15,7 @@ app.use("/blogs", BlogsRouter);
 app.use("/posts", PostRouter);
 app.use("/users", UserRouter);
 app.use("/auth", AuthRouter);
+app.use("/comments", CommentRouter);
 
 const startApp = async () => {
     await connectDB();
@@ -24,6 +26,7 @@ const startApp = async () => {
             await db.collection("blogs").deleteMany({});
             await db.collection("posts").deleteMany({});
             await db.collection("users").deleteMany({});
+            await db.collection("comments").deleteMany({});
             response.status(204).send();
         } catch (error) {
             console.error("Error deleting data:", error);

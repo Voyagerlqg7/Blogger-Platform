@@ -7,6 +7,8 @@ export type CommentDB = {
     },
     createdAt?: string;
 }
+
+//for future pagination
 export type CommentPage = {
     pagesCount: number;
     page: number;

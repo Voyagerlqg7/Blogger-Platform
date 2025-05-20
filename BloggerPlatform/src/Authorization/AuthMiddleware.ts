@@ -13,7 +13,7 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
         res.status(401).send();
     }
     else{
-        req.user = UserService.findUserById(userId);
+        const user = UserService.findUserById(userId);
         next();
     }
 }
