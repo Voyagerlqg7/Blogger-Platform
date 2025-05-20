@@ -3,7 +3,7 @@ import {UserDBType} from "../Objects/User";
 declare global {
     namespace Express {
         export interface Request {
-            userId: UserDBType | null
+            user: UserDBType | null
         }
     }
 }

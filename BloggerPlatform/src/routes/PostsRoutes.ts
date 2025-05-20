@@ -65,12 +65,20 @@ PostRouter.delete('/:id', basicAuthMiddleware, async (request: Request, response
 PostRouter.get('/:postId/comments', async (request: Request, response: Response) => {
 
 })
-PostRouter.post('/:postId/comments', AuthMiddleware, commentsValidationMiddleware,inputValidationMiddleware, async (request: Request, response: Response) => {
-    const newComment = await PostsService.CreateComment(request.body, request.userId!._id);
-    if(newComment){
-        response.status(201).send(newComment);
-    }
-    else{
-        response.status(404).send();
-    }
-})
+PostRouter.post(
+    '/:postId/comments',
+    AuthMiddleware,
+    commentsValidationMiddleware,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const postId = req.params.postId;
+        const userId = req.user!._id; // безопасно, если есть AuthMiddleware
+
+        const newComment = await PostsService.CreateComment(req.body, userId, postId);
+
+        if (newComment) {
+            res.status(201).send(newComment);
+        } else {
+            res.sendStatus(404);
+        }
+    });
