@@ -60,3 +60,9 @@ PostRouter.delete('/:id', basicAuthMiddleware, async (request: Request, response
         response.status(404).send();
     }
 });
+PostRouter.get('/:postId/comments', async (request: Request, response: Response) => {
+
+})
+PostRouter.post('/:postId/comments', async (request: Request, response: Response) => {
+
+})

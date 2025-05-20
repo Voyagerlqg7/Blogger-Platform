@@ -7,9 +7,9 @@ CommentRouter.use(express.json());
 CommentRouter.get('/', (req: Request, res: Response) => {
 
 });
-CommentRouter.put('/', (req: Request, res: Response) => {
+CommentRouter.put('/:commentId', (req: Request, res: Response) => {
 
 })
-CommentRouter.delete('/:id', (req: Request, res: Response) => {
+CommentRouter.delete('/:commentId', (req: Request, res: Response) => {
 
 })

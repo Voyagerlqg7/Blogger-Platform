@@ -12,3 +12,6 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
     }
     else{response.status(401).send();}
 })
+AuthRouter.get('/me', async(req: Request, res: Response) =>{
+
+})
