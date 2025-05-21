@@ -3,6 +3,7 @@ import {UserService} from "../Domain/UserService";
 import {JWTService} from "../application/JWTService";
 import {AuthMiddleware} from "../Authorization/AuthMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
+import "../types/index"
 export const AuthRouter = Router();
 
 AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, response:Response) => {
