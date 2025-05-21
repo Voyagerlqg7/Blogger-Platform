@@ -99,5 +99,20 @@ export const UsersDBController = {
             console.error("Error deleting user by ID:", error);
             throw new Error("Failed to delete user");
         }
+    },
+    async FindUserById(id:string):Promise<UserDBType | undefined>{
+        try{
+            if (!ObjectId.isValid(id)) return undefined;
+            const user = await userDBcollection.findOne({_id: new ObjectId(id)});
+            if (user){
+                return user;
+            }
+            else return undefined;
+        }
+        catch(error){
+            console.error(error);
+            console.error("Error deleting user by ID:", id);
+            return undefined;
+        }
     }
 }

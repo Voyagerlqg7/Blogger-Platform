@@ -10,10 +10,10 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
 
     if (!userId) return res.sendStatus(401);
 
-    const user = await UserService.findUserById(userId);
+    const user = await UserService.FindUserById(userId);
     if (!user) return res.sendStatus(401);
     else{
-        req.user = user;
+        return req.user = user;
         next();
     }
 };

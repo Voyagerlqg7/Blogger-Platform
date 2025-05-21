@@ -38,5 +38,9 @@ export const UserService = {
     },
     async DeleteUserByID(id:string){
         return await UsersDBController.DeleteUserByID(id);
+    },
+    async FindUserById(id:ObjectId){
+        const user =  await UsersDBController.FindUserById(id.toString());
+        return user;
     }
 }
