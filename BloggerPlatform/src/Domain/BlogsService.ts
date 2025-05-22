@@ -1,15 +1,15 @@
-import {BlogsQueryParams} from "../routes/BlogsRoutes";
 import {BlogsDB, BlogsPage} from "../Objects/Blogs";
 import {blogsDBCollection, BlogsDBController} from "../Repository/BlogsDBController";
 import {PostsQueryParams} from "../routes/PostsRoutes";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {PostDBController} from "../Repository/PostDBController";
 import {ObjectId} from "mongodb";
+import {BlogsPaginationParams} from "../routes/BlogsRoutes";
 
 
 
 export const BlogsService = {
-    async GetAllBlogs(queryParams:BlogsQueryParams): Promise<BlogsPage | undefined> {
+    async GetAllBlogs(queryParams:BlogsPaginationParams): Promise<BlogsPage | undefined> {
         return BlogsDBController.GetAllBlogs(queryParams);
     },
     async GetBlogByID(id: string): Promise<BlogsDB | undefined> {

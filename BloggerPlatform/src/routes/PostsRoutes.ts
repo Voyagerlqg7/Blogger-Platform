@@ -7,7 +7,6 @@ import {commentsValidationMiddleware} from "../Validator/CommentsValidation";
 import {AuthMiddleware} from "../Authorization/AuthMiddleware";
 
 
-
 export const PostRouter = Router();
 export interface PostsQueryParams {
     sortBy: string;
@@ -26,9 +25,9 @@ PostRouter.get('/', async (request: Request, response: Response) => {
 
     const queryParams:PostsQueryParams = {
         sortBy,
-        sortDirection: sortDirection as 'asc' | 'desc',
         pageNumber,
-        pageSize
+        pageSize,
+        sortDirection: sortDirection as 'asc' | 'desc',
     }
 
     const blogs = await PostsService.GetAllPosts(queryParams);
@@ -62,19 +61,29 @@ PostRouter.delete('/:id', basicAuthMiddleware, async (request: Request, response
         response.status(404).send();
     }
 });
-PostRouter.get('/:postId/comments', async (request: Request, response: Response) => {
+PostRouter.get('/:postId/comments', async (req: Request, res: Response) => {
+    const postId = req.params.postId;
+    const sortBy = req.query.sortBy as string || 'createdAt';
+    const sortDirection = (req.query.sortDirection === 'asc' || req.query.sortDirection === 'desc')
+        ? req.query.sortDirection
+        : 'desc';
+    const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
 
+    const queryParams: PostsQueryParams = {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection: sortDirection as 'asc' | 'desc'
+    };
+    const post = await PostsService.GetCommentsFromPost(postId, queryParams);
+    res.status(200).send(post);
 })
-PostRouter.post(
-    '/:postId/comments',
-    AuthMiddleware,
-    commentsValidationMiddleware,
-    inputValidationMiddleware,
-    async (req: Request, res: Response) => {
-        const postId = req.params.postId;
-        const userId = req.user!._id; // безопасно, если есть AuthMiddleware
+PostRouter.post('/:postId/comments', AuthMiddleware, commentsValidationMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
 
-        const newComment = await PostsService.CreateComment(req.body, userId, postId);
+        const userLogin = req.user!.email;
+        const userId = req.user!._id; // безопасно, если есть AuthMiddleware
+        const newComment = await PostsService.CreateComment(req.body, userId.toString(), userLogin);
 
         if (newComment) {
             res.status(201).send(newComment);

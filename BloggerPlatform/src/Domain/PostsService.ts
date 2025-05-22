@@ -1,5 +1,5 @@
 import {PostDBController} from "../Repository/PostDBController";
-import {blogsDBCollection} from "../Repository/BlogsDBController";
+import {blogsDBCollection, BlogsDBController} from "../Repository/BlogsDBController";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";
@@ -39,20 +39,20 @@ export const PostsService = {
     async UpdatePostByID(id: string, post: PostsDB): Promise<PostsDB | undefined> {
         return await PostDBController.UpdatePostByID(id, post);
     },
-    async CreateComment(text:NewComment):Promise<CommentDB| undefined>{
-
+    async CreateComment(text:NewComment, userId:string, userLogin:string):Promise<CommentDB| undefined>{
         const newComment:CommentDB = {
-            id: string,
+            id: "string",
             content: text.content,
             commentatorInfo: {
-                userId: string,
-                userLogin: string
+                userId: userId,
+                userLogin: userLogin
             },
             createdAt: new Date().toISOString(),
         }
-
-
-        const result = await PostDBController.AddCommentUnderPost();
+        const result = await PostDBController.AddCommentUnderPost(newComment);
         return result;
-    }
+    },
+    async GetCommentsFromPost(postId: string, queryParams:PostsQueryParams): Promise<PostsPage | undefined> {
+        return PostDBController.GetAllCommentsFromPost(postId, queryParams);
+    },
 };

@@ -2,13 +2,14 @@ import { ObjectId } from 'mongodb';
 import {BlogsDB, BlogsPage} from "../Objects/Blogs";
 import {PostsPage} from "../Objects/Posts";
 import { client } from "../mongo/ConnectDB";
-import {BlogsQueryParams} from "../routes/BlogsRoutes";
 import {postsDBCollection} from "./PostDBController";
 import {PostsQueryParams} from "../routes/PostsRoutes"
+import {BlogsPaginationParams} from "../routes/BlogsRoutes";
+
 export const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 
 export const BlogsDBController = {
-    async GetAllBlogs(params: BlogsQueryParams): Promise<BlogsPage | undefined> {
+    async GetAllBlogs(params: BlogsPaginationParams): Promise<BlogsPage | undefined> {
         try {
             const {
                 searchNameTerm,

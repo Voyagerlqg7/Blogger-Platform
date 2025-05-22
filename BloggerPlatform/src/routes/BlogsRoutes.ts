@@ -6,7 +6,7 @@ import {basicAuthMiddleware} from "../Authorization/BasicAuthMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 
 export const BlogsRouter = Router();
-export interface BlogsQueryParams {
+export interface BlogsPaginationParams {
     searchNameTerm: string | null;
     sortBy: string;
     sortDirection: 'asc' | 'desc';
@@ -22,7 +22,7 @@ BlogsRouter.get('/', async (request: Request, response: Response) => {
     const pageNumber = parseInt(request.query.pageNumber as string) || 1;
     const pageSize = parseInt(request.query.pageSize as string) || 10;
 
-    const queryParams: BlogsQueryParams = {
+    const queryParams: BlogsPaginationParams = {
         pageNumber,
         pageSize,
         searchNameTerm,
@@ -52,7 +52,7 @@ BlogsRouter.get('/:blogId/posts', async (request:Request, response: Response)=>{
     const pageSize = parseInt(request.query.pageSize as string) || 10;
 
 
-    const queryParams: BlogsQueryParams = {
+    const queryParams: BlogsPaginationParams = {
         pageNumber,
         pageSize,
         searchNameTerm,

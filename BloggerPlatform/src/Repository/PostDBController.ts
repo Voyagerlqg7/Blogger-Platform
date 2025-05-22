@@ -1,9 +1,11 @@
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import { client } from "../mongo/ConnectDB";
 import {ObjectId} from "mongodb";
-import {blogsDBCollection} from "./BlogsDBController";
 import {PostsQueryParams} from "../routes/PostsRoutes";
-import {CommentDB, NewComment} from "../Objects/Comments";
+import {CommentDB} from "../Objects/Comments";
+import {CommentsDBCollection} from "./CommentsDBController";
+import {blogsDBCollection} from "./BlogsDBController";
+
 
 export const postsDBCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
 
@@ -158,8 +160,76 @@ export const PostDBController = {
             throw new Error("Failed to delete post");
         }
     },
-    async AddCommentUnderPost():Promise<CommentDB | undefined>{
+    async AddCommentUnderPost(newComment:CommentDB):Promise<CommentDB | undefined>{
+        try{
+            const result = await CommentsDBCollection.insertOne(newComment);
+            if (!result.acknowledged) return undefined
+            return{
+                id: result.insertedId.toString(),
+                content: newComment.content,
+                commentatorInfo: {
+                    userId: newComment.commentatorInfo.userId,
+                    userLogin: newComment.commentatorInfo.userLogin,
+                },
+                createdAt: newComment.createdAt
+            }
+        }
+        catch (error) {
+            console.error("Error adding comment:", error);
+            return undefined;
+        }
+    },
+    async GetAllCommentsFromPost(postId: string, queryParams:PostsQueryParams):Promise<PostsPage | undefined>{
+        try {
+            const post = await postsDBCollection.findOne({ _id: new ObjectId(postId) });
 
+            if (!post) {
+                console.error(`Post not found for ID: ${postId}`);
+                return undefined;
+            }
+            const {
+                sortBy,
+                sortDirection,
+                pageNumber,
+                pageSize
+            } = queryParams;
+
+            const filter: any = { postId };
+
+            const sort: Record<string, 1 | -1> = {
+                [sortBy]: sortDirection === 'asc' ? 1 : -1
+            };
+
+            const totalCount = await CommentsDBCollection.countDocuments(filter);
+            const pagesCount = Math.ceil(totalCount / pageSize);
+
+            const posts = await CommentsDBCollection
+                .find(filter)
+                .sort(sort)
+                .skip((pageNumber - 1) * pageSize)
+                .limit(pageSize)
+                .toArray();
+
+            const items = posts.map(post => ({
+                id: post._id.toString(),
+                content: post.content,
+                commentatorInfo: {
+                    userId: post.commentatorInfo.userId,
+                    userLogin: post.commentatorInfo.userLogin
+                },
+                createdAt: post.createdAt
+            }));
+
+            return {
+                pagesCount,
+                pageNumber,
+                pageSize,
+                totalCount,
+                items
+            };
+        } catch (error) {
+            console.error('Error fetching comments by postId:', error);
+            throw new Error('Failed to fetch comments by postId');
         }
     }
 };
