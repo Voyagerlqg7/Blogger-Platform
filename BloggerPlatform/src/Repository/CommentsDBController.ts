@@ -32,18 +32,28 @@ export const CommentsDBController = {
         try{
             const UpdateComment = await CommentsDBCollection.findOne({_id: new ObjectId(commentId)});
             if(!UpdateComment) return undefined;
-            else{
-                return UpdateComment?{
-                    id: UpdateComment.id,
-                }
-            }
+            return UpdateComment?{
+                id: UpdateComment._id.toString(),
+                content: NewText,
+                commentatorInfo: {
+                    userId: UpdateComment.commentatorInfo.userId,
+                    userLogin: UpdateComment.commentatorInfo.userLogin,
+                },
+                createdAt: UpdateComment.createdAt
+            }:undefined;
+        } catch(err){
+            console.error(err);
+            throw new Error("Failed to update blog");
         }
-        catch(err){
-
-        }
-
     },
-    async DeleteCommentById(commentsId:string){
-
+    async DeleteCommentById(commentId:string){
+        if (!commentId) return false;
+        try {
+            const result = await CommentsDBCollection.deleteOne({ _id: new ObjectId(commentId) });
+            return result.deletedCount > 0;
+        } catch (error) {
+            console.error("Error deleting comment by ID:", error);
+            throw new Error("Failed to delete comment");
+        }
     }
 };
