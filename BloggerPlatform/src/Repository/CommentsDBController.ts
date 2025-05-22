@@ -27,27 +27,36 @@ export const CommentsDBController = {
         }
 
     },
-    async UpdateCommentById(commentId:string, NewText:string):Promise<CommentDB| undefined>{
+    async UpdateCommentText(commentId: string, newText: string): Promise<CommentDB | undefined> {
         if (!ObjectId.isValid(commentId)) return undefined;
-        try{
-            const UpdateComment = await CommentsDBCollection.findOne({_id: new ObjectId(commentId)});
-            if(!UpdateComment) return undefined;
-            return UpdateComment?{
-                id: UpdateComment._id.toString(),
-                content: NewText,
+
+        const filter = { _id: new ObjectId(commentId) };
+        const update = { $set: { content: newText } };
+
+        try {
+            const result = await CommentsDBCollection.updateOne(filter, update);
+            if (result.modifiedCount === 0) return undefined;
+
+            // Вернём обновлённый комментарий
+            const updated = await CommentsDBCollection.findOne(filter);
+            if (!updated) return undefined;
+
+            return {
+                id: updated._id.toString(),
+                content: updated.content,
                 commentatorInfo: {
-                    userId: UpdateComment.commentatorInfo.userId,
-                    userLogin: UpdateComment.commentatorInfo.userLogin,
+                    userId: updated.commentatorInfo.userId,
+                    userLogin: updated.commentatorInfo.userLogin
                 },
-                createdAt: UpdateComment.createdAt
-            }:undefined;
-        } catch(err){
-            console.error(err);
-            throw new Error("Failed to update blog");
+                createdAt: updated.createdAt
+            };
+        } catch (err) {
+            console.error("Error updating comment:", err);
+            return undefined;
         }
     },
-    async DeleteCommentById(commentId:string){
-        if (!commentId) return false;
+    async DeleteCommentById(commentId: string): Promise<boolean> {
+        if (!ObjectId.isValid(commentId)) return false;
         try {
             const result = await CommentsDBCollection.deleteOne({ _id: new ObjectId(commentId) });
             return result.deletedCount > 0;
@@ -56,4 +65,5 @@ export const CommentsDBController = {
             throw new Error("Failed to delete comment");
         }
     }
+
 };
