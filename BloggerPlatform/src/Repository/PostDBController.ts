@@ -2,7 +2,7 @@ import {PostsDB, PostsPage} from "../Objects/Posts";
 import { client } from "../mongo/ConnectDB";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";
-import {CommentDB} from "../Objects/Comments";
+import {CommentDB, CommentPage} from "../Objects/Comments";
 import {CommentsDBCollection} from "./CommentsDBController";
 import {blogsDBCollection} from "./BlogsDBController";
 
@@ -179,7 +179,7 @@ export const PostDBController = {
             return undefined;
         }
     },
-    async GetAllCommentsFromPost(postId: string, queryParams:PostsQueryParams):Promise<PostsPage | undefined>{
+    async GetAllCommentsFromPost(postId: string, queryParams:PostsQueryParams):Promise<CommentPage | undefined>{
         try {
             const post = await postsDBCollection.findOne({ _id: new ObjectId(postId) });
 
@@ -222,7 +222,7 @@ export const PostDBController = {
 
             return {
                 pagesCount,
-                pageNumber,
+                page:pageNumber,
                 pageSize,
                 totalCount,
                 items

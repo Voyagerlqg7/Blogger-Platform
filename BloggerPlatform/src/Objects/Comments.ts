@@ -10,7 +10,6 @@ export type CommentDB = {
 export type NewComment={
     content: string
 }
-
 //for future pagination
 export type CommentPage = {
     pagesCount: number;

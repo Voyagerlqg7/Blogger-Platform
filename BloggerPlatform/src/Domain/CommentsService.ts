@@ -1,14 +1,16 @@
-import express from "express";
 import {CommentDB} from "../Objects/Comments";
+import {CommentsDBController} from "../Repository/CommentsDBController";
 
 export const CommentsService = {
-    async GetCommentById(commentIf:string):Promise<CommentDB| undefined>{
-
+    async GetCommentById(commentId:string):Promise<CommentDB| undefined>{
+        const comment = await CommentsDBController.GetCommentById(commentId);
+        return comment;
     },
-    async UpdateCommentById(commentsId:string):Promise<CommentDB| undefined>{
-
+    async UpdateCommentById(commentId:string):Promise<CommentDB| undefined>{
+        const comment = await CommentsDBController.UpdateCommentById(commentId);
+        return comment;
     },
-    async DeleteCommentById(commentsId:string){
+    async DeleteCommentById(commentId:string){
 
     }
 };

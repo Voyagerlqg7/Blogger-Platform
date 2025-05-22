@@ -4,6 +4,7 @@ import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";
 import {CommentDB, NewComment} from "../Objects/Comments";
+import {CommentPage} from "../Objects/Comments";
 
 
 export const PostsService = {
@@ -52,7 +53,7 @@ export const PostsService = {
         const result = await PostDBController.AddCommentUnderPost(newComment);
         return result;
     },
-    async GetCommentsFromPost(postId: string, queryParams:PostsQueryParams): Promise<PostsPage | undefined> {
+    async GetCommentsFromPost(postId: string, queryParams:PostsQueryParams): Promise<CommentPage | undefined> {
         return PostDBController.GetAllCommentsFromPost(postId, queryParams);
     },
 };
