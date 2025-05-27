@@ -7,11 +7,17 @@ export const AuthRouter = Router();
 
 AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, response:Response) => {
     const user = await UserService.checkCredentials(request.body.loginOrEmail, request.body.password);
-    if(user){
-        const token = await JWTService.createJWT(user);
-        response.status(200).json({ accessToken: token });
+    try {
+        if (user) {
+            const token = await JWTService.createJWT(user);
+            response.status(200).json({accessToken: token});
+        } else {
+            response.status(401).send();
+        }
     }
-    else{response.status(401).send();}
+    catch (error) {
+        response.status(400).send(error);
+    }
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
