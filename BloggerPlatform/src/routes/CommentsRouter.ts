@@ -13,7 +13,9 @@ CommentRouter.get('/:id', async (req: Request, res: Response)=> {
     if (!comment) {
         res.status(404).send("No comment found");
     }
-    res.status(200).send(comment);
+    else {
+        res.status(200).send(comment);
+    }
 });
 CommentRouter.put('/:commentId', AuthMiddleware, commentsValidationMiddleware, async (req: Request, res: Response) => {
     const commentId = req.params.commentId;
