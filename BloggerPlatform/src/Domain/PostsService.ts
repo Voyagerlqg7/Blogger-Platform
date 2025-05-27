@@ -41,7 +41,7 @@ export const PostsService = {
         return await PostDBController.UpdatePostByID(id, post);
     },
     async CreateComment(text:NewComment, userId:string, userLogin:string, postId:string):Promise<CommentDB| undefined>{
-        const existingPost = postsDBCollection.findOne({_id: new ObjectId(postId)});
+        const existingPost = await postsDBCollection.findOne({_id: new ObjectId(postId)});
         if(!existingPost) {
             return undefined;
         }
