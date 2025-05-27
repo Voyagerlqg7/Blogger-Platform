@@ -83,8 +83,8 @@ PostRouter.post('/:postId/comments', AuthMiddleware, commentsValidationMiddlewar
 
         const userLogin = req.user!.email;
         const userId = req.user!._id; // безопасно, если есть AuthMiddleware
-        const post = req.body.postId;
-        const newComment = await PostsService.CreateComment(req.body, userId.toString(), userLogin,post);
+        const postId = req.params.postId;
+        const newComment = await PostsService.CreateComment(req.body, userId.toString(), userLogin,postId);
 
         if (newComment) {
             res.status(201).send(newComment);
