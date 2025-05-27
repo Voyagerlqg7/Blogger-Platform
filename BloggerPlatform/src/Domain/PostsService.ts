@@ -1,5 +1,5 @@
 import {PostDBController} from "../Repository/PostDBController";
-import {blogsDBCollection, BlogsDBController} from "../Repository/BlogsDBController";
+import {blogsDBCollection} from "../Repository/BlogsDBController";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";

@@ -16,9 +16,9 @@ CommentRouter.get('/:id', AuthMiddleware, async (req: Request, res: Response)=> 
     res.status(200).send(comment);
 });
 CommentRouter.put('/:commentId', AuthMiddleware, commentsValidationMiddleware, async (req: Request, res: Response) => {
-    const commentId = req.params.commentId; // Исправлено с req.params.id
+    const commentId = req.params.commentId;
     const text = req.body.content;
-    const userId = req.user!._id; // Получаем текущего пользователя
+    const userId = req.user!._id;
 
     const updatedComment = await CommentsService.UpdateCommentById(commentId, text, userId);
 
