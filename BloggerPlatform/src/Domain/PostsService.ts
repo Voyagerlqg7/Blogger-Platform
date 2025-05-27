@@ -1,4 +1,4 @@
-import {PostDBController} from "../Repository/PostDBController";
+import {PostDBController, postsDBCollection} from "../Repository/PostDBController";
 import {blogsDBCollection} from "../Repository/BlogsDBController";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
@@ -40,7 +40,11 @@ export const PostsService = {
     async UpdatePostByID(id: string, post: PostsDB): Promise<PostsDB | undefined> {
         return await PostDBController.UpdatePostByID(id, post);
     },
-    async CreateComment(text:NewComment, userId:string, userLogin:string):Promise<CommentDB| undefined>{
+    async CreateComment(text:NewComment, userId:string, userLogin:string, postId:string):Promise<CommentDB| undefined>{
+        const existingPost = postsDBCollection.findOne({_id: new ObjectId(postId)});
+        if(!existingPost) {
+            return undefined;
+        }
         const newComment:CommentDB = {
             id: "string",
             content: text.content,

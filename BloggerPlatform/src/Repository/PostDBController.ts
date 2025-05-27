@@ -72,23 +72,18 @@ export const PostDBController = {
         };
     },
     async AddNewPost(newPost: PostsDB): Promise<PostsDB | undefined> {
-        try {
-            const result = await postsDBCollection.insertOne(newPost);
-            if (!result.acknowledged) return undefined;
+        const result = await postsDBCollection.insertOne(newPost);
+        if (!result.acknowledged) return undefined;
 
-            return {
-                id: result.insertedId.toString(),
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                content: newPost.content,
-                blogId: newPost.blogId,
-                blogName: newPost.blogName,
-                createdAt: newPost.createdAt,
-            };
-        } catch (error) {
-            console.error("Error adding new post:", error);
-            throw new Error("Failed to add post");
-        }
+        return {
+            id: result.insertedId.toString(),
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            blogId: newPost.blogId,
+            blogName: newPost.blogName,
+            createdAt: newPost.createdAt,
+        };
     },
     async AddNewPostUsingBlogId(newPost: PostsDB): Promise<PostsDB | undefined> {
         try {
