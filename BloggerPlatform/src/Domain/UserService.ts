@@ -25,10 +25,16 @@ export const UserService = {
       return UsersDBController.AddNewUser(newUser);
     },
     async checkCredentials(loginOrEmail: string, password: string) {
-        const user = await UsersDBController.findByLoginOrEmail(loginOrEmail);
-        if (!user) return undefined;
-        const passwordHash = await this._generateHash(password, user.passwordSalt);
-        if (user.passwordHash !== passwordHash) {
+        try {
+            const user = await UsersDBController.findByLoginOrEmail(loginOrEmail);
+            if (!user) return undefined;
+            const passwordHash = await this._generateHash(password, user.passwordSalt);
+            if (user.passwordHash !== passwordHash) {
+                return undefined;
+            }
+        }
+        catch(error) {
+            console.error(error);
             return undefined;
         }
     },

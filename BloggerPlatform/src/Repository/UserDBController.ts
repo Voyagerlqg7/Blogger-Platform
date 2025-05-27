@@ -83,8 +83,14 @@ export const UsersDBController = {
 
     },
     async findByLoginOrEmail(loginOrEmail:string) {
-        const user = await userDBcollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]});
-        return user;
+        try {
+            const user = await userDBcollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]});
+            return user;
+        }
+        catch (error){
+            console.error(error);
+            return null;
+        }
     },
     async DeleteUserByID(id: string | null): Promise<boolean>{
         if(!id) return false;
