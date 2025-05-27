@@ -1,11 +1,11 @@
 import {client} from "../mongo/ConnectDB";
-import {CommentDB} from "../Objects/Comments";
+import {CommentDB, CommentViewModel} from "../Objects/Comments";
 import {ObjectId} from "mongodb";
 
 export const CommentsDBCollection = client.db("BloggerPlatform").collection<CommentDB>("Comments");
 
 export const CommentsDBController = {
-    async GetCommentById(commentId:string):Promise<CommentDB | undefined>{
+    async GetCommentById(commentId:string):Promise<CommentViewModel | undefined>{
         if (!ObjectId.isValid(commentId)) return undefined;
         try{
             const comment = await CommentsDBCollection.findOne({_id: new ObjectId(commentId)});
@@ -27,7 +27,7 @@ export const CommentsDBController = {
         }
 
     },
-    async UpdateCommentText(commentId: string, newText: string): Promise<CommentDB | undefined> {
+    async UpdateCommentText(commentId: string, newText: string): Promise<CommentViewModel | undefined> {
         if (!ObjectId.isValid(commentId)) return undefined;
 
         const filter = { _id: new ObjectId(commentId) };

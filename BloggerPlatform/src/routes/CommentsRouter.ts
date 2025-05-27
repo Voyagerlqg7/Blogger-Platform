@@ -26,7 +26,7 @@ CommentRouter.put('/:commentId', AuthMiddleware, commentsValidationMiddleware,in
     const updatedComment = await CommentsService.UpdateCommentById(commentId, text, userId);
 
     if (!updatedComment) {
-        res.status(403).send("Forbidden or comment not found"); // 403 — доступ запрещён
+        res.status(404).send("Forbidden or comment not found"); // 403 — доступ запрещён
     }
     else{
         res.status(204).send(updatedComment);

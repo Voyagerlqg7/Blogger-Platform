@@ -1,13 +1,13 @@
-import {CommentDB} from "../Objects/Comments";
+import {CommentDB, CommentViewModel} from "../Objects/Comments";
 import {CommentsDBController} from "../Repository/CommentsDBController";
 import {ObjectId} from "mongodb";
 
 export const CommentsService = {
-    async GetCommentById(commentId:string):Promise<CommentDB| undefined>{
+    async GetCommentById(commentId:string):Promise<CommentViewModel| undefined>{
         const comment = await CommentsDBController.GetCommentById(commentId);
         return comment;
     },
-    async UpdateCommentById(commentId: string, text: string, userId: ObjectId): Promise<CommentDB | undefined> {
+    async UpdateCommentById(commentId: string, text: string, userId: ObjectId): Promise<CommentViewModel | undefined> {
         const existingComment = await CommentsDBController.GetCommentById(commentId);
         if (!existingComment) return undefined;
 

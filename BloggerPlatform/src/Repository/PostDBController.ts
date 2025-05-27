@@ -2,9 +2,9 @@ import {PostsDB, PostsPage} from "../Objects/Posts";
 import { client } from "../mongo/ConnectDB";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";
-import {CommentDB, CommentPage} from "../Objects/Comments";
+import {CommentDB, CommentPage, CommentViewModel} from "../Objects/Comments";
 import {CommentsDBCollection} from "./CommentsDBController";
-import {blogsDBCollection} from "./BlogsDBController";
+import {blogsDBCollection} from "./BlogsDBController"
 
 
 export const postsDBCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
@@ -155,7 +155,7 @@ export const PostDBController = {
             throw new Error("Failed to delete post");
         }
     },
-    async AddCommentUnderPost(newComment:CommentDB):Promise<CommentDB | undefined>{
+    async AddCommentUnderPost(newComment:CommentDB):Promise<CommentViewModel | undefined>{
         try{
             const result = await CommentsDBCollection.insertOne(newComment);
             if (!result.acknowledged) return undefined
@@ -199,7 +199,7 @@ export const PostDBController = {
                 .limit(pageSize)
                 .toArray();
 
-            const items = comments.map(comment => ({
+            const items: CommentViewModel[] = comments.map(comment => ({
                 id: comment._id.toString(),
                 content: comment.content,
                 commentatorInfo: {

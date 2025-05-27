@@ -3,7 +3,7 @@ import {blogsDBCollection} from "../Repository/BlogsDBController";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";
-import {CommentDB, NewComment} from "../Objects/Comments";
+import {CommentDB, NewComment, CommentViewModel} from "../Objects/Comments";
 import {CommentPage} from "../Objects/Comments";
 
 
@@ -40,7 +40,7 @@ export const PostsService = {
     async UpdatePostByID(id: string, post: PostsDB): Promise<PostsDB | undefined> {
         return await PostDBController.UpdatePostByID(id, post);
     },
-    async CreateComment(text:NewComment, userId:string, userLogin:string, postId:string):Promise<CommentDB| undefined>{
+    async CreateComment(text:NewComment, userId:string, userLogin:string, postId:string):Promise<CommentViewModel| undefined>{
         const existingPost = await postsDBCollection.findOne({_id: new ObjectId(postId)});
         if(!existingPost) {
             return undefined;
@@ -53,6 +53,7 @@ export const PostsService = {
                 userLogin: userLogin
             },
             createdAt: new Date().toISOString(),
+            postId: new ObjectId(postId)
         }
         const result = await PostDBController.AddCommentUnderPost(newComment);
         return result;
