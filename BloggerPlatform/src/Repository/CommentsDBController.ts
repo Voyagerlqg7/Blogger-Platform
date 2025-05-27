@@ -36,8 +36,6 @@ export const CommentsDBController = {
         try {
             const result = await CommentsDBCollection.updateOne(filter, update);
             if (result.modifiedCount === 0) return undefined;
-
-            // Вернём обновлённый комментарий
             const updated = await CommentsDBCollection.findOne(filter);
             if (!updated) return undefined;
 

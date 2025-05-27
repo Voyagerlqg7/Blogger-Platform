@@ -175,6 +175,7 @@ export const PostDBController = {
         }
     },
     async GetAllCommentsFromPost(postId: string, queryParams:PostsQueryParams):Promise<CommentPage | undefined>{
+        if (!ObjectId.isValid(postId)) return undefined;
         try {
             const {
                 sortBy,
@@ -183,8 +184,7 @@ export const PostDBController = {
                 pageSize
             } = queryParams;
 
-            const filter: any = { postId };
-
+            const filter = { postId: new ObjectId(postId) };
             const sort: Record<string, 1 | -1> = {
                 [sortBy]: sortDirection === 'asc' ? 1 : -1
             };
