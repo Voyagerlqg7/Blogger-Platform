@@ -28,10 +28,13 @@ export const UserService = {
         try {
             const user = await UsersDBController.findByLoginOrEmail(loginOrEmail);
             if (!user) return undefined;
+
             const passwordHash = await this._generateHash(password, user.passwordSalt);
+
             if (user.passwordHash !== passwordHash) {
                 return undefined;
             }
+            return user;
         }
         catch(error) {
             console.error(error);
