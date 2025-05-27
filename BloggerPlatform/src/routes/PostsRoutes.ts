@@ -76,8 +76,8 @@ PostRouter.get('/:postId/comments', async (req: Request, res: Response) => {
         sortBy,
         sortDirection: sortDirection as 'asc' | 'desc'
     };
-    const post = await PostsService.GetCommentsFromPost(postId, queryParams);
-    res.status(200).send(post);
+    const CommentsUnderPost = await PostsService.GetCommentsFromPost(postId, queryParams);
+    res.status(200).send(CommentsUnderPost);
 })
 PostRouter.post('/:postId/comments', AuthMiddleware, commentsValidationMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
 

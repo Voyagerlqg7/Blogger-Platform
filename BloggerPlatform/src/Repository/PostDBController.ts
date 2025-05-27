@@ -176,12 +176,6 @@ export const PostDBController = {
     },
     async GetAllCommentsFromPost(postId: string, queryParams:PostsQueryParams):Promise<CommentPage | undefined>{
         try {
-            const post = await postsDBCollection.findOne({ _id: new ObjectId(postId) });
-
-            if (!post) {
-                console.error(`Post not found for ID: ${postId}`);
-                return undefined;
-            }
             const {
                 sortBy,
                 sortDirection,
@@ -198,21 +192,21 @@ export const PostDBController = {
             const totalCount = await CommentsDBCollection.countDocuments(filter);
             const pagesCount = Math.ceil(totalCount / pageSize);
 
-            const posts = await CommentsDBCollection
+            const comments = await CommentsDBCollection
                 .find(filter)
                 .sort(sort)
                 .skip((pageNumber - 1) * pageSize)
                 .limit(pageSize)
                 .toArray();
 
-            const items = posts.map(post => ({
-                id: post._id.toString(),
-                content: post.content,
+            const items = comments.map(comment => ({
+                id: comment._id.toString(),
+                content: comment.content,
                 commentatorInfo: {
-                    userId: post.commentatorInfo.userId,
-                    userLogin: post.commentatorInfo.userLogin
+                    userId: comment.commentatorInfo.userId,
+                    userLogin: comment.commentatorInfo.userLogin
                 },
-                createdAt: post.createdAt
+                createdAt: comment.createdAt
             }));
 
             return {

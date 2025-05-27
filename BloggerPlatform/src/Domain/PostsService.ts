@@ -58,6 +58,11 @@ export const PostsService = {
         return result;
     },
     async GetCommentsFromPost(postId: string, queryParams:PostsQueryParams): Promise<CommentPage | undefined> {
+        const existingPost = await postsDBCollection.findOne({_id: new ObjectId(postId)});
+        if(!existingPost) {
+            console.error(`Post not found for ID: ${postId}`);
+            return undefined;
+        }
         return PostDBController.GetAllCommentsFromPost(postId, queryParams);
     },
 };

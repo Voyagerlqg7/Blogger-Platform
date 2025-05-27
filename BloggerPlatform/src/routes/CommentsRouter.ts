@@ -7,7 +7,7 @@ import {AuthMiddleware} from "../Authorization/AuthMiddleware";
 export const CommentRouter = Router();
 CommentRouter.use(express.json());
 
-CommentRouter.get('/:id', AuthMiddleware, async (req: Request, res: Response)=> {
+CommentRouter.get('/:id', async (req: Request, res: Response)=> {
     const commentId = req.params.id;
     const comment = await CommentsService.GetCommentById(commentId);
     if (!comment) {
