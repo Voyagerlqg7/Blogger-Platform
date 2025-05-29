@@ -25,12 +25,17 @@ CommentRouter.put('/:commentId', AuthMiddleware, commentsValidationMiddleware,in
 
     const updatedComment = await CommentsService.UpdateCommentById(commentId, text, userId);
 
-    if (!updatedComment) {
-        res.status(404).send("Forbidden or comment not found"); // 403 — доступ запрещён
+    if (updatedComment === null) {
+        res.status(404).send("Comment not found");
+        return;
     }
-    else{
-        res.status(204).send(updatedComment);
+
+    if (updatedComment === false) {
+        res.status(403).send("Forbidden");
+        return;
     }
+
+    res.status(204).send();
 });
 
 CommentRouter.delete('/:commentId', AuthMiddleware, async (req: Request, res: Response): Promise<void> => {

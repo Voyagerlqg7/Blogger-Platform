@@ -7,13 +7,12 @@ export const CommentsService = {
         const comment = await CommentsDBController.GetCommentById(commentId);
         return comment;
     },
-    async UpdateCommentById(commentId: string, text: string, userId: ObjectId): Promise<CommentViewModel | undefined> {
+    async UpdateCommentById(commentId: string, text: string, userId: ObjectId): Promise<CommentViewModel | undefined | false | null> {
         const existingComment = await CommentsDBController.GetCommentById(commentId);
-        if (!existingComment) return undefined;
+        if (!existingComment) return null;
 
-        // Проверка: пользователь — владелец комментария?
         if (existingComment.commentatorInfo.userId !== userId.toString()) {
-            return undefined; // чужой комментарий — нельзя редактировать
+            return false; // чужой комментарий
         }
 
         const updatedComment = await CommentsDBController.UpdateCommentText(commentId, text);
