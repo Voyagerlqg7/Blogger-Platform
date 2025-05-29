@@ -39,16 +39,16 @@ CommentRouter.delete('/:commentId', AuthMiddleware, async (req: Request, res: Re
     const result = await CommentsService.DeleteCommentById(commentId, userId);
 
     if (result === null) {
-        res.status(404).send("Comment not found"); // 🟡 комментария нет
+        res.status(404).send("Comment not found");
         return;
     }
 
     if (result === false) {
-        res.status(403).send("Forbidden"); // 🔴 чужой комментарий
+        res.status(403).send("Forbidden");
         return;
     }
 
-    res.status(204).send(); // 🟢 удалён успешно
+    res.status(204).send();
 });
 
 
