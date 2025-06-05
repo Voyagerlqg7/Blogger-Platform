@@ -5,6 +5,7 @@ import {AuthMiddleware} from "../Authorization/AuthMiddleware";
 import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
 import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {EmailService} from "../Domain/EmailService";
+import {NewUserTemplate} from "./UserRouter";
 
 export const AuthRouter = Router();
 
@@ -23,14 +24,19 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
     }
 })
 AuthRouter.post('/registration', usersValidationMiddleware, inputValidationMiddleware, async (request:Request, response:Response) => {
-    const login = request.body.login;
-    const password =  request.body.password;
-    const email= request.body.email;
-    const result = EmailService.RegistrationProcess(login, password, email);
-    if(!result){
-        response.status(400).send("Something wrong");
+    const userLogin = request.body.login;
+    const userPassword =  request.body.password;
+    const userEmail= request.body.email;
+    const newUser:NewUserTemplate ={
+        login: userLogin,
+        password: userPassword,
+        email: userEmail
     }
-    else{response.status(200).send("Email with confirmation code will be send to passed email address");}
+
+    const createdUser = await UserService.createUser(newUser);
+
+
+
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
