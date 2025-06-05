@@ -10,7 +10,7 @@ export const EmailService = {
         if(existingUser){
             return undefined;
         }
-    }
+    },
 
 
 }
