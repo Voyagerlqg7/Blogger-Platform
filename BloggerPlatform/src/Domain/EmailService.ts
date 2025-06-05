@@ -1,11 +1,15 @@
-
+import {UsersDBController} from "../Repository/UserDBController";
 const nodemailer = require("nodemailer");
 
 
 
 export const EmailService = {
-    async RegistrationProcess(){
-
+    async CheckExistingEmailOrLogin(login: string, email: string): Promise<undefined> {
+        const existingUser = await UsersDBController.findByLoginOrEmail(login)
+            || await UsersDBController.findByLoginOrEmail(email);
+        if(existingUser){
+            return undefined;
+        }
     }
 
 

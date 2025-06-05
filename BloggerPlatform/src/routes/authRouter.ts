@@ -32,11 +32,15 @@ AuthRouter.post('/registration', usersValidationMiddleware, inputValidationMiddl
         password: userPassword,
         email: userEmail
     }
+    const checkExisting = await EmailService.CheckExistingEmailOrLogin(newUser.login, newUser.email);
+    if(checkExisting) {
+        response.status(400).send();
+    }
+    else {
+        const createdUser = await UserService.createUser(newUser);
 
-    const createdUser = await UserService.createUser(newUser);
-
-
-
+        response.status(200).send();
+    }
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
