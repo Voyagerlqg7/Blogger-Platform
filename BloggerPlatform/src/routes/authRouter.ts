@@ -37,16 +37,19 @@ AuthRouter.post('/registration', usersValidationMiddleware, inputValidationMiddl
         response.status(400).send();
     }
     else {
-        const createdUser = await UserService.createUser(newUser);
-
-        response.status(200).send();
-    }
+        const createdUser = await UserService.RegistrationUser(newUser);
+        if(createdUser) {
+            response.status(204).send();
+        }
+        else{
+            response.status(400).send();
+        }}
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
     res.status(200).json({
-        email: user.email,
-        login: user.login,
+        email: user.accountData.email,
+        login: user.accountData.login,
         userId: user._id
     });
 });
