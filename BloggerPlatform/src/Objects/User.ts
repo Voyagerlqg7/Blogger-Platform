@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 
-export type User ={
+export type UserViewModel ={
     id: string,
     login: string,
     email: string,
@@ -11,14 +11,20 @@ export type UsersPage = {
     page: number;
     pageSize: number;
     totalCount: number;
-    items: User[];
+    items: UserViewModel[];
 };
-
-export type UserDBType ={
+export type UserDBType = {
     _id: ObjectId,
-    login: string,
-    email: string,
-    passwordHash: string,
-    passwordSalt: string;
-    createdAt: string;
+    accountData: {
+        login: string,
+        email: string,
+        passwordHash: string,
+        passwordSalt: string,
+        createdAt: string
+    },
+    emailConfirmation: {
+        confirmationCode: string,
+        expiresAt: string,
+        isConfirmed: boolean
+    }
 }

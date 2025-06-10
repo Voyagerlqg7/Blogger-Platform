@@ -11,6 +11,12 @@ export const EmailService = {
             return undefined;
         }
     },
+    async SendEmailCodeConfirmation(){
+
+    },
+    async ReSendEmailCodeConfirmation(){
+
+    }
 
 
 }

@@ -1,5 +1,5 @@
 import { client } from "../mongo/ConnectDB";
-import {User, UserDBType} from '../Objects/User';
+import {UserDBType, UserViewModel} from '../Objects/User';
 import {UsersPage} from "../Objects/User";
 import {UserQueryParams} from "../routes/UserRouter";
 import {ObjectId} from "mongodb";
@@ -47,9 +47,9 @@ export const UsersDBController = {
 
             const items = users.map(user => ({
                 id: user._id.toString(),
-                login: user.login,
-                email: user.email,
-                createdAt: user.createdAt,
+                login: user.accountData.login,
+                email: user.accountData.email,
+                createdAt: user.accountData.createdAt,
             }));
             return {
                 pagesCount,
@@ -64,15 +64,15 @@ export const UsersDBController = {
             throw new Error("Failed to fetch users");
         }
     },
-    async AddNewUser(newUser:UserDBType): Promise<User | undefined> {
+    async AddNewUser(newUser:UserDBType): Promise<UserViewModel | undefined> {
         try {
             userDBcollection.insertOne(newUser);
 
             const addedUser = {
                 id: newUser._id.toString(),
-                login: newUser.login,
-                email: newUser.email,
-                createdAt: newUser.createdAt,
+                login: newUser.accountData.login,
+                email: newUser.accountData.email,
+                createdAt: newUser.accountData.createdAt,
             }
             return addedUser;
         }
@@ -84,7 +84,12 @@ export const UsersDBController = {
     },
     async findByLoginOrEmail(loginOrEmail:string) {
         try {
-            const user = await userDBcollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]});
+            const user = await userDBcollection.findOne({
+                $or: [
+                    { "accountData.login": loginOrEmail },
+                    { "accountData.email": loginOrEmail }
+                ]
+            });
             return user;
         }
         catch (error){
@@ -106,12 +111,18 @@ export const UsersDBController = {
             throw new Error("Failed to delete user");
         }
     },
-    async FindUserById(id:string):Promise<UserDBType | undefined>{
+    async FindUserById(id:string):Promise<UserViewModel | undefined>{
         try{
             if (!ObjectId.isValid(id)) return undefined;
             const user = await userDBcollection.findOne({_id: new ObjectId(id)});
             if (user){
-                return user;
+                const sentUser ={
+                    id: user._id.toString(),
+                    login: user.accountData.login,
+                    email: user.accountData.email,
+                    createdAt: user.accountData.createdAt,
+                }
+                return sentUser;
             }
             else return undefined;
         }
