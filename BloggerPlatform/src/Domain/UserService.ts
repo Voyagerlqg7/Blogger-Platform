@@ -53,7 +53,7 @@ export const UserService = {
                 isConfirmed: false
             }
         }
-        EmailService.SendEmailCodeConfirmation(newUser);
+        await EmailService.SendEmailCodeConfirmation(newUser);
         return UsersDBController.AddNewUser(newUser);
     },
     async checkCredentials(loginOrEmail: string, password: string) {

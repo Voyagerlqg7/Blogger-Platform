@@ -1,5 +1,7 @@
 import {UsersDBController} from "../Repository/UserDBController";
 import nodemailer from "nodemailer";
+import {settings} from "../application/settings";
+import {UserDBType} from "../Objects/User";
 
 
 
@@ -11,17 +13,32 @@ export const EmailService = {
             return undefined;
         }
     },
-    async SendEmailCodeConfirmation(email:string){
-        // Create a test account or replace with real credentials.
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: "maddison53@ethereal.email",
-                pass: "jn7jnAPss4f63QBp6D",
-            },
-        });
+    async SendEmailCodeConfirmation(user:UserDBType){
+        try {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: settings.GOOGLE_GMAIL_EMAIL,
+                    pass: settings.GOOGLE_GMAIL_APP_PASSWORD,
+                },
+            });
+            const confirmationLink = `https://somesite.com/confirm-email?code=${user.emailConfirmation.confirmationCode}`;
+
+            await transporter.sendMail({
+                from: settings.GOOGLE_GMAIL_EMAIL,
+                to: user.accountData.email,
+                subject: "Verification Code Confirmation",
+                html: `<h1>Thanks for your registration</h1>
+                        <p>To finish registration please follow the link below:
+                        <a href='${confirmationLink}'>complete registration</a>
+                        </p>
+                        <p>Or use this code manually: ${user.emailConfirmation.confirmationCode}</p>`,
+                // text-версия для клиентов без поддержки HTML
+                text: `Thank for your registration. To finish registration please follow this link: ${confirmationLink}\n\nOr use this code manually: ${user.emailConfirmation.confirmationCode}`
+            });
+        } catch (error) {
+            console.error("Failed to create transporter:", error);
+        }
 
     },
     async ReSendEmailCodeConfirmation(){

@@ -6,6 +6,8 @@ import {AuthRouter} from "./routes/authRouter";
 import {CommentRouter} from "./routes/CommentsRouter";
 import {connectDB}from "./mongo/ConnectDB";
 import {client} from "./mongo/ConnectDB";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 6419;
