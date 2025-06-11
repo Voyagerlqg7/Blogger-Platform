@@ -32,18 +32,26 @@ AuthRouter.post('/registration', usersValidationMiddleware, inputValidationMiddl
         password: userPassword,
         email: userEmail
     }
-    const checkExisting = await EmailService.CheckExistingEmailOrLogin(newUser.login, newUser.email);
-    if(checkExisting) {
+    const createdUser = await UserService.RegistrationUser(newUser);
+    if(createdUser) {
+        response.status(204).send();
+    }
+    else{
         response.status(400).send();
     }
+})
+AuthRouter.post('/registration-confirmation', async (request: Request, response:Response) => {
+    const ConfirmationCode = request.body.code;
+
+})
+AuthRouter.post('/registration-email-resending', async (request: Request, response:Response) => {
+    const result = await EmailService.ReSendConfirmationCode(request.body.email);
+    if(result) {
+        response.status(204).send();
+    }
     else {
-        const createdUser = await UserService.RegistrationUser(newUser);
-        if(createdUser) {
-            response.status(204).send();
-        }
-        else{
-            response.status(400).send();
-        }}
+        response.status(400).send();
+    }
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;

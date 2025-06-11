@@ -5,7 +5,7 @@ import {UsersDBController} from "../Repository/UserDBController";
 import {UsersPage} from "../Objects/User";
 import {UserDBType} from "../Objects/User";
 import { v4 as uuidv4 } from "uuid";
-import add from "date-fns/add";
+import {add} from "date-fns/add";
 import {EmailService} from "./EmailService";
 
 
@@ -49,12 +49,18 @@ export const UserService = {
             },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                expiresAt: new Date().toISOString(),
+                expiresAt: add(new Date(), { minutes: 5 }).toISOString(),
                 isConfirmed: false
             }
         }
-        await EmailService.SendEmailCodeConfirmation(newUser);
-        return UsersDBController.AddNewUser(newUser);
+        const result = await EmailService.SendEmailCodeConfirmation(newUser.accountData.login, newUser.accountData.email, newUser.emailConfirmation.confirmationCode);
+        if (result) {
+            await UsersDBController.AddNewUser(newUser);
+            return true;
+        } else {
+            return undefined;
+        }
+
     },
     async checkCredentials(loginOrEmail: string, password: string) {
         try {

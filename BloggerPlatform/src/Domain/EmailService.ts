@@ -6,15 +6,17 @@ import {UserDBType} from "../Objects/User";
 
 
 export const EmailService = {
-    async CheckExistingEmailOrLogin(login: string, email: string): Promise<undefined> {
-        const existingUser = await UsersDBController.findByLoginOrEmail(login)
-            || await UsersDBController.findByLoginOrEmail(email);
-        if(existingUser){
-            return undefined;
-        }
+    async CheckExistingEmailOrLogin(LoginOrEmail: string): Promise<boolean> {
+        const existingUser = await UsersDBController.findByLoginOrEmail(LoginOrEmail)
+        return !!existingUser;
     },
-    async SendEmailCodeConfirmation(user:UserDBType){
+    async SendEmailCodeConfirmation(login:string, email:string, code:string){
         try {
+            const existingEmail = await this.CheckExistingEmailOrLogin(email);
+            const existingLogin = await this.CheckExistingEmailOrLogin(login);
+            if(existingEmail || existingLogin){
+                return undefined
+            }
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
@@ -22,28 +24,24 @@ export const EmailService = {
                     pass: settings.GOOGLE_GMAIL_APP_PASSWORD,
                 },
             });
-            const confirmationLink = `https://somesite.com/confirm-email?code=${user.emailConfirmation.confirmationCode}`;
+            const confirmationLink = `https://somesite.com/confirm-email?code=${code}`;
 
             await transporter.sendMail({
                 from: settings.GOOGLE_GMAIL_EMAIL,
-                to: user.accountData.email,
+                to: email,
                 subject: "Verification Code Confirmation",
                 html: `<h1>Thanks for your registration</h1>
                         <p>To finish registration please follow the link below:
                         <a href='${confirmationLink}'>complete registration</a>
                         </p>
-                        <p>Or use this code manually: ${user.emailConfirmation.confirmationCode}</p>`,
+                        <p>Or use this code manually: ${code}</p>`,
                 // text-версия для клиентов без поддержки HTML
-                text: `Thank for your registration. To finish registration please follow this link: ${confirmationLink}\n\nOr use this code manually: ${user.emailConfirmation.confirmationCode}`
+                text: `Thank for your registration. To finish registration please follow this link: ${confirmationLink}\n\nOr use this code manually: ${code}`
             });
+            return true;
         } catch (error) {
             console.error("Failed to create transporter:", error);
+            return false;
         }
-
     },
-    async ReSendEmailCodeConfirmation(){
-
-    }
-
-
 }
