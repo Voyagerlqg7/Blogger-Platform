@@ -35,6 +35,10 @@ export const UserService = {
       return UsersDBController.AddNewUser(newUser);
     },
     async RegistrationUser(user:NewUserTemplate){
+        const existingLogin = await UsersDBController.findByLoginOrEmail(user.login);
+        const existingEmail = await UsersDBController.findByLoginOrEmail(user.email);
+        if (existingLogin || existingEmail) return false;
+
         const passwordSalt = await bcrypt.genSalt(10);
         const passwordHash = await this._generateHash(user.password, passwordSalt);
 
@@ -53,14 +57,20 @@ export const UserService = {
                 isConfirmed: false
             }
         }
-        const result = await EmailService.SendEmailCodeConfirmation(newUser.accountData.login, newUser.accountData.email, newUser.emailConfirmation.confirmationCode);
+        await UsersDBController.AddNewUser(newUser);
+
+        const result = await EmailService.SendEmailCodeConfirmation(
+            newUser.accountData.login,
+            newUser.accountData.email,
+            newUser.emailConfirmation.confirmationCode
+        );
+
         if (result) {
-            await UsersDBController.AddNewUser(newUser);
             return true;
         } else {
+            await UsersDBController.DeleteUserByID(newUser._id.toString());
             return undefined;
         }
-
     },
     async checkCredentials(loginOrEmail: string, password: string) {
         try {

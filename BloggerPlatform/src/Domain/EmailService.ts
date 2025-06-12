@@ -11,11 +11,6 @@ export const EmailService = {
     },
     async SendEmailCodeConfirmation(login:string, email:string, code:string){
         try {
-            const existingEmail = await this.CheckExistingEmailOrLogin(email);
-            const existingLogin = await this.CheckExistingEmailOrLogin(login);
-            if(existingEmail || existingLogin){
-                return undefined
-            }
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
