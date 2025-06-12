@@ -97,6 +97,19 @@ export const UsersDBController = {
             return null;
         }
     },
+    async FindByConfirmationCode(code: string) {
+        try {
+            const user = await userDBcollection.findOne({
+                "emailConfirmation.confirmationCode": code,
+                "emailConfirmation.isConfirmed": false,
+                "emailConfirmation.expiresAt": { $gt: new Date().toISOString() }
+            });
+            return user;
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    },
     async DeleteUserByID(id: string | null): Promise<boolean>{
         if(!id) return false;
         if (!ObjectId.isValid(id)) {
@@ -131,5 +144,27 @@ export const UsersDBController = {
             console.error("Error deleting user by ID:", id);
             return undefined;
         }
+    },
+    async UpdateStatusConfirmation(user:UserDBType) {
+        try {
+            await userDBcollection.updateOne(
+                { _id: user._id },
+                { $set: { "emailConfirmation.isConfirmed": true } }
+            );
+        } catch (error) {
+            console.error("Error to update confirmation status for userId:", user._id," ", error);
+        }
+    },
+    async UpdateCodeConfirmationAndExpiresTime(userId: ObjectId, newCode: string, newExpiresAt:string){
+        await userDBcollection.updateOne(
+            { _id: userId },
+            {
+                $set: {
+                    "emailConfirmation.confirmationCode": newCode,
+                    "emailConfirmation.expiresAt": newExpiresAt,
+                    "emailConfirmation.isConfirmed": false
+                }
+            }
+        );
     }
 }

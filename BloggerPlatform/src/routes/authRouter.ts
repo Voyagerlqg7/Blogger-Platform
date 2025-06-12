@@ -41,11 +41,17 @@ AuthRouter.post('/registration', usersValidationMiddleware, inputValidationMiddl
     }
 })
 AuthRouter.post('/registration-confirmation', async (request: Request, response:Response) => {
-    const ConfirmationCode = request.body.code;
+    const result = await EmailService.CheckCodeConfirmation(request.body.code);
+    if(result) {
+        response.status(204).send();
+    }
+    else{
+        response.status(400).send();
+    }
 
 })
 AuthRouter.post('/registration-email-resending', async (request: Request, response:Response) => {
-    const result = await EmailService.ReSendConfirmationCode(request.body.email);
+    const result = await EmailService.ReSendCodeConfirmation(request.body.email);
     if(result) {
         response.status(204).send();
     }

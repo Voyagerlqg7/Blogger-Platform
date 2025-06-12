@@ -1,9 +1,8 @@
 import {UsersDBController} from "../Repository/UserDBController";
 import nodemailer from "nodemailer";
 import {settings} from "../application/settings";
-import {UserDBType} from "../Objects/User";
-
-
+import { v4 as uuidv4 } from "uuid";
+import {add} from "date-fns"
 
 export const EmailService = {
     async CheckExistingEmailOrLogin(LoginOrEmail: string): Promise<boolean> {
@@ -44,4 +43,25 @@ export const EmailService = {
             return false;
         }
     },
+    async ReSendCodeConfirmation(email:string){
+        const user = await UsersDBController.findByLoginOrEmail(email);
+        const newCode = uuidv4();
+        const newExpiresAt = add(new Date(), { minutes: 5 }).toISOString();
+
+        if (!user) return false;
+
+        await UsersDBController.UpdateCodeConfirmationAndExpiresTime(user._id, newCode, newExpiresAt);
+        await this.SendEmailCodeConfirmation(user.accountData.login, user.accountData.email, newCode);
+        return true;
+    },
+    async CheckCodeConfirmation(code:string){
+        const user = await UsersDBController.FindByConfirmationCode(code);
+        if (!user || user.emailConfirmation.isConfirmed || new Date() > new Date(user.emailConfirmation.expiresAt)) {
+            return false;
+        }
+        else{
+            await UsersDBController.UpdateStatusConfirmation(user);
+            return true;
+        }
+    }
 }
