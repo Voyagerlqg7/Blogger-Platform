@@ -37,7 +37,7 @@ AuthRouter.post('/registration', usersValidationMiddleware, inputValidationMiddl
         response.status(204).send();
     }
     else{
-        response.status(400).send();
+        response.status(400).json({ errorsMessages: [{ message: "Failed to create user", field: "server" }] });
     }
 })
 AuthRouter.post('/registration-confirmation', async (request: Request, response:Response) => {

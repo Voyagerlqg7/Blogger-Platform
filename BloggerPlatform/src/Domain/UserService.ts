@@ -35,10 +35,6 @@ export const UserService = {
       return UsersDBController.AddNewUser(newUser);
     },
     async RegistrationUser(user:NewUserTemplate){
-        const existingLogin = await UsersDBController.findByLoginOrEmail(user.login);
-        const existingEmail = await UsersDBController.findByLoginOrEmail(user.email);
-        if (existingLogin || existingEmail) return false;
-
         const passwordSalt = await bcrypt.genSalt(10);
         const passwordHash = await this._generateHash(user.password, passwordSalt);
 
