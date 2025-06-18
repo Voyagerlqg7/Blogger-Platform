@@ -50,7 +50,7 @@ AuthRouter.post('/registration-confirmation', async (request: Request, response:
     }
 
 })
-AuthRouter.post('/registration-email-resending', usersValidationMiddleware, inputValidationMiddleware, async (request: Request, response:Response) => {
+AuthRouter.post('/registration-email-resending', async (request: Request, response:Response) => {
     const result = await EmailService.ReSendCodeConfirmation(request.body.email);
     if(result) {
         response.status(204).send();
