@@ -66,8 +66,8 @@ AuthRouter.post('/registration-email-resending', emailResendingValidation, input
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
     res.status(200).json({
-        email: user.accountData.email,
-        login: user.accountData.login,
-        userId: user._id
+        email: user.email,
+        login: user.login,
+        userId: user.id
     });
 });

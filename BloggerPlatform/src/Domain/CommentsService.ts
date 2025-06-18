@@ -7,22 +7,22 @@ export const CommentsService = {
         const comment = await CommentsDBController.GetCommentById(commentId);
         return comment;
     },
-    async UpdateCommentById(commentId: string, text: string, userId: ObjectId): Promise<CommentViewModel | undefined | false | null> {
+    async UpdateCommentById(commentId: string, text: string, userId: string): Promise<CommentViewModel | undefined | false | null> {
         const existingComment = await CommentsDBController.GetCommentById(commentId);
         if (!existingComment) return null;
 
-        if (existingComment.commentatorInfo.userId !== userId.toString()) {
+        if (existingComment.commentatorInfo.userId !== userId) {
             return false; // чужой комментарий
         }
 
         const updatedComment = await CommentsDBController.UpdateCommentText(commentId, text);
         return updatedComment;
     },
-    async DeleteCommentById(commentId: string, userId: ObjectId): Promise<true | false | null> {
+    async DeleteCommentById(commentId: string, userId: string): Promise<true | false | null> {
         const existingComment = await CommentsDBController.GetCommentById(commentId);
         if (!existingComment) return null; // комментарий не найден
 
-        if (existingComment.commentatorInfo.userId !== userId.toString()) {
+        if (existingComment.commentatorInfo.userId !== userId) {
             return false; // не твой комментарий
         }
 

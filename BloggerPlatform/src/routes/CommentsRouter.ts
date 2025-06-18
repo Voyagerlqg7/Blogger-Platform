@@ -21,7 +21,7 @@ CommentRouter.get('/:id', async (req: Request, res: Response)=> {
 CommentRouter.put('/:commentId', AuthMiddleware, commentsValidationMiddleware,inputValidationMiddleware, async (req: Request, res: Response) => {
     const commentId = req.params.commentId;
     const text = req.body.content;
-    const userId = req.user!._id;
+    const userId = req.user!.id;
 
     const updatedComment = await CommentsService.UpdateCommentById(commentId, text, userId);
 
@@ -39,7 +39,7 @@ CommentRouter.put('/:commentId', AuthMiddleware, commentsValidationMiddleware,in
 });
 
 CommentRouter.delete('/:commentId', AuthMiddleware, async (req: Request, res: Response): Promise<void> => {
-    const userId = req.user!._id;
+    const userId = req.user!.id;
     const commentId = req.params.commentId;
     const result = await CommentsService.DeleteCommentById(commentId, userId);
 

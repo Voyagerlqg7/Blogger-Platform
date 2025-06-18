@@ -92,7 +92,7 @@ export const UserService = {
     async DeleteUserByID(id:string){
         return await UsersDBController.DeleteUserByID(id);
     },
-    async FindUserById(id:ObjectId){
+    async FindUserById(id:string){
         const user =  await UsersDBController.FindUserById(id.toString());
         return user;
     }

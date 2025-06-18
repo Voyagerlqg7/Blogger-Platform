@@ -8,14 +8,14 @@ export const JWTService = {
         const token = await jwt.sign({userId : user._id}, settings.JWT_SECRET, {expiresIn: "30m"});
         return token;
     },
-    async GetUserIdByToken(token: string){
-        try{
-            const result:any = jwt.verify(token, settings.JWT_SECRET);
-            return new ObjectId(result.userId);
-        }
-        catch(error){
+    async GetUserIdByToken(token: string): Promise<string | null> {
+        try {
+            const result: any = jwt.verify(token, settings.JWT_SECRET);
+            return result.userId.toString();
+        } catch (error) {
             console.log(error);
             return null;
         }
     }
+
 }

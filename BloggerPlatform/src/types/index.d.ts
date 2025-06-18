@@ -1,9 +1,9 @@
-import {UserDBType} from "../Objects/User";
+import {UserViewModel} from "../Objects/User";
 
 declare global {
     namespace Express {
         interface Request {
-            user: UserDBType | null;
+            user: UserViewModel | null;
         }
     }
 }

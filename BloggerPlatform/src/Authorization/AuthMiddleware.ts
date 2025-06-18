@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {JWTService} from "../application/JWTService";
 import {UserService} from "../Domain/UserService";
+import {UserDBType} from "../Objects/User";
 
 export const AuthMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (!req.headers.authorization) {

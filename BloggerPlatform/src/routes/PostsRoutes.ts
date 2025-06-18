@@ -87,7 +87,7 @@ PostRouter.get('/:postId/comments', async (req: Request, res: Response) => {
 PostRouter.post('/:postId/comments', AuthMiddleware, commentsValidationMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
 
         const userLogin = req.user!.email;
-        const userId = req.user!._id; // безопасно, если есть AuthMiddleware
+        const userId = req.user!.id;
         const postId = req.params.postId;
         const newComment = await PostsService.CreateComment(req.body, userId.toString(), userLogin,postId);
 

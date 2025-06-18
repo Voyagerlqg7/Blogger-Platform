@@ -47,17 +47,17 @@ export const EmailService = {
         await this.SendEmailCodeConfirmation(user.accountData.login, user.accountData.email, newCode);
         return true;
     },
-    async CheckCodeConfirmation(code:string){
+    async CheckCodeConfirmation(code: string): Promise<boolean | undefined> {
         const user = await UsersDBController.FindByConfirmationCode(code);
-        if(!user){
-            return undefined;
-        }
-        if (user.emailConfirmation.isConfirmed || new Date() > new Date(user.emailConfirmation.expiresAt)) {
-            return false;
-        }
-        else{
-            await UsersDBController.UpdateStatusConfirmation(user);
-            return true;
-        }
+        if (!user) return undefined;
+
+        const isExpired = new Date() > new Date(user.emailConfirmation.expiresAt);
+        const isConfirmed = user.emailConfirmation.isConfirmed;
+
+        if (isConfirmed || isExpired) return false;
+
+        await UsersDBController.UpdateStatusConfirmation(user);
+        return true;
     }
+
 }
