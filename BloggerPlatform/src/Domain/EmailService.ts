@@ -41,7 +41,7 @@ export const EmailService = {
         const newCode = uuidv4();
         const newExpiresAt = add(new Date(), { minutes: 5 }).toISOString();
 
-        if (!user) return undefined;
+        if (!user) return false;
 
         await UsersDBController.UpdateCodeConfirmationAndExpiresTime(user._id, newCode, newExpiresAt);
         await this.SendEmailCodeConfirmation(user.accountData.login, user.accountData.email, newCode);

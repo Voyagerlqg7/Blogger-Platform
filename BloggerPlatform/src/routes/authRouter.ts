@@ -59,8 +59,8 @@ AuthRouter.post('/registration-email-resending', emailResendingValidation, input
     if(result) {
         response.status(204).send();
     }
-    else if(result === undefined) {
-        response.status(400).send({ errorsMessages: [{ message: "email doesnt exist", field: "email" }] });
+    else if(!result) {
+        response.status(400).send({ errorsMessages: [{ message: "email doesnt exist or already confirmed", field: "email" }] });
     }
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
