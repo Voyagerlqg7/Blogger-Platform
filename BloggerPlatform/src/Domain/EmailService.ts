@@ -10,8 +10,8 @@ export const EmailService = {
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                    user: process.env.GOOGLE_GMAIL_EMAIL,
-                    pass: process.env.GOOGLE_GMAIL_PASSWORD,
+                    user: settings.GOOGLE_GMAIL_EMAIL,
+                    pass: settings.GOOGLE_GMAIL_APP_PASSWORD,
                 },
             });
 
