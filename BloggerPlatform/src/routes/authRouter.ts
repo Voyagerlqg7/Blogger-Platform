@@ -47,10 +47,10 @@ AuthRouter.post('/registration-confirmation', async (request: Request, response:
         response.status(204).send();
     }
     else if(result === undefined){
-        response.status(400).send({ errorsMessages: [{ message: "Email is already confirmed or doesnt exist", field: "registration-confirmation" }] });
+        response.status(400).send({ errorsMessages: [{ message: "Email is already confirmed or doesnt exist", field: "code" }] });
     }
     else if(!result){
-        response.status(400).send({ errorsMessages: [{ message: "Wrong code confirmation", field: "registration-confirmation" }] });
+        response.status(400).send({ errorsMessages: [{ message: "Wrong code confirmation", field: "code" }] });
     }
 
 })
@@ -60,10 +60,10 @@ AuthRouter.post('/registration-email-resending', emailResendingValidation, input
         response.status(204).send();
     }
     else if(result === undefined) {
-        response.status(400).send({ errorsMessages: [{ message: "email doesnt exist", field: "registration-email-resending" }] });
+        response.status(400).send({ errorsMessages: [{ message: "email doesnt exist", field: "email" }] });
     }
     else if(!result){
-        response.status(400).send({ errorsMessages: [{ message: "wrong email", field: "registration-email-resending" }] });
+        response.status(400).send({ errorsMessages: [{ message: "wrong email", field: "email" }] });
     }
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
