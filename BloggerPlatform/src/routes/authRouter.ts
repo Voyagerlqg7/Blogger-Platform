@@ -6,6 +6,7 @@ import {inputValidationMiddleware} from "../Validator/input-validation-middlewar
 import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {EmailService} from "../Domain/EmailService";
 import {NewUserTemplate} from "./UserRouter";
+import {emailResendingValidation} from "../Validator/EmailValidation";
 
 export const AuthRouter = Router();
 
@@ -45,18 +46,24 @@ AuthRouter.post('/registration-confirmation', async (request: Request, response:
     if(result) {
         response.status(204).send();
     }
-    else{
-        response.status(400).send();
+    else if(result === undefined){
+        response.status(400).send({ errorsMessages: [{ message: "Email is already confirmed or doesnt exist", field: "registration-confirmation" }] });
+    }
+    else if(!result){
+        response.status(400).send({ errorsMessages: [{ message: "Wrong code confirmation", field: "registration-confirmation" }] });
     }
 
 })
-AuthRouter.post('/registration-email-resending', async (request: Request, response:Response) => {
+AuthRouter.post('/registration-email-resending', emailResendingValidation, inputValidationMiddleware, async (request: Request, response:Response) => {
     const result = await EmailService.ReSendCodeConfirmation(request.body.email);
     if(result) {
         response.status(204).send();
     }
-    else {
-        response.status(400).send();
+    else if(result === undefined) {
+        response.status(400).send({ errorsMessages: [{ message: "email doesnt exist", field: "registration-email-resending" }] });
+    }
+    else if(!result){
+        response.status(400).send({ errorsMessages: [{ message: "wrong email", field: "registration-email-resending" }] });
     }
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
