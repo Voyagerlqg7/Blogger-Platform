@@ -1,12 +1,17 @@
 import {UserDBType} from "../Objects/User";
 import jwt from "jsonwebtoken";
-import {ObjectId} from "mongodb";
 import {settings} from "./settings";
 
 export const JWTService = {
-    async createJWT(user:UserDBType){
-        const token = await jwt.sign({userId : user._id}, settings.JWT_SECRET, {expiresIn: "30m"});
-        return token;
+    async createAccessJWT(user:UserDBType){
+        const accessToken = jwt.sign({userId : user._id}, settings.JWT_SECRET, {expiresIn: "10s"});
+        return accessToken;
+    },
+    async createRefreshJWT(user:UserDBType){
+        const refreshToken = jwt.sign({
+            userId: user._id,
+        }, settings.JWT_SECRET, { expiresIn: '20s' });
+        return refreshToken;
     },
     async GetUserIdByToken(token: string): Promise<string | null> {
         try {

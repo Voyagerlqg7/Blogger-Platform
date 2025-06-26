@@ -7,11 +7,13 @@ import {CommentRouter} from "./routes/CommentsRouter";
 import {connectDB}from "./mongo/ConnectDB";
 import {client} from "./mongo/ConnectDB";
 import dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 6419;
 app.use(express.json());
+app.use(cookieParser())
 
 app.use("/blogs", BlogsRouter);
 app.use("/posts", PostRouter);

@@ -14,8 +14,14 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
     const user = await UserService.checkCredentials(request.body.loginOrEmail, request.body.password);
     try {
         if (user) {
-            const token = await JWTService.createJWT(user);
-            response.status(200).json({accessToken: token});
+            const AccessToken = await JWTService.createAccessJWT(user);
+            const RefrechToken = await JWTService.createRefreshJWT(user);
+            response.cookie('refreshToken JWT Cookie', RefrechToken, {
+                httpOnly: true,
+                sameSite: 'strict',
+                secure: true,
+            });
+            response.status(200).json({accessToken: AccessToken});
         } else {
             response.status(401).send();
         }
@@ -62,6 +68,12 @@ AuthRouter.post('/registration-email-resending', emailResendingValidation, input
     else if(!result) {
         response.status(400).send({ errorsMessages: [{ message: "email doesnt exist or already confirmed", field: "email" }] });
     }
+})
+AuthRouter.post('/logout', async (req: Request, res: Response) => {
+
+})
+AuthRouter.post('/refresh-token', async (req: Request, res: Response) => {
+
 })
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
