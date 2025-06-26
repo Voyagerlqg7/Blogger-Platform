@@ -7,7 +7,8 @@ import {usersValidationMiddleware} from "../Validator/UserValidation";
 import {EmailService} from "../Domain/EmailService";
 import {NewUserTemplate} from "./UserRouter";
 import {emailResendingValidation} from "../Validator/EmailValidation";
-
+import {sessionsRepository} from "../Repository/sessionsRepository";
+import {validateRefreshToken} from "../Validator/validateRefToken";
 export const AuthRouter = Router();
 
 AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, response:Response) => {
@@ -69,12 +70,34 @@ AuthRouter.post('/registration-email-resending', emailResendingValidation, input
         response.status(400).send({ errorsMessages: [{ message: "email doesnt exist or already confirmed", field: "email" }] });
     }
 })
-AuthRouter.post('/logout', async (req: Request, res: Response) => {
-
+AuthRouter.post('/logout', validateRefreshToken, async (req: Request, res: Response) => {
+    const oldtoken = req.refreshToken!;
+    const result = await sessionsRepository.deleteToken(oldtoken);
+    if(!result) {
+        res.status(401).send()
+    }
+    else{res.status(201).send()}
 })
-AuthRouter.post('/refresh-token', async (req: Request, res: Response) => {
+AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
+    const user = req.user!;
+    const oldToken = req.refreshToken!;
 
-})
+    await sessionsRepository.deleteToken(oldToken);
+
+    const newAccessToken = await JWTService.createAccessJWT(user);
+    const newRefreshToken = await JWTService.createRefreshJWT(user);
+
+    await sessionsRepository.saveToken(newRefreshToken);
+
+    res
+        .cookie('refreshToken', newRefreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+        })
+        .status(200)
+        .json({ accessToken: newAccessToken });
+});
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
     res.status(200).json({

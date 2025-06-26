@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import bcrypt from "bcryptjs"
 import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
 import {UsersDBController} from "../Repository/UserDBController";
-import {UsersPage} from "../Objects/User";
+import {UsersPage, UserViewModel} from "../Objects/User";
 import {UserDBType} from "../Objects/User";
 import { v4 as uuidv4 } from "uuid";
 import {add} from "date-fns/add";
@@ -78,7 +78,13 @@ export const UserService = {
             if (user.accountData.passwordHash !== passwordHash) {
                 return undefined;
             }
-            return user;
+            const newUser: UserViewModel ={
+                id: user._id.toString(),
+                login: user.accountData.login,
+                email: user.accountData.email,
+                createdAt: user.accountData.createdAt
+            }
+            return newUser;
         }
         catch(error) {
             console.error(error);

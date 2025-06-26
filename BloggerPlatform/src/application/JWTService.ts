@@ -1,15 +1,15 @@
-import {UserDBType} from "../Objects/User";
+import {UserDBType, UserViewModel} from "../Objects/User";
 import jwt from "jsonwebtoken";
 import {settings} from "./settings";
 
 export const JWTService = {
-    async createAccessJWT(user:UserDBType){
-        const accessToken = jwt.sign({userId : user._id}, settings.JWT_SECRET, {expiresIn: "10s"});
+    async createAccessJWT(user:UserViewModel){
+        const accessToken = jwt.sign({userId : user.id}, settings.JWT_SECRET, {expiresIn: "10s"});
         return accessToken;
     },
-    async createRefreshJWT(user:UserDBType){
+    async createRefreshJWT(user:UserViewModel){
         const refreshToken = jwt.sign({
-            userId: user._id,
+            userId: user.id,
         }, settings.JWT_SECRET, { expiresIn: '20s' });
         return refreshToken;
     },
@@ -22,5 +22,4 @@ export const JWTService = {
             return null;
         }
     }
-
 }
