@@ -79,7 +79,7 @@ AuthRouter.post('/logout', validateRefreshToken, async (req: Request, res: Respo
     }
     else{res.status(201).send()}
 })
-AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
+AuthRouter.post('/refresh-token', AuthMiddleware, validateRefreshToken, async (req, res) => {
     const user = req.user!;
     const oldToken = req.refreshToken!;
     try {
