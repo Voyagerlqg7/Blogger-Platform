@@ -16,8 +16,8 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
     try {
         if (user) {
             const AccessToken = await JWTService.createAccessJWT(user);
-            const RefreshToken = await JWTService.createRefreshJWT(user);
-            response.cookie('refreshToken', RefreshToken, {
+            const refreshToken = await JWTService.createRefreshJWT(user);
+            response.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 sameSite: 'strict',
                 secure: true,
@@ -82,22 +82,27 @@ AuthRouter.post('/logout', validateRefreshToken, async (req: Request, res: Respo
 AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
     const user = req.user!;
     const oldToken = req.refreshToken!;
+    try {
+        await sessionsRepository.deleteToken(oldToken);
 
-    await sessionsRepository.deleteToken(oldToken);
+        const newAccessToken = await JWTService.createAccessJWT(user);
+        const newRefreshToken = await JWTService.createRefreshJWT(user);
 
-    const newAccessToken = await JWTService.createAccessJWT(user);
-    const newRefreshToken = await JWTService.createRefreshJWT(user);
+        await sessionsRepository.saveToken(newRefreshToken);
 
-    await sessionsRepository.saveToken(newRefreshToken);
-
-    res
-        .cookie('refreshToken', newRefreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-        })
-        .status(200)
-        .json({ accessToken: newAccessToken });
+        res
+            .cookie('refreshToken', newRefreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+            })
+            .status(200)
+            .json({accessToken: newAccessToken});
+    }
+    catch (error) {
+        console.log(error);
+        res.status(401).send();
+    }
 });
 AuthRouter.get('/me', AuthMiddleware, async (req: Request, res: Response) => {
     const user = req.user!;
