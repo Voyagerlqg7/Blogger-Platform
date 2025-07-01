@@ -9,6 +9,7 @@ import {NewUserTemplate} from "./UserRouter";
 import {emailResendingValidation} from "../Validator/EmailValidation";
 import {sessionsRepository} from "../Repository/sessionsRepository";
 import {validateRefreshToken} from "../Validator/validateRefToken";
+import {settings} from "../application/settings";
 export const AuthRouter = Router();
 
 AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, response:Response) => {
@@ -79,7 +80,7 @@ AuthRouter.post('/logout', validateRefreshToken, async (req: Request, res: Respo
     }
     else{res.status(201).send()}
 })
-AuthRouter.post('/refresh-token', AuthMiddleware, validateRefreshToken, async (req, res) => {
+AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
     const user = req.user!;
     const oldToken = req.refreshToken!;
     try {
@@ -93,7 +94,7 @@ AuthRouter.post('/refresh-token', AuthMiddleware, validateRefreshToken, async (r
         res
             .cookie('refreshToken', newRefreshToken, {
                 httpOnly: true,
-                secure: true,
+                secure: settings.NODE_ENV === "production",
                 sameSite: 'strict',
             })
             .status(200)
