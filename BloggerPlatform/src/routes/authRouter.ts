@@ -94,7 +94,7 @@ AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
         res
             .cookie('refreshToken', newRefreshToken, {
                 httpOnly: true,
-                secure: settings.NODE_ENV === "production",
+                secure: false,
                 sameSite: 'strict',
             })
             .status(200)
