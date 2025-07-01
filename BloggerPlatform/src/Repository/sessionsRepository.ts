@@ -15,20 +15,15 @@ export const sessionsRepository = {
             return null;
         }
     },
-
     async findToken(token: string): Promise<string | null> {
-        const tokenInDb = await tokenDBCollection.findOne({ token });
-        if (!tokenInDb) return null;
-
         try {
             jwt.verify(token, settings.JWT_SECRET);
-            return token; // токен валиден
+            const tokenInDb = await tokenDBCollection.findOne({ token });
+            return tokenInDb ? token : null;
         } catch (err) {
-            console.log("Token is not valid" + err);
             return null;
         }
     },
-
     async saveToken(token: string): Promise<string | null> {
         try {
             const result = await tokenDBCollection.insertOne({ token });

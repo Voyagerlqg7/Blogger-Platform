@@ -91,14 +91,12 @@ AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
 
         await sessionsRepository.saveToken(newRefreshToken);
 
-        res
-            .cookie('refreshToken', newRefreshToken, {
-                httpOnly: true,
-                secure: false,
-                sameSite: 'strict',
-            })
-            .status(200)
-            .json({accessToken: newAccessToken});
+        res.cookie('refreshToken', newRefreshToken, {
+            httpOnly: true,
+            secure: settings.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 20 * 1000 // 20 seconds for cookie,
+        }).status(200).json({accessToken: newAccessToken});
     }
     catch (error) {
         console.log(error);
