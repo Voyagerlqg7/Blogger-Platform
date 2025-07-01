@@ -16,8 +16,8 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
     try {
         if (user) {
             const AccessToken = await JWTService.createAccessJWT(user);
-            const RefrechToken = await JWTService.createRefreshJWT(user);
-            response.cookie('refreshToken JWT Cookie', RefrechToken, {
+            const RefreshToken = await JWTService.createRefreshJWT(user);
+            response.cookie('refreshToken', RefreshToken, {
                 httpOnly: true,
                 sameSite: 'strict',
                 secure: true,
@@ -28,6 +28,7 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
         }
     }
     catch (error) {
+        console.log(error);
         response.status(400).send(error);
     }
 })
