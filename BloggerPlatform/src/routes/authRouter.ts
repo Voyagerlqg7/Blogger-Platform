@@ -16,15 +16,15 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
     const user = await UserService.checkCredentials(request.body.loginOrEmail, request.body.password);
     try {
         if (user) {
-            const AccessToken = await JWTService.createAccessJWT(user);
+            const accessToken = await JWTService.createAccessJWT(user);
             const refreshToken = await JWTService.createRefreshJWT(user);
             response.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 sameSite: 'strict',
-                secure: settings.NODE_ENV === 'production',
+                secure: true,
                 maxAge: 20 * 1000
             });
-            response.status(200).json({accessToken: AccessToken});
+            response.status(200).json({accessToken: accessToken});
         } else {
             response.status(401).send();
         }
@@ -94,7 +94,7 @@ AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
 
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
-            secure: settings.NODE_ENV === 'production',
+            secure: true,
             sameSite: 'strict',
             maxAge: 20 * 1000 // 20 seconds for cookie,
         }).status(200).json({accessToken: newAccessToken});
