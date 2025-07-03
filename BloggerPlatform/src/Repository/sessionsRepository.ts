@@ -26,10 +26,12 @@ export const sessionsRepository = {
     async saveToken(token: string): Promise<string | null> {
         try {
             const result = await tokenDBCollection.insertOne({ token });
+            console.log('SAVED TOKEN:', token);
             return result.insertedId ? token : null;
         } catch (error) {
-            console.log(error);
+            console.log('SAVE ERROR:', error);
             return null;
         }
     }
+
 };
