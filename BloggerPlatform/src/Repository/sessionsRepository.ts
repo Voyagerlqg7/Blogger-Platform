@@ -17,7 +17,6 @@ export const sessionsRepository = {
     },
     async findToken(token: string): Promise<string | null> {
         try {
-            jwt.verify(token, settings.JWT_SECRET);
             const tokenInDb = await tokenDBCollection.findOne({ token });
             return tokenInDb ? token : null;
         } catch (err) {

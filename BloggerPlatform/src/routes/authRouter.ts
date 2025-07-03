@@ -78,7 +78,7 @@ AuthRouter.post('/logout', validateRefreshToken, async (req: Request, res: Respo
     if(!result) {
         res.status(401).send()
     }
-    else{res.status(201).send()}
+    else{res.sendStatus(204)}
 })
 AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
     const user = req.user!;
@@ -95,7 +95,7 @@ AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
             httpOnly: true,
             secure: settings.NODE_ENV === 'production',
             sameSite: 'strict',
-            maxAge: 20 * 1000 // 20 seconds for cookie,
+            maxAge: 30 * 1000 // 20 seconds for cookie,
         }).status(200).json({accessToken: newAccessToken});
     }
     catch (error) {

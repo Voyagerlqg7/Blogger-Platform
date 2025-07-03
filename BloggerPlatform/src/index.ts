@@ -31,6 +31,7 @@ const startApp = async () => {
             await db.collection("posts").deleteMany({});
             await db.collection("users").deleteMany({});
             await db.collection("comments").deleteMany({});
+            await db.collection("token").deleteMany({});
             response.status(204).send();
         } catch (error) {
             console.error("Error deleting data:", error);
