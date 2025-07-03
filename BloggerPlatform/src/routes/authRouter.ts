@@ -21,7 +21,8 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
             response.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 sameSite: 'strict',
-                secure: true,
+                secure: settings.NODE_ENV === 'production',
+                maxAge: 20 * 1000
             });
             response.status(200).json({accessToken: AccessToken});
         } else {
@@ -95,7 +96,7 @@ AuthRouter.post('/refresh-token', validateRefreshToken, async (req, res) => {
             httpOnly: true,
             secure: settings.NODE_ENV === 'production',
             sameSite: 'strict',
-            maxAge: 30 * 1000 // 20 seconds for cookie,
+            maxAge: 20 * 1000 // 20 seconds for cookie,
         }).status(200).json({accessToken: newAccessToken});
     }
     catch (error) {
