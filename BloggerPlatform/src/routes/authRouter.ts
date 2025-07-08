@@ -19,6 +19,7 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
             const accessToken = await JWTService.createAccessJWT(user);
             const refreshToken = await JWTService.createRefreshJWT(user);
             await sessionsRepository.saveToken(refreshToken);
+            response.clearCookie("refreshToken");
             response.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 sameSite: 'strict',
@@ -29,6 +30,7 @@ AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, res
         } else {
             response.status(401).send();
         }
+
     }
     catch (error) {
         console.log(error);
