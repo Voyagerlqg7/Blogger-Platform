@@ -1,12 +1,13 @@
 import {Post} from "../entities/Post";
 import {Comment} from "../entities/Comment";
+import {UpdatePostByIdDTO,CreatePostByBlogIdDTO,CreateCommentDTO} from "./DTO/PostDTO";
 
 export interface IPostRepository {
     getAllPosts():Post;
-    getPostById(id:string):Post;
-    deletePostById(id:string):void;
-    updatePostById(id:string, title:string, shortDescription:string,content:string, blogId:string):Post;
-    createPostByBlogId(blogId:string, title:string,shortDescription:string, content:string):Post;
-    createNewCommentUnderPost(postId:string, content:string):Comment;
+    getPostById(postId:string):Post;
+    deletePostById(postId:string):void;
+    updatePostById(postId:string, dto:UpdatePostByIdDTO):Post;
+    createPostByBlogId(dto:CreatePostByBlogIdDTO):Post;
+    createNewCommentUnderPost(postId:string, dto:CreateCommentDTO):Comment;
     getAllCommentsByPostId(postId:string):Comment;
 }

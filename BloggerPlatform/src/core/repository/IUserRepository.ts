@@ -1,7 +1,7 @@
 import {User} from "../entities/User";
-
+import {UserDTO} from "./DTO/UserDTO";
 export interface IUserRepository {
-    createUser(login: string, password:string, email:string): User;
+    createUser(dto:UserDTO): User;
     getAllUsers(): User;
-    deleteUser(id: string): void;
+    deleteUser(userId: string): void;
 }
