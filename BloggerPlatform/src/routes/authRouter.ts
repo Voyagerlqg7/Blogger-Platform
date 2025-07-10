@@ -9,7 +9,6 @@ import {NewUserTemplate} from "./UserRouter";
 import {emailResendingValidation} from "../Validator/EmailValidation";
 import {sessionsRepository} from "../Repository/sessionsRepository";
 import {validateRefreshToken} from "../Validator/validateRefToken";
-import {settings} from "../application/settings";
 export const AuthRouter = Router();
 
 AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, response:Response) => {
