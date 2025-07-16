@@ -1,6 +1,6 @@
 export class Blog {
     constructor(
-        public readonly id: number,
+        public readonly id: string,
         public name: string,
         public description: string,
         public websiteUrl: string,
