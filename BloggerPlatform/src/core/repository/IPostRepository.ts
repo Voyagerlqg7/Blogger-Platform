@@ -3,11 +3,11 @@ import {Comment} from "../entities/Comment";
 import {UpdatePostByIdDTO,CreatePostByBlogIdDTO,CreateCommentDTO} from "./DTO/PostDTO";
 
 export interface IPostRepository {
-    getAllPosts():Post;
-    getPostById(postId:string):Post;
-    deletePostById(postId:string):void;
-    updatePostById(postId:string, dto:UpdatePostByIdDTO):Post;
-    createPostByBlogId(dto:CreatePostByBlogIdDTO):Post;
-    createNewCommentUnderPost(postId:string, dto:CreateCommentDTO):Comment;
-    getAllCommentsByPostId(postId:string):Comment;
+    getAllPosts():Promise<Post[]>;
+    getPostById(postId:string):Promise<Post>;
+    deletePostById(postId:string):Promise<void>;
+    updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<Post>;
+    createPostByBlogId(dto:CreatePostByBlogIdDTO):Promise<Post>;
+    createNewCommentUnderPost(postId:string, dto:CreateCommentDTO):Promise<Comment>;
+    getAllCommentsByPostId(postId:string):Promise<Comment>;
 }
