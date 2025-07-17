@@ -5,11 +5,10 @@ export class CreateBlogDTO{
         readonly websiteUrl:string
     ){}
 }
-export class CreatePostForSpecialBlogDTO{
+export class UpdateBlogDTO{
     constructor(
-        readonly blogId: string,
-        readonly title:string,
-        readonly shortDescription:string,
-        readonly content:string
+        readonly name:string,
+        readonly description:string,
+        readonly websiteUrl:string
     ){}
 }
