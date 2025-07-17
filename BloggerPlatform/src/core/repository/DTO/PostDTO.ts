@@ -14,12 +14,6 @@ export class CreatePostByBlogIdDTO {
         readonly content:string
     ) {}
 }
-export class CreateCommentDTO {
-    constructor(
-        readonly content:string,
-    ) {
-    }
-}
 export class CreatePostForSpecialBlogDTO{
     constructor(
         readonly blogId: string,
