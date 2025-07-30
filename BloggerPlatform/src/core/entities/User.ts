@@ -7,4 +7,3 @@ export class User{
         public createdAt: string,
     ) {}
 }
-
