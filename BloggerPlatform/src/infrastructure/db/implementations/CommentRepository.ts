@@ -41,7 +41,7 @@ export class CommentRepository {
                 )
         }
     }
-    async save(comment: Comment): Promise<void> {
+    async save(postId: string, comment: Comment): Promise<void> {
         const commentToSave: CommentDB = {
             _id:new ObjectId(comment.id),
             content: comment.content,
@@ -50,6 +50,7 @@ export class CommentRepository {
                 userLogin: comment.commentatorInfo.userLogin
             },
             createdAt: new Date(comment.createdAt),
+            postId: new ObjectId(postId),
         }
     }
 

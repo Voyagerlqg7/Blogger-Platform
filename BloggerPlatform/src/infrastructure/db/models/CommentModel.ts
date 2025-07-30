@@ -8,4 +8,5 @@ export type CommentDB = {
         userLogin: string
     },
     createdAt: Date,
+    postId: ObjectId
 }
