@@ -4,9 +4,8 @@ export type CommentDB = {
     _id: ObjectId,
     content: string,
     commentatorInfo: {
-        "userId": string,
-        "userLogin": string
+        userId: string,
+        userLogin: string
     },
     createdAt: Date,
-    postId: ObjectId,
 }

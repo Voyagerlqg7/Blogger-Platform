@@ -7,7 +7,7 @@ export class BlogRepository {
     async getAllBlogs(): Promise<Blog[]> {
 
     }
-    async getBlogById(id: string): Promise<Blog | null> {
+    async getBlog(id: string): Promise<Blog | null> {
         const blogDB = await blogsDBCollection.findOne({ _id: new ObjectId(id) });
         if (!blogDB) return null;
 
@@ -20,7 +20,7 @@ export class BlogRepository {
             blogDB.isMembership
         );
     }
-    async deleteBlogById(id: string): Promise<void | null> {
+    async deleteBlog(id: string): Promise<void | null> {
         const blogDB = await blogsDBCollection.findOne({ _id: new ObjectId(id) });
         if (!blogDB) return null;
         else {

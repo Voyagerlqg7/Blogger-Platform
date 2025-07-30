@@ -2,8 +2,10 @@ export class Comment {
     constructor(
         public readonly id: string,
         public content: string,
-        public userName: string,
-        public userLogin: string,
+        public commentatorInfo:{
+            userId: string,
+            userLogin: string,
+        },
         public createdAt: string,
     ){}
 }
