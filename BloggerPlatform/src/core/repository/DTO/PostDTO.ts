@@ -14,11 +14,3 @@ export class CreatePostByBlogIdDTO {
         readonly content:string
     ) {}
 }
-export class CreatePostForSpecialBlogDTO{
-    constructor(
-        readonly blogId: string,
-        readonly title:string,
-        readonly shortDescription:string,
-        readonly content:string
-    ){}
-}

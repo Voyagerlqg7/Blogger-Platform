@@ -4,11 +4,11 @@ import {CommentDB} from "../models/CommentModel";
 import {commentDBCollection} from "../collections/collections";
 
 export class CommentRepository {
-    async getAllComments(): Promise<Comment[]> {
+    async getAllCommentsByPostID(): Promise<Comment[]> {
 
     }
 
-    async getComment(id: string): Promise<Comment | null> {
+    async getCommentById(id: string): Promise<Comment | null> {
         const commentDB = await commentDBCollection.findOne({ _id: new ObjectId(id) });
         if (!commentDB) return null;
         return new Comment(
@@ -21,14 +21,14 @@ export class CommentRepository {
             commentDB.createdAt.toISOString()
         )
     }
-    async deleteComment(id: string): Promise<void | null> {
+    async deleteCommentById(id: string): Promise<void | null> {
         const commentDB = commentDBCollection.findOne({ _id: new ObjectId(id) });
         if (!commentDB) return null;
         else{
             await commentDBCollection.deleteOne({ _id: new ObjectId(id) });
         }
     }
-    async updateComment(id: string, comment: Comment): Promise<void | null> {
+    async updateCommentById(id: string): Promise<void | null> {
         const commentDB = await commentDBCollection.findOne({ _id: new ObjectId(id) });
         if (!commentDB) return null;
         else{
@@ -41,7 +41,7 @@ export class CommentRepository {
                 )
         }
     }
-    async save(postId: string, comment: Comment): Promise<void> {
+    async createCommentByPostID(postId: string, comment:Comment): Promise<void> {
         const commentToSave: CommentDB = {
             _id:new ObjectId(comment.id),
             content: comment.content,
@@ -52,6 +52,7 @@ export class CommentRepository {
             createdAt: new Date(comment.createdAt),
             postId: new ObjectId(postId),
         }
+        await commentDBCollection.insertOne(commentToSave);
     }
 
 }

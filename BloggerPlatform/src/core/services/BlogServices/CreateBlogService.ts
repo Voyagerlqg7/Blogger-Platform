@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid'
 
 
 export class CreateBlogService {
-    constructor(private readonly blogRepository: IBlogRepository) {}
+    constructor(readonly blogRepository: IBlogRepository) {}
     async execute(dto:CreateBlogDTO): Promise<Blog> {
         const id = uuidv4();
         const newBlog = new Blog(
@@ -13,8 +13,8 @@ export class CreateBlogService {
             dto.name,
             dto.description,
             dto.websiteUrl,
-            false,
-            new Date().toISOString()
+            new Date().toISOString(),
+            false
         );
         return await this.blogRepository.createBlog(newBlog);
     }
