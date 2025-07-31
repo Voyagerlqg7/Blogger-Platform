@@ -4,7 +4,7 @@ export class Blog {
         public name: string,
         public description: string,
         public websiteUrl: string,
-        public createdAt: Date,
+        public createdAt: string,
         public isMembership: boolean,
     )
     {}

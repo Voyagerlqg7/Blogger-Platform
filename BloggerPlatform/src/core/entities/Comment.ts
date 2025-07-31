@@ -6,6 +6,6 @@ export class Comment {
             userId: string,
             userLogin: string,
         },
-        public createdAt: Date,
+        public createdAt: string,
     ){}
 }

@@ -1,7 +1,6 @@
 import { Comment } from "../../entities/Comment";
 import { ICommentsRepository } from "../../repository/ICommentsRepository";
 import { v4 as uuidv4 } from 'uuid';
-import { CreateCommentDTO } from "../../repository/DTO/CreateCommentDTO";
 import {IPostRepository} from "../../repository/IPostRepository";
 
 export class CreateNewCommentUnderPostService {
@@ -14,7 +13,17 @@ export class CreateNewCommentUnderPostService {
     ): Promise<Comment | null> {
         const post = await this.postRepository.getPostById(postId);
         if (!post) throw new Error("Could not find post with id " + postId);
-        return await this.commentRepository.createCommentByPostID(postId, content);
+
+        const id = uuidv4();
+        const newComment = {
+            id,
+            content,
+            commentatorInfo:{
+                
+            },
+            createdAt: new Date().toISOString()
+        }
+        return await this.commentRepository.createCommentByPostID(postId, newComment);
     }
 
 }

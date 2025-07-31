@@ -24,11 +24,4 @@ export class BlogMapper {
             isMembership: blog.isMembership
         };
     }
-
-    static toDTO(blog: Blog): BlogViewDTO {
-        return {
-            id: blog.id,
-            name: blog.name,
-        };
-    }
 }

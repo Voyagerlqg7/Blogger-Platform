@@ -8,6 +8,6 @@ export interface IPostRepository {
     deletePostById(postId:string):Promise<void|null>;
     updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<Post>;
     createPostByBlogId(dto:CreatePostByBlogIdDTO):Promise<Post>;
-    getAllCommentsByPostId(postId:string):Promise<Comment>;
+    getAllCommentsByPostId(postId:string):Promise<Comment[]>;
     getAllPostsByBlogId(blogId:string):Promise<Post[]>;
 }

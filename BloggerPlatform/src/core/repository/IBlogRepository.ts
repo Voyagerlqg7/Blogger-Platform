@@ -1,5 +1,5 @@
 import {Blog} from "../entities/Blog";
-import {CreateBlogDTO, UpdateBlogDTO} from "./DTO/BlogDTO";
+import {UpdateBlogDTO} from "./DTO/BlogDTO";
 
 export interface IBlogRepository {
     getAllBlogs(): Promise<Blog[]>;
