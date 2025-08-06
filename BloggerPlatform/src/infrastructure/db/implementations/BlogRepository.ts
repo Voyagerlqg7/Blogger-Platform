@@ -11,7 +11,7 @@ export class BlogRepository implements IBlogRepository {
     }
     async createBlog(blog:Blog): Promise<Blog> {
         const newBlog = BlogMapper.toPersistence(blog);
-        await blogsDBCollection.insertOne(newBlog);
+        await blogsDBCollection.insertOne(BlogMapper.toPersistence(blog));
         return BlogMapper.toDomain(newBlog);
     }
     async getBlogById(blogId:string):Promise<Blog | null> {

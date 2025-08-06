@@ -20,6 +20,7 @@ export class CreatePostByBlogIDService {
             dto.content,
             dto.shortDescription,
             dto.blogId,
+            blog.name,
             new Date().toISOString()
         )
         return await this.postRepository.createPostByBlogId(newPost);

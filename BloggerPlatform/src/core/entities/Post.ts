@@ -5,6 +5,7 @@ export class Post {
                 public content: string,
                 public shortDescription: string,
                 public blogId: string,
+                public blogName: string,
                 public createdAt: string,
     ){}
 }

@@ -10,8 +10,6 @@ export class UpdatePostByBlogIdService {
         if (!post) {
             throw new Error("Post not found");
         }
-
-        // Делаем update через репозиторий
         return await this.postRepository.updatePostById(postId, dto);
     }
 }
