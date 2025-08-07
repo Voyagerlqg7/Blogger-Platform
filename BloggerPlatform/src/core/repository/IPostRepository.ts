@@ -7,7 +7,7 @@ export interface IPostRepository {
     getPostById(postId:string):Promise<Post|null>;
     deletePostById(postId:string):Promise<void | null>;
     updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<void>;
-    createPost(dto:CreatePostDTO):Promise<Post>;
+    createPost(post:Post):Promise<Post>;
     getAllCommentsByPostID(postId:string):Promise<Comment[]>;
     createCommentByPostID(postId:string, comment:Comment):Promise<Comment>;
 }

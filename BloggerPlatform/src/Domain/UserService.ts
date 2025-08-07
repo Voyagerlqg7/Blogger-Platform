@@ -2,11 +2,11 @@ import {ObjectId} from "mongodb";
 import bcrypt from "bcryptjs"
 import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
 import {UsersDBController} from "../Repository/UserDBController";
-import {UsersPage, UserViewModel} from "../Objects/User";
-import {UserDBType} from "../Objects/User";
 import { v4 as uuidv4 } from "uuid";
 import {add} from "date-fns/add";
 import {EmailService} from "./EmailService";
+import {UserDB} from "../infrastructure/db/models/UserModel";
+import {UserViewModel} from "../infrastructure/db/models/UserModel";
 
 
 export const UserService = {
@@ -17,18 +17,18 @@ export const UserService = {
       const passwordSalt = await bcrypt.genSalt(10);
       const passwordHash = await this._generateHash(user.password, passwordSalt);
 
-      const newUser : UserDBType={
+      const newUser : UserDB={
           _id: new ObjectId(),
           accountData: {
               login: user.login,
               email: user.email,
               passwordHash,
               passwordSalt,
-              createdAt: new Date().toISOString()
+              createdAt: new Date()
           },
           emailConfirmation: {
               confirmationCode: "Created by admin from POST Route",
-              expiresAt: new Date().toISOString(),
+              expiresAt: new Date(),
               isConfirmed: true
           }
       }
@@ -38,18 +38,18 @@ export const UserService = {
         const passwordSalt = await bcrypt.genSalt(10);
         const passwordHash = await this._generateHash(user.password, passwordSalt);
 
-        const newUser : UserDBType={
+        const newUser : UserDB={
             _id: new ObjectId(),
             accountData: {
                 login: user.login,
                 email: user.email,
                 passwordHash,
                 passwordSalt,
-                createdAt: new Date().toISOString()
+                createdAt: new Date()
             },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
-                expiresAt: add(new Date(), { minutes: 5 }).toISOString(),
+                expiresAt: add(new Date(), { minutes: 5 }),
                 isConfirmed: false
             }
         }

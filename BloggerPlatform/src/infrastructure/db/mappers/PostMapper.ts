@@ -20,7 +20,7 @@ export class PostMapper{
             title: post.title,
             content: post.content,
             shortDescription: post.shortDescription,
-            blogId: post.blogId,
+            blogId: new ObjectId(post.blogId),
             blogName:post.blogName,
             createdAt: new Date(post.createdAt),
         }

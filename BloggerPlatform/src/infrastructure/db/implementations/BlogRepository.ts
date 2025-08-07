@@ -9,7 +9,8 @@ import {Post} from "../../../core/entities/Post";
 
 export class BlogRepository implements IBlogRepository {
     async getAllBlogs(): Promise<Blog[]> {
-
+        const blogs = await blogsDBCollection.find({}).sort({ createdAt: -1 }).toArray();
+        return blogs.map(BlogMapper.toDomain);
     }
     async createBlog(blog:Blog): Promise<Blog> {
         const newBlog = BlogMapper.toPersistence(blog);
