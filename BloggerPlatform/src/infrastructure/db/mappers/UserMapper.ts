@@ -1,5 +1,6 @@
 import {User} from "../../../core/entities/User";
 import {UserDB} from "../models/UserModel";
+import {UserViewModel} from "../models/UserModel";
 import {ObjectId} from "mongodb";
 
 export class UserMapper {
@@ -10,5 +11,13 @@ export class UserMapper {
             userDB.accountData.email,
             userDB.accountData.createdAt
         )
+    }
+    static toViewModel(user: User): UserViewModel {
+        return {
+            id: user.id,
+            login: user.login,
+            email: user.email,
+            createdAt: new Date(user.createdAt),
+        };
     }
 }

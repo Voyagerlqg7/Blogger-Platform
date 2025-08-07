@@ -6,7 +6,7 @@ export class UpdatePostByIdDTO {
         readonly blogId:string
     ) {}
 }
-export class CreatePostByBlogIdDTO {
+export class CreatePostDTO {
     constructor(
         readonly blogId:string,
         readonly title:string,
