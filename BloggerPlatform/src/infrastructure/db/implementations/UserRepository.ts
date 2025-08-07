@@ -1,19 +1,18 @@
 import {IUserRepository} from "../../../core/repository/IUserRepository";
 import {User} from "../../../core/entities/User";
-import {UserDB} from "../models/UserModel";
-
+import {ObjectId} from "mongodb"
 
 export class UserRepository implements IUserRepository {
-    async createBlogById(blogId:string):Promise<User> {
-
-    }
-    async getAllBlogsByUserId(blogId:string):Promise<Users[]> {
-
-    }
     async deleteUser():Promise<void> {
 
     }
     async getUserById(blogId:string):Promise<User> {
+
+    }
+    async createUser(user:User):Promise<User> {
+
+    }
+    async getAllUsers():Promise<User[]> {
 
     }
 }
