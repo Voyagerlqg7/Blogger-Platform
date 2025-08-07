@@ -10,8 +10,10 @@ import {CommentDB} from "../models/CommentModel";
 
 export class PostRepository implements IPostRepository {
     async getAllPosts(): Promise<Post[]> {
-
+        const posts = await postsDBCollection.find().sort({ createdAt: -1 }).toArray();
+        return posts.map(PostMapper.toDomain);
     }
+
     async getPostById(postId:string):Promise<Post | null> {
         const post = await postsDBCollection.findOne({_id: new ObjectId(postId)});
         if (!post) {
@@ -26,8 +28,13 @@ export class PostRepository implements IPostRepository {
         await postsDBCollection.updateOne({_id: new ObjectId(postId)},
             {$set: {title:dto.title, shortDescription:dto.shortDescription, content:dto.content, blogId: dto.blogId}});
     }
-    async getAllCommentsByPostID(postId:string):Promise<Comment[]>{
+    async getAllCommentsByPostID(postId: string): Promise<Comment[]> {
+        const comments = await commentDBCollection
+            .find({ postId: new ObjectId(postId) })
+            .sort({ createdAt: -1 })
+            .toArray();
 
+        return comments.map(CommentMapper.toDomain);
     }
     async createCommentByPostID(postId:string, comment:Comment):Promise<Comment>{
         const newComment = CommentMapper.toPersistence(postId, comment);

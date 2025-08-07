@@ -9,13 +9,13 @@ export class UserService {
     async getUserById(userId: string): Promise<User|null> {
         return await this.userRepository.getUserById(userId);
     }
-    async createUser(userDTO:UserDTO): Promise<User> {
+    async createUser(dto:UserDTO): Promise<User> {
         const id = uuidv4();
         const newUser = new User(
             id,
-            userDTO.login,
-            userDTO.email,
-            userDTO.password,
+            dto.login,
+            dto.email,
+            dto.password,
             new Date().toISOString(),
         )
         return await this.userRepository.createUser(newUser);

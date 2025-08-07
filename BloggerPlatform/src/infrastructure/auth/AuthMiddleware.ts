@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { JWTService } from './JWTService';
-import { GetUserByIdService } from '../../core/services/UserServices/GetUserByIDService';
+import {UserService} from "../../core/services/UserService";
 import {UserRepository} from "../db/implementations/UserRepository";
 
 export const authMiddleware = async (
@@ -25,8 +25,8 @@ export const authMiddleware = async (
     }
 
     const userRepository = new UserRepository();
-    const getUserByIdService = new GetUserByIdService(userRepository);
-    const user = await getUserByIdService.execute(userId);
+    const getUserByIdService = new UserService(userRepository);
+    const user = await getUserByIdService.getUserById(userId);
 
     if (!user) {
         res.sendStatus(401);

@@ -9,7 +9,7 @@ export class PostMapper{
             postDB.title,
             postDB.content,
             postDB.shortDescription,
-            postDB.blogId,
+            postDB.blogId.toString(),
             postDB.blogName,
             postDB.createdAt.toISOString()
         )

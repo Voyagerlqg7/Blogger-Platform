@@ -11,7 +11,7 @@ export class BlogService {
     async getAllBlogs(): Promise<Blog[]>{
         return await this.blogRepository.getAllBlogs();
     }
-    async createBlog(blog:Blog, dto:CreateBlogDTO):Promise<Blog>{
+    async createBlog(dto:CreateBlogDTO):Promise<Blog>{
         const id = uuidv4();
         const newBlog = new Blog(
             id,
@@ -45,7 +45,7 @@ export class BlogService {
             blog.name,
             new Date().toISOString()
         )
-        return await this.createNewPostForSpecialBlog(newPost);
+        return await this.blogRepository.createNewPostForSpecialBlog(newPost);
 
     }
     async getBlogById(blogId:string):Promise<Blog | null> {

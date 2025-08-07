@@ -16,7 +16,7 @@ export class CommentService {
     async updateCommentById(commentId:string, content:string):Promise<void> {
         const comment = await this.commentRepository.getCommentById(commentId);
         if (!comment) {
-            throw new Error("Post not found");
+            throw new Error("Comment not found");
         }
         return await this.commentRepository.updateCommentById(commentId, content);
     }

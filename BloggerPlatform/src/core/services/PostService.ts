@@ -18,22 +18,26 @@ export class PostService {
         }
         return await this.postRepository.getAllCommentsByPostID(postId);
     }
-    async createCommentUnderPost(postId:string, content:string):Promise<Comment> {
+    async createCommentUnderPost(
+        postId: string,
+        content: string,
+        userId: string,
+        userLogin: string
+    ): Promise<Comment> {
         const post = await this.postRepository.getPostById(postId);
         if (!post) throw new Error("Could not find post with id " + postId);
 
         const id = uuidv4();
-        const newComment = {
+        const newComment: Comment = new Comment(
             id,
             content,
-            commentatorInfo:{
-
-            },
-            createdAt: new Date().toISOString()
-        }
-        return await this.postRepository.createCommentByPostID(postId, newComment);
+            { userId, userLogin },
+            new Date().toISOString()
+        );
+        return this.postRepository.createCommentByPostID(postId, newComment);
     }
-    async createPost(dto:CreatePostDTO){
+
+    async createPost(dto: CreatePostDTO): Promise<Post> {
         const blog = await this.blogRepository.getBlogById(dto.blogId);
         if (!blog) {
             throw new Error("Cannot find blog with id 'blogId': " + dto.blogId);
@@ -65,7 +69,7 @@ export class PostService {
         if (!post) {
             throw new Error("Post not found");
         }
-        return await this.deletePostById(postId);
+        return await this.postRepository.deletePostById(postId);
     }
-    
+
 }

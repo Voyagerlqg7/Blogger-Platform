@@ -11,7 +11,7 @@ export type UserDB = {
     },
     emailConfirmation: {
         confirmationCode: string,
-        expiresAt: string,
+        expiresAt: Date,
         isConfirmed: boolean
     }
 }

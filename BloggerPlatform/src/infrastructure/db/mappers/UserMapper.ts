@@ -4,14 +4,16 @@ import {UserViewModel} from "../models/UserModel";
 import {ObjectId} from "mongodb";
 
 export class UserMapper {
-    static toDomain(userDB: UserDB):User{
+    static toDomain(userDB: UserDB): User {
         return new User(
             userDB._id.toString(),
             userDB.accountData.login,
             userDB.accountData.email,
-            userDB.accountData.createdAt
-        )
+            userDB.accountData.passwordHash, // ← обязательно!
+            userDB.accountData.createdAt.toISOString()
+        );
     }
+
     static toViewModel(user: User): UserViewModel {
         return {
             id: user.id,

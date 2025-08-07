@@ -6,9 +6,13 @@ import {ICommentsRepository} from "../../../core/repository/ICommentsRepository"
 
 
 export class CommentRepository implements ICommentsRepository {
-    async getAllCommentsByPostID(postId:string):Promise<Comment[]> {
+    async getAllCommentsByPostID(postId: string): Promise<Comment[]> {
+        const comments = await commentDBCollection
+            .find({ postId: new ObjectId(postId) })
+            .sort({ createdAt: -1 })
+            .toArray();
 
-
+        return comments.map(CommentMapper.toDomain);
     }
     async getCommentById(commentId:string):Promise<Comment | null> {
         const comment = await commentDBCollection.findOne({_id:new ObjectId(commentId)});

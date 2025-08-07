@@ -13,7 +13,7 @@ export class BlogRepository implements IBlogRepository {
     }
     async createBlog(blog:Blog): Promise<Blog> {
         const newBlog = BlogMapper.toPersistence(blog);
-        await blogsDBCollection.insertOne(BlogMapper.toPersistence(blog));
+        await blogsDBCollection.insertOne(newBlog);
         return BlogMapper.toDomain(newBlog);
     }
     async getBlogById(blogId:string):Promise<Blog | null> {
@@ -29,9 +29,11 @@ export class BlogRepository implements IBlogRepository {
             { $set: { name: dto.name, description: dto.description, websiteUrl: dto.websiteUrl } }
         );
     }
-    async getAllPostsFromBlog(blogId:string):Promise<Post[]>{
-
+    async getAllPostsFromBlog(blogId: string): Promise<Post[]> {
+        const posts = await postsDBCollection.find({blogId: new ObjectId(blogId) }).toArray();
+        return posts.map(PostMapper.toDomain);
     }
+
     async createNewPostForSpecialBlog(post:Post):Promise<Post>{
         const newPost = PostMapper.toPersistence(post);
         await postsDBCollection.insertOne(newPost);
