@@ -30,10 +30,10 @@ export class BlogService {
         }
         return await this.blogRepository.getAllPostsFromBlog(blogId);
     }
-    async createNewPostForSpecialBlog(dto:CreatePostDTO):Promise<Post>{
-        const blog = await this.blogRepository.getBlogById(dto.blogId);
+    async createNewPostForSpecialBlog(blogId:string, dto:CreatePostDTO):Promise<Post>{
+        const blog = await this.blogRepository.getBlogById(blogId);
         if (!blog) {
-            throw new Error("Cannot find blog with id 'blogId': " + dto.blogId);
+            throw new Error("Cannot find blog with id 'blogId': " + blogId);
         }
         const id = uuidv4();
         const newPost = new Post(
@@ -41,7 +41,7 @@ export class BlogService {
             dto.title,
             dto.content,
             dto.shortDescription,
-            dto.blogId,
+            blogId,
             blog.name,
             new Date().toISOString()
         )

@@ -1,10 +1,11 @@
 import {PostDBController, postsDBCollection} from "../Repository/PostDBController";
 import {blogsDBCollection} from "../Repository/BlogsDBController";
-import {PostsDB, PostsPage} from "../Objects/Posts";
 import {ObjectId} from "mongodb";
 import {PostsQueryParams} from "../routes/PostsRoutes";
-import {CommentDB, NewComment, CommentViewModel} from "../Objects/Comments";
-import {CommentPage} from "../Objects/Comments";
+import {PostsDB} from "../infrastructure/db/models/PostModel";
+import {Comment} from "../core/entities/Comment";
+import {CommentDB} from "../infrastructure/db/models/CommentModel";
+import {v4 as uuidv4} from "uuid";
 
 
 export const PostsService = {
@@ -40,19 +41,20 @@ export const PostsService = {
     async UpdatePostByID(id: string, post: PostsDB): Promise<PostsDB | undefined> {
         return await PostDBController.UpdatePostByID(id, post);
     },
-    async CreateComment(text:NewComment, userId:string, userLogin:string, postId:string):Promise<CommentViewModel| undefined>{
+    async CreateComment(text:string, userId:string, userLogin:string, postId:string):Promise<CommentViewModel| undefined>{
         const existingPost = await postsDBCollection.findOne({_id: new ObjectId(postId)});
         if(!existingPost) {
             return undefined;
         }
+        const id = uuidv4();
         const newComment:CommentDB = {
-            id: "string",
-            content: text.content,
+            id: ,
+            content: text,
             commentatorInfo: {
                 userId: userId,
                 userLogin: userLogin
             },
-            createdAt: new Date().toISOString(),
+            createdAt: new Date(),
             postId: new ObjectId(postId)
         }
         const result = await PostDBController.AddCommentUnderPost(newComment);
