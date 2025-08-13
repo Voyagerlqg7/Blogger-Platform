@@ -41,3 +41,12 @@ export const createCommentByPostId = async (req:Request, res:Response) => {
         //res.status(201).send(comment);
     }
 }
+
+export const deletePostById = async (req:Request, res:Response) => {
+    const post = postService.getPostById(req.params.id);
+    if(!post){res.status(404).send("Post not found")}
+    else{
+        await postService.deletePostById(req.params.id);
+        res.status(204).send();
+    }
+}

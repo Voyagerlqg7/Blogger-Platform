@@ -1,6 +1,5 @@
 import {Request, Response} from 'express';
 import {commentService} from "../composition";
-import {commentDBCollection} from "../db/collections/collections";
 
 export const getCommentById = async (req:Request, res: Response)=> {
     const comment = await commentService.getCommentById(req.params.id);
