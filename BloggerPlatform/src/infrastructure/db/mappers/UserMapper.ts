@@ -13,7 +13,6 @@ export class UserMapper {
             userDB.accountData.createdAt.toISOString()
         );
     }
-
     static toViewModel(user: User): UserViewModel {
         return {
             id: user.id,

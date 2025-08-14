@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import {User} from "../../core/entities/User";
-import {settings} from "../applicationSettings/settings";
+import {settings} from "../settings/settings";
 
 export class JWTService {
     async createAccessToken(user:User): Promise<string> {

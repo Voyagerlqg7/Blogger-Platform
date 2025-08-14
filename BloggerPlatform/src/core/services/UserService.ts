@@ -30,4 +30,13 @@ export class UserService {
     async getAllUsers(): Promise<User[]> {
         return await this.userRepository.getAllUsers();
     }
+    async findByLoginOrEmail(loginOrEmail:string): Promise<User|null>{
+        return await this.userRepository.findByLoginOrEmail(loginOrEmail);
+    }
+    async updateStatusConfirmation(user:User):Promise<void>{
+        return await this.userRepository.updateStatusConfirmation(user);
+    }
+    async updateCodeConfirmationAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>{
+        return await this.userRepository.updateCodeConfirmationAndExpiresTime(userId,newCode,newExpiresAt);
+    }
 }

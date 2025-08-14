@@ -1,6 +1,6 @@
 import {MongoClient} from 'mongodb';
 import * as dotenv from 'dotenv';
-import {settings} from "../applicationSettings/settings";
+import {settings} from "../settings/settings";
 
 dotenv.config();
 const mongoURI = settings.MONGODB_URI;
