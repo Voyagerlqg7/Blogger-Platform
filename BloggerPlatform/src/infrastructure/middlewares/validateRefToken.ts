@@ -1,7 +1,7 @@
 import {JWTService} from "../application/JWTService";
 import {Request, Response, NextFunction} from "express";
-import {sessionsRepository} from "../Repository/sessionsRepository";
-import {UserService} from "../Domain/UserService";
+import {sessionsRepository} from "../../Repository/sessionsRepository";
+import {UserService} from "../../Domain/UserService";
 import jwt from "jsonwebtoken";
 import {settings} from "../application/settings";
 

@@ -1,5 +1,5 @@
 import {body, ValidationChain} from "express-validator";
-import { UsersDBController } from "../Repository/UserDBController"
+import { UsersDBController } from "../../Repository/UserDBController"
 
 export const usersValidationMiddleware: ValidationChain[] = [
     body('login')

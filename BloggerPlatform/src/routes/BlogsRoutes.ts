@@ -1,9 +1,9 @@
 import {Request, Response, Router} from 'express';
 import {BlogsService} from "../Domain/BlogsService";
-import {blogValidationMiddleware} from "../Validator/BlogsValidation";
-import {postValidationMiddleware} from "../Validator/PostsValidation";
+import {blogValidationMiddleware} from "../infrastructure/middlewares/BlogsValidation";
+import {postValidationMiddleware} from "../infrastructure/middlewares/PostsValidation";
 import {basicAuthMiddleware} from "../Authorization/BasicAuthMiddleware";
-import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
+import {inputValidationMiddleware} from "../infrastructure/middlewares/input-validation-middleware";
 
 export const BlogsRouter = Router();
 export interface BlogsPaginationParams {

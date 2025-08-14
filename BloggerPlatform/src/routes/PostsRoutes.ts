@@ -1,9 +1,9 @@
 import {Request, Response, Router} from 'express';
-import {postValidationMiddleware} from "../Validator/PostsValidation";
+import {postValidationMiddleware} from "../infrastructure/middlewares/PostsValidation";
 import {basicAuthMiddleware} from "../Authorization/BasicAuthMiddleware";
-import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
+import {inputValidationMiddleware} from "../infrastructure/middlewares/input-validation-middleware";
 import {PostsService} from "../Domain/PostsService";
-import {commentsValidationMiddleware} from "../Validator/CommentsValidation";
+import {commentsValidationMiddleware} from "../infrastructure/middlewares/CommentsValidation";
 import {AuthMiddleware} from "../Authorization/AuthMiddleware";
 
 

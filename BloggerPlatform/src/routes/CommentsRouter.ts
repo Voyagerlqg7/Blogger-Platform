@@ -1,8 +1,8 @@
 import express, {Request, Response, Router} from "express";
-import {commentsValidationMiddleware} from "../Validator/CommentsValidation";
+import {commentsValidationMiddleware} from "../infrastructure/middlewares/CommentsValidation";
 import {CommentsService} from "../Domain/CommentsService";
 import {AuthMiddleware} from "../Authorization/AuthMiddleware";
-import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
+import {inputValidationMiddleware} from "../infrastructure/middlewares/input-validation-middleware";
 
 
 export const CommentRouter = Router();

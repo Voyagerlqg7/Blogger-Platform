@@ -2,13 +2,13 @@ import {Request, Response, Router} from 'express';
 import {UserService} from "../Domain/UserService";
 import {JWTService} from "../application/JWTService";
 import {AuthMiddleware} from "../Authorization/AuthMiddleware";
-import {inputValidationMiddleware} from "../Validator/input-validation-middleware";
-import {usersValidationMiddleware} from "../Validator/UserValidation";
+import {inputValidationMiddleware} from "../infrastructure/middlewares/input-validation-middleware";
+import {usersValidationMiddleware} from "../infrastructure/middlewares/UserValidation";
 import {EmailService} from "../Domain/EmailService";
 import {NewUserTemplate} from "./UserRouter";
-import {emailResendingValidation} from "../Validator/EmailValidation";
+import {emailResendingValidation} from "../infrastructure/middlewares/EmailValidation";
 import {sessionsRepository} from "../Repository/sessionsRepository";
-import {validateRefreshToken} from "../Validator/validateRefToken";
+import {validateRefreshToken} from "../infrastructure/middlewares/validateRefToken";
 export const AuthRouter = Router();
 
 AuthRouter.post('/login', inputValidationMiddleware, async (request:Request, response:Response) => {
