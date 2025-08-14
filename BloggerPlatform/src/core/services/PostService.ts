@@ -13,9 +13,7 @@ export class PostService {
     }
     async getAllCommentsFromPost(postId:string):Promise<Comment[]> {
         const post = await this.postRepository.getPostById(postId);
-        if (!post) {
-            throw new Error("Post not found.");
-        }
+        if (!post) {throw new Error("Post not found.");}
         return await this.postRepository.getAllCommentsByPostID(postId);
     }
     async createCommentUnderPost(
@@ -39,9 +37,7 @@ export class PostService {
 
     async createPost(dto: CreatePostDTO): Promise<Post> {
         const blog = await this.blogRepository.getBlogById(dto.blogId);
-        if (!blog) {
-            throw new Error("Cannot find blog with id 'blogId': " + dto.blogId);
-        }
+        if (!blog) {throw new Error("Cannot find blog with id 'blogId': " + dto.blogId);}
         const id = uuidv4();
         const newPost = new Post(
             id,
@@ -59,16 +55,12 @@ export class PostService {
     }
     async updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<void>{
         const post = await this.postRepository.getPostById(postId);
-        if (!post) {
-            throw new Error("Post not found");
-        }
+        if (!post) {throw new Error("Post not found");}
         return await this.postRepository.updatePostById(postId, dto);
     }
     async deletePostById(postId:string):Promise<void | null>{
         const post = await this.postRepository.getPostById(postId);
-        if (!post) {
-            throw new Error("Post not found");
-        }
+        if (!post) {throw new Error("Post not found");}
         return await this.postRepository.deletePostById(postId);
     }
 
