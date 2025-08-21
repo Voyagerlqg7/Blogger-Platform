@@ -2,6 +2,7 @@ import {IUserRepository} from "../repository/IUserRepository";
 import {User} from "../entities/User";
 import {UserDTO} from "../repository/DTO/UserDTO";
 import {v4 as uuidv4} from "uuid";
+import { add } from "date-fns";
 
 
 export class UserService {
@@ -9,15 +10,21 @@ export class UserService {
     async getUserById(userId: string): Promise<User|null> {
         return await this.userRepository.getUserById(userId);
     }
-    async createUser(dto:UserDTO): Promise<User> {
+    async createUser(dto: UserDTO): Promise<User> {
         const id = uuidv4();
+        const code = uuidv4();
+        const expiresAt = add(new Date(), { seconds: 30 }).toISOString();
+
         const newUser = new User(
             id,
             dto.login,
             dto.email,
             dto.password,
             new Date().toISOString(),
-        )
+            code,
+            expiresAt,
+            false
+        );
         return await this.userRepository.createUser(newUser);
     }
     async deleteUser(userId: string): Promise<void> {

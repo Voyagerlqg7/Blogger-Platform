@@ -3,28 +3,33 @@ import {User} from "../../../core/entities/User";
 import {userDBCollection} from "../collections/collections";
 import {ObjectId} from "mongodb";
 import {UserMapper} from "../mappers/UserMapper";
-
+import {UserDB} from "../models/UserModel";
+import {PasswordService} from "../../applicationServices/PasswordService";
+const passService = new PasswordService();
 
 
 export class UserRepository implements IUserRepository {
     async createUser(user: User): Promise<User> {
-        const newUser = {
-            _id: new ObjectId(user.id),
+        const passwordSalt = await passService.generatePasswordSalt();
+        const passwordHash = await passService.generateHash(user.password, passwordSalt);
+
+        const newUser : UserDB={
+            _id: new ObjectId(),
             accountData: {
                 login: user.login,
                 email: user.email,
-                passwordHash: //Пока что в процессе переноса из старого
-                passwordSalt:
-                createdAt: new Date(user.createdAt),
+                passwordHash,
+                passwordSalt,
+                createdAt: new Date()
             },
             emailConfirmation: {
-                confirmationCode: "dummy-code",
-                expiresAt: new Date().toISOString(),
-                isConfirmed: true
+                confirmationCode: user.confirmationCode,
+                expiresAt: new Date(user.expiresAt),
+                isConfirmed: user.isConfirmed
             }
-        };
+        }
         await userDBCollection.insertOne(newUser);
-        return UserMapper.toDomain(newUser);
+        return user;
     }
 
     async getAllUsers(): Promise<User[]> {
@@ -41,29 +46,31 @@ export class UserRepository implements IUserRepository {
     async deleteUser(userId: string): Promise<void> {
         await userDBCollection.deleteOne({ _id: new ObjectId(userId) });
     }
-    async findByLoginOrEmail(loginOrEmail:string):Promise<User | null> {
-        try {
-            const user = await userDBCollection.findOne({
-                $or: [
-                    { "accountData.login": loginOrEmail },
-                    { "accountData.email": loginOrEmail }
-                ]
-            });
-            return UserMapper.toDomain(user);
-        }
-        catch (error){
-            console.error(error);
-            return null;
-        }
+    async findByLoginOrEmail(loginOrEmail: string): Promise<User | null> {
+        const user = await userDBCollection.findOne({
+            $or: [
+                { "accountData.login": loginOrEmail },
+                { "accountData.email": loginOrEmail }
+            ]
+        });
+        return user ? UserMapper.toDomain(user) : null;
     }
-    async updateStatusConfirmation(user:User) {
+
+    async findByCodeConfirmation(codeConfirmation: string): Promise<User | null> {
+        const user = await userDBCollection.findOne({
+            "emailConfirmation.confirmationCode": codeConfirmation
+        });
+        return user ? UserMapper.toDomain(user) : null;
+    }
+
+    async updateStatusConfirmation(user: User): Promise<void> {
         try {
             await userDBCollection.updateOne(
-                { _id: user._id},
+                { _id: new ObjectId(user.id)},
                 { $set: { "emailConfirmation.isConfirmed": true } }
             );
         } catch (error) {
-            console.error("Error to update confirmation status for userId:", user._id," ", error);
+            console.error("Error to update confirmation status for userId:", user.id," ", error);
         }
     }
     async updateCodeConfirmationAndExpiresTime(userId: string, newCode: string, newExpiresAt:string){

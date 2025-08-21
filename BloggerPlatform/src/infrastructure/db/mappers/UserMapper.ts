@@ -1,7 +1,6 @@
 import {User} from "../../../core/entities/User";
 import {UserDB} from "../models/UserModel";
 import {UserViewModel} from "../models/UserModel";
-import {ObjectId} from "mongodb";
 
 export class UserMapper {
     static toDomain(userDB: UserDB): User {
@@ -9,8 +8,11 @@ export class UserMapper {
             userDB._id.toString(),
             userDB.accountData.login,
             userDB.accountData.email,
-            userDB.accountData.passwordHash, // ← обязательно!
-            userDB.accountData.createdAt.toISOString()
+            userDB.accountData.passwordHash,
+            userDB.accountData.createdAt.toISOString(),
+            userDB.emailConfirmation.confirmationCode,
+            userDB.emailConfirmation.expiresAt.toISOString(),
+            userDB.emailConfirmation.isConfirmed
         );
     }
     static toViewModel(user: User): UserViewModel {

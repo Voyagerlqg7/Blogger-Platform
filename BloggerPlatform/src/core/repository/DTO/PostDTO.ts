@@ -9,6 +9,7 @@ export class UpdatePostByIdDTO {
 export class CreatePostDTO {
     constructor(
         readonly title:string,
+        readonly blogId:string,
         readonly shortDescription:string,
         readonly content:string
     ) {}

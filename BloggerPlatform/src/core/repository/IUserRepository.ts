@@ -2,7 +2,7 @@ import {User} from "../entities/User";
 import {UserDTO} from "./DTO/UserDTO";
 
 export interface IUserRepository {
-    createUser(dto:UserDTO): Promise<User>;
+    createUser(user:User): Promise<User>;
     getAllUsers(): Promise<User[]>;
     deleteUser(userId: string): Promise<void>;
     getUserById(userId: string): Promise<User|null>;
