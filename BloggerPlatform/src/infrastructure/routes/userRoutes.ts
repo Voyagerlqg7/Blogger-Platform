@@ -3,7 +3,7 @@ import {getAllUsers, getUserById, createNewUser, deleteUserById} from "../contro
 import {basicAuthMiddleware} from "../auth/BasicAuthMiddleware";
 
 
-const userRouter = Router();
+export const userRouter = Router();
 
 userRouter.get("/:id", getUserById);
 userRouter.get("/", getAllUsers,basicAuthMiddleware);

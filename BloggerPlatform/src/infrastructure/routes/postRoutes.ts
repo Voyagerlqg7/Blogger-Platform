@@ -4,7 +4,7 @@ import {updatePostById,getAllCommentsByPostId,createCommentByPostId} from "../co
 
 import {basicAuthMiddleware} from "../auth/BasicAuthMiddleware";
 
-const postRouter = Router();
+export const postRouter = Router();
 
 postRouter.get("/",getAllPosts);
 postRouter.get("/:id",getPostById);

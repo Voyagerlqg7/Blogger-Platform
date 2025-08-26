@@ -1,7 +1,7 @@
 import {PostDBController, postsDBCollection} from "../Repository/PostDBController";
 import {blogsDBCollection} from "../Repository/BlogsDBController";
 import {ObjectId} from "mongodb";
-import {PostsQueryParams} from "../routes/PostsRoutes";
+import {PostsQueryParams} from "../Oldroutes/PostsRoutes";
 import {PostsDB} from "../infrastructure/db/models/PostModel";
 import {Comment} from "../core/entities/Comment";
 import {CommentDB} from "../infrastructure/db/models/CommentModel";

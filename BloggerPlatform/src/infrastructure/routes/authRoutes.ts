@@ -5,7 +5,7 @@ import {emailResendingValidation} from "../middlewares/EmailValidation";
 import {validateRefreshToken} from "../middlewares/validateRefToken";
 import {authMiddleware} from "../auth/AuthMiddleware";
 
-const authRouter = Router();
+export const authRouter = Router();
 
 authRouter.post("/login",inputValidationMiddleware);
 authRouter.post("/registration",usersValidationMiddleware,inputValidationMiddleware);

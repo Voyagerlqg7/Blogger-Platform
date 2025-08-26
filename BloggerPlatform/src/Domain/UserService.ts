@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import bcrypt from "bcryptjs"
-import {NewUserTemplate, UserQueryParams} from "../routes/UserRouter";
+import {NewUserTemplate, UserQueryParams} from "../Oldroutes/UserRouter";
 import {UsersDBController} from "../Repository/UserDBController";
 import { v4 as uuidv4 } from "uuid";
 import {add} from "date-fns/add";

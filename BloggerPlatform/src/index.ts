@@ -1,11 +1,11 @@
 import express, {Request, Response} from 'express';
-import {BlogsRouter} from "./routes/BlogsRoutes";
-import {PostRouter} from "./routes/PostsRoutes";
-import {UserRouter} from "./routes/UserRouter";
-import {AuthRouter} from "./routes/authRouter";
-import {CommentRouter} from "./routes/CommentsRouter";
-import {connectDB}from "./mongo/ConnectDB";
-import {client} from "./mongo/ConnectDB";
+import {authRouter} from "./infrastructure/routes/authRoutes"
+import {blogRouter} from "./infrastructure/routes/blogRoutes";
+import {commentRouter} from "./infrastructure/routes/commentRoutes";
+import {userRouter} from "./infrastructure/routes/userRoutes";
+import {postRouter} from "./infrastructure/routes/postRoutes";
+import {connectDB} from "./infrastructure/db/connection";
+import {client} from "./infrastructure/db/connection";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 dotenv.config();
@@ -15,11 +15,11 @@ const port = process.env.PORT || 6419;
 app.use(express.json());
 app.use(cookieParser())
 
-app.use("/blogs", BlogsRouter);
-app.use("/posts", PostRouter);
-app.use("/users", UserRouter);
-app.use("/auth", AuthRouter);
-app.use("/comments", CommentRouter);
+app.use("/blogs", blogRouter);
+app.use("/posts", postRouter);
+app.use("/users", userRouter);
+app.use("/auth", authRouter);
+app.use("/comments", commentRouter);
 
 const startApp = async () => {
     await connectDB();

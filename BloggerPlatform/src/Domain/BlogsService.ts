@@ -1,10 +1,10 @@
 import {BlogsDB, BlogsPage} from "../Objects/Blogs";
 import {blogsDBCollection, BlogsDBController} from "../Repository/BlogsDBController";
-import {PostsQueryParams} from "../routes/PostsRoutes";
+import {PostsQueryParams} from "../Oldroutes/PostsRoutes";
 import {PostsDB, PostsPage} from "../Objects/Posts";
 import {PostDBController} from "../Repository/PostDBController";
 import {ObjectId} from "mongodb";
-import {BlogsPaginationParams} from "../routes/BlogsRoutes";
+import {BlogsPaginationParams} from "../Oldroutes/BlogsRoutes";
 
 
 
