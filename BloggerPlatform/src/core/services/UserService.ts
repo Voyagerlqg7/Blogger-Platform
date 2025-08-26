@@ -40,8 +40,20 @@ export class UserService {
     async findByLoginOrEmail(loginOrEmail:string): Promise<User|null>{
         return await this.userRepository.findByLoginOrEmail(loginOrEmail);
     }
+    async getPasswordHash(loginOrEmail:string): Promise<string|null>{
+        return await this.userRepository.getPasswordHash(loginOrEmail);
+    }
     async updateStatusConfirmation(user:User):Promise<void>{
         return await this.userRepository.updateStatusConfirmation(user);
+    }
+    async findByCodeConfirmation(codeConfirmation: string): Promise<User|null>{
+        const user = await this.findByCodeConfirmation(codeConfirmation);
+        if (!user){
+            throw new Error(`Cannot find user with code confirmation:  ${codeConfirmation}`);
+        }
+        else{
+            return user;
+        }
     }
     async updateCodeConfirmationAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>{
         return await this.userRepository.updateCodeConfirmationAndExpiresTime(userId,newCode,newExpiresAt);

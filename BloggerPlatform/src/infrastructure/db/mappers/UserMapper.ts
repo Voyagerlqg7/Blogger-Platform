@@ -20,7 +20,7 @@ export class UserMapper {
             id: user.id,
             login: user.login,
             email: user.email,
-            createdAt: new Date(user.createdAt),
+            createdAt: new Date(user.createdAt).toISOString(),
         };
     }
 }

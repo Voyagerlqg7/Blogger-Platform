@@ -1,10 +1,9 @@
-import {UserRepository} from "../db/implementations/UserRepository";
 import nodemailer from "nodemailer";
 import {settings} from "../settings/settings";
 import { v4 as uuidv4 } from "uuid";
 import {add} from "date-fns"
+import {userService} from "../composition";
 
-const UserRepo = new UserRepository();
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -39,7 +38,7 @@ export const EmailService = {
 
     },
     async ReSendCodeConfirmation(email:string){
-        const user = await UserRepo.findByLoginOrEmail(email);
+        const user = await userService.findByLoginOrEmail(email);
         const newCode = uuidv4();
         const newExpiresAt = add(new Date(), { minutes: 5 }).toISOString();
 
@@ -47,12 +46,12 @@ export const EmailService = {
             return false;
         }
 
-        await UserRepo.updateCodeConfirmationAndExpiresTime(user.id.toString(), newCode, newExpiresAt);
+        await userService.updateCodeConfirmationAndExpiresTime(user.id.toString(), newCode, newExpiresAt);
         await this.SendEmailCodeConfirmation(user.login, user.email, newCode);
         return true;
     },
     async CheckCodeConfirmation(code: string): Promise<boolean | undefined> {
-        const user = await UserRepo.findByCodeConfirmation(code);
+        const user = await userService.findByCodeConfirmation(code);
         if (!user) return undefined;
 
         const isExpired = new Date() > new Date(user.expiresAt);
@@ -60,7 +59,7 @@ export const EmailService = {
 
         if (isConfirmed || isExpired) return false;
 
-        await UserRepo.updateStatusConfirmation(user);
+        await userService.updateStatusConfirmation(user);
         return true;
     }
 

@@ -1,5 +1,4 @@
 import {User} from "../entities/User";
-import {UserDTO} from "./DTO/UserDTO";
 
 export interface IUserRepository {
     createUser(user:User): Promise<User>;
@@ -9,4 +8,6 @@ export interface IUserRepository {
     findByLoginOrEmail(loginOrEmail:string): Promise<User|null>;
     updateStatusConfirmation(user:User):Promise<void>;
     updateCodeConfirmationAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>
+    getPasswordHash(loginOrEmail:string):Promise<string|null>;
+    findByCodeConfirmation(codeConfirmation: string): Promise<User|null>;
 }

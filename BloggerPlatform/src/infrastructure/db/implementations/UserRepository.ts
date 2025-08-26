@@ -5,6 +5,7 @@ import {ObjectId} from "mongodb";
 import {UserMapper} from "../mappers/UserMapper";
 import {UserDB} from "../models/UserModel";
 import {PasswordService} from "../../applicationServices/PasswordService";
+
 const passService = new PasswordService();
 
 
@@ -55,6 +56,17 @@ export class UserRepository implements IUserRepository {
         });
         return user ? UserMapper.toDomain(user) : null;
     }
+    async getPasswordHash(loginOrEmail: string): Promise<string | null> {
+        const userAuthCredentials = await userDBCollection.findOne({
+            $or: [
+                { "accountData.login": loginOrEmail },
+                { "accountData.email": loginOrEmail }
+            ]
+        });
+        if (!userAuthCredentials) return null;
+        else {return userAuthCredentials.accountData.passwordHash;}
+    }
+
 
     async findByCodeConfirmation(codeConfirmation: string): Promise<User | null> {
         const user = await userDBCollection.findOne({

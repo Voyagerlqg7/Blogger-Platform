@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs"
 import {userService} from "../composition";
+import {UserMapper} from "../db/mappers/UserMapper";
 
 export class PasswordService {
     async generatePasswordSalt(){
@@ -11,23 +12,17 @@ export class PasswordService {
     }
     async checkCredentials(loginOrEmail: string, password: string) {
         try {
-            const user = await userService.findByLoginOrEmail(loginOrEmail);
-            if (!user) return undefined;
+            const passwordHash = await userService.getPasswordHash(loginOrEmail);
+            if (!passwordHash) return undefined;
 
-            const isValid = await bcrypt.compare(password, user.accountData.passwordHash);
+            const isValid = await bcrypt.compare(password, passwordHash);
             if (!isValid) return undefined;
 
-            return {
-                id: user._id.toString(),
-                login: user.accountData.login,
-                email: user.accountData.email,
-                createdAt: user.accountData.createdAt
-            } as UserViewModel;
-        }
-        catch(error) {
+            const user = await userService.findByLoginOrEmail(loginOrEmail);
+            return user ? UserMapper.toViewModel(user) : undefined;
+        } catch (error) {
             console.error(error);
             return undefined;
         }
     }
-
 }
