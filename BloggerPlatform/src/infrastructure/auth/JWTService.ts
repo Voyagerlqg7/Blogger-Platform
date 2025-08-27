@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import {User} from "../../core/entities/User";
 import {settings} from "../settings/settings";
+import {UserViewModel} from "../db/models/UserModel"
 
 export class JWTService {
-    async createAccessToken(user:User): Promise<string> {
+    async createAccessToken(user:UserViewModel): Promise<string> {
         const accessToken:string = jwt.sign(
             {userId: user.id},
             settings.JWT_SECRET,
@@ -11,7 +11,7 @@ export class JWTService {
         return accessToken;
     }
 
-    async createRefreshJWT(user:User):Promise<string>{
+    async createRefreshJWT(user:UserViewModel):Promise<string>{
         const refreshToken:string = jwt.sign(
             {userId: user.id},
             settings.JWT_SECRET,

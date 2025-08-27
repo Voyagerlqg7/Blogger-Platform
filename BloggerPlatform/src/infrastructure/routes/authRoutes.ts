@@ -1,4 +1,6 @@
-import {Router} from "express"
+import {Router} from "express";
+import {loginHandler, logoutHandler, aboutMeHandler, refreshTokenHandler} from "../controllers/AuthHTTPController";
+import {registerHandler,registrationConfirmationHandler, registrationEmailResendingHandler} from "../controllers/AuthHTTPController";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {usersValidationMiddleware} from "../middlewares/UserValidation";
 import {emailResendingValidation} from "../middlewares/EmailValidation";
@@ -7,10 +9,10 @@ import {authMiddleware} from "../auth/AuthMiddleware";
 
 export const authRouter = Router();
 
-authRouter.post("/login",inputValidationMiddleware);
-authRouter.post("/registration",usersValidationMiddleware,inputValidationMiddleware);
-authRouter.post("/registration-confirmation'", );
-authRouter.post('/registration-email-resending',emailResendingValidation,inputValidationMiddleware);
-authRouter.post("/logout",validateRefreshToken);
-authRouter.post("/refresh-token",validateRefreshToken)
-authRouter.post("/me",authMiddleware)
+authRouter.post("/login",loginHandler,inputValidationMiddleware);
+authRouter.post("/registration",registerHandler,usersValidationMiddleware,inputValidationMiddleware);
+authRouter.post("/registration-confirmation'",registrationConfirmationHandler);
+authRouter.post('/registration-email-resending',registrationEmailResendingHandler, emailResendingValidation,inputValidationMiddleware);
+authRouter.post("/logout",logoutHandler,validateRefreshToken);
+authRouter.post("/refresh-token",refreshTokenHandler,validateRefreshToken)
+authRouter.post("/me",aboutMeHandler,authMiddleware)

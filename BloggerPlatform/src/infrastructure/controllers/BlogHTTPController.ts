@@ -41,8 +41,8 @@ export const getAllPostsFromBlogHandler = async (req: Request, res: Response) =>
 }
 
 export const createPostForSpecialBlogHandler = async (req: Request, res: Response) => {
-    const {title, shortDescription, content} = req.body;
+    const {title, shortDescription,content} = req.body;
     const dto = { title, shortDescription, content };
-    const newPostToBlog = await blogService.createNewPostForSpecialBlog(req.params.id, dto);
+    const newPostToBlog = await blogService.createNewPostForSpecialBlog(req.params.blogId, dto);
 
 }

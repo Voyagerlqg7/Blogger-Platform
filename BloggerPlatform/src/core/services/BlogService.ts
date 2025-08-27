@@ -3,7 +3,7 @@ import {Blog} from "../entities/Blog";
 import {v4 as uuidv4} from "uuid";
 import {CreateBlogDTO, UpdateBlogDTO} from "../repository/DTO/BlogDTO";
 import {Post} from "../entities/Post";
-import {CreatePostDTO} from "../repository/DTO/PostDTO";
+import {CreatePostForSpecialBlogDTO} from "../repository/DTO/PostDTO";
 
 
 export class BlogService {
@@ -30,7 +30,7 @@ export class BlogService {
         }
         return await this.blogRepository.getAllPostsFromBlog(blogId);
     }
-    async createNewPostForSpecialBlog(blogId:string, dto:CreatePostDTO):Promise<Post>{
+    async createNewPostForSpecialBlog(blogId:string, dto:CreatePostForSpecialBlogDTO):Promise<Post>{
         const blog = await this.blogRepository.getBlogById(blogId);
         if (!blog) {
             throw new Error("Cannot find blog with id 'blogId': " + blogId);
