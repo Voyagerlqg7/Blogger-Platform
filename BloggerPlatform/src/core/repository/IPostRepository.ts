@@ -1,6 +1,6 @@
 import {Post} from "../entities/Post";
 import {Comment} from "../entities/Comment";
-import {UpdatePostByIdDTO,CreatePostDTO} from "./DTO/PostDTO";
+import {UpdatePostByIdDTO} from "./DTO/PostDTO";
 
 export interface IPostRepository {
     getAllPosts():Promise<Post[]>;

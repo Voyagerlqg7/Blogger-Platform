@@ -37,8 +37,8 @@ export const createCommentByPostId = async (req:Request, res:Response) => {
     const post = postService.getPostById(req.params.id);
     if(!post){res.status(404).send("Post not found")}
     else{
-        //const comment = await postService.createCommentUnderPost(req.params.id,req.body.content)
-        //res.status(201).send(comment);
+        const comment = await postService.createCommentUnderPost(req.params.id,req.body.content, req.body.userId,req.body.login)
+        res.status(201).send(comment);
     }
 }
 
