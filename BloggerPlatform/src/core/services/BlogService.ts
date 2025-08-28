@@ -4,12 +4,13 @@ import {v4 as uuidv4} from "uuid";
 import {CreateBlogDTO, UpdateBlogDTO} from "../repository/DTO/BlogDTO";
 import {Post} from "../entities/Post";
 import {CreatePostForSpecialBlogDTO} from "../repository/DTO/PostDTO";
-import {BlogsQueryDTO} from "../repository/DTO/QueryParamsDTO";
+import {BlogsQueryDTO, PagedResponse, PostsQueryDTO} from "../repository/DTO/QueryParamsDTO";
+import {PostsDB} from "../../infrastructure/db/models/PostModel";
 
 
 export class BlogService {
     constructor(private readonly blogRepository: IBlogRepository) {}
-    async getAllBlogs(query:BlogsQueryDTO): Promise<Blog[]>{
+    async getAllBlogs(query:BlogsQueryDTO): Promise<PagedResponse<Blog>>{
         return await this.blogRepository.getAllBlogs(query);
     }
     async createBlog(dto:CreateBlogDTO):Promise<Blog>{
@@ -24,12 +25,12 @@ export class BlogService {
         );
         return await this.blogRepository.createBlog(newBlog);
     }
-    async getAllPostsFromBlog(blogId:string):Promise<Post[]>{
+    async getAllPostsFromBlog(blogId:string, query:PostsQueryDTO):Promise<PagedResponse<Post>>{
         const blog = await this.blogRepository.getBlogById(blogId);
         if (!blog) {
             throw new Error("Blog not found");
         }
-        return await this.blogRepository.getAllPostsFromBlog(blogId);
+        return await this.blogRepository.getAllPostsFromBlog(blogId,query);
     }
     async createNewPostForSpecialBlog(blogId:string, dto:CreatePostForSpecialBlogDTO):Promise<Post>{
         const blog = await this.blogRepository.getBlogById(blogId);

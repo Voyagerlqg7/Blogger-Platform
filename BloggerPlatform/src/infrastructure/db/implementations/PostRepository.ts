@@ -57,12 +57,7 @@ export class PostRepository implements IPostRepository {
         );
     }
 
-    async getAllCommentsByPostID(postId: string, query:PostsQueryDTO): Promise<PagedResponse<Comment> | null> {
-        const post = await postsDBCollection.findOne({ _id: new ObjectId(postId) });
-        if(!post) return null;
-        else {
-
-
+    async getAllCommentsByPostID(postId: string, query:PostsQueryDTO): Promise<PagedResponse<Comment>> {
             const filter: any = {};
             const totalCount = await commentDBCollection.countDocuments(filter);
             const items = await commentDBCollection
@@ -79,7 +74,6 @@ export class PostRepository implements IPostRepository {
                 totalCount,
                 items: items.map(CommentMapper.toDomain)
             };
-        }
     }
 
     async createCommentByPostID(postId: string, comment: Comment): Promise<Comment> {

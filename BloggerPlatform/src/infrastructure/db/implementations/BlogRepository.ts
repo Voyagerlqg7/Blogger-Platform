@@ -52,12 +52,7 @@ export class BlogRepository implements IBlogRepository {
             { $set: { name: dto.name, description: dto.description, websiteUrl: dto.websiteUrl } }
         );
     }
-    async getAllPostsFromBlog(blogId: string, query:PostsQueryDTO): Promise<PagedResponse<Post>|null> {
-        const blog = await blogsDBCollection.findOne({_id: new ObjectId(blogId)});
-        if (!blog) {
-            return null;
-        }
-        else{
+    async getAllPostsFromBlog(blogId: string, query:PostsQueryDTO): Promise<PagedResponse<Post>> {
             const filter:any = {};
             const totalCount = await postsDBCollection.countDocuments(filter);
             const items = await postsDBCollection
@@ -74,7 +69,6 @@ export class BlogRepository implements IBlogRepository {
                 totalCount,
                 items: items.map(PostMapper.toDomain)
             }
-        }
     }
 
     async createNewPostForSpecialBlog(post:Post):Promise<Post>{

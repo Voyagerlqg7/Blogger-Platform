@@ -4,15 +4,15 @@ import {v4 as uuidv4} from "uuid";
 import {Comment} from "../entities/Comment";
 import {CreatePostDTO, UpdatePostByIdDTO} from "../repository/DTO/PostDTO";
 import {IBlogRepository} from "../repository/IBlogRepository";
-import {PostsQueryDTO} from "../repository/DTO/QueryParamsDTO";
+import {PagedResponse, PostsQueryDTO} from "../repository/DTO/QueryParamsDTO";
 
 export class PostService {
     constructor(private readonly postRepository: IPostRepository,
                 private readonly blogRepository: IBlogRepository) {}
-    async getAllPosts(query:PostsQueryDTO): Promise<Post[]> {
+    async getAllPosts(query:PostsQueryDTO): Promise<PagedResponse<Post>> {
         return await this.postRepository.getAllPosts(query);
     }
-    async getAllCommentsFromPost(postId:string, query:PostsQueryDTO):Promise<Comment[]> {
+    async getAllCommentsFromPost(postId:string, query:PostsQueryDTO):Promise<PagedResponse<Comment>> {
         const post = await this.postRepository.getPostById(postId);
         if (!post) {throw new Error("Post not found.");}
         return await this.postRepository.getAllCommentsByPostID(postId,query);

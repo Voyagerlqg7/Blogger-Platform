@@ -3,7 +3,7 @@ import {User} from "../entities/User";
 import {UserDTO} from "../repository/DTO/UserDTO";
 import {v4 as uuidv4} from "uuid";
 import { add } from "date-fns";
-import {UsersQueryDTO} from "../repository/DTO/QueryParamsDTO";
+import {PagedResponse, UsersQueryDTO} from "../repository/DTO/QueryParamsDTO";
 
 
 export class UserService {
@@ -35,7 +35,7 @@ export class UserService {
         }
         return await this.userRepository.deleteUser(userId);
     }
-    async getAllUsers(query: UsersQueryDTO): Promise<User[]> {
+    async getAllUsers(query: UsersQueryDTO): Promise<PagedResponse<User>> {
         return await this.userRepository.getAllUsers(query);
     }
     async findByLoginOrEmail(loginOrEmail:string): Promise<User|null>{
