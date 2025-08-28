@@ -1,9 +1,9 @@
 import {User} from "../entities/User";
-import {UsersQueryDTO} from "./DTO/QueryParamsDTO";
+import {UsersQueryDTO,PagedResponse} from "./DTO/QueryParamsDTO";
 
 export interface IUserRepository {
     createUser(user:User): Promise<User>;
-    getAllUsers(Q_params:UsersQueryDTO): Promise<User[]>;
+    getAllUsers(Q_params:UsersQueryDTO): Promise<PagedResponse<User>>;
     deleteUser(userId: string): Promise<void>;
     getUserById(userId: string): Promise<User|null>;
     findByLoginOrEmail(loginOrEmail:string): Promise<User|null>;

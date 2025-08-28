@@ -15,3 +15,12 @@ export type UsersQueryDTO = BaseQueryDTO & {
     searchLoginTerm: string | null;
     searchEmailTerm: string | null;
 };
+
+
+export interface PagedResponse<T> {
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: T[];
+}

@@ -6,11 +6,26 @@ import {UpdatePostByIdDTO} from "../../../core/repository/DTO/PostDTO";
 import {PostMapper} from "../mappers/PostMapper";
 import {Comment} from "../../../core/entities/Comment";
 import {CommentMapper} from "../mappers/CommentMapper";
+import {PagedResponse, PostsQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
 
 export class PostRepository implements IPostRepository {
-    async getAllPosts(): Promise<Post[]> {
-        const posts = await postsDBCollection.find().sort({ createdAt: -1 }).toArray();
-        return posts.map(PostMapper.toDomain);
+    async getAllPosts(query:PostsQueryDTO): Promise<PagedResponse<Post>> {
+        const filter:any = {};
+        const totalCount = await postsDBCollection.countDocuments(filter);
+        const items = await postsDBCollection
+            .find(filter)
+            .sort({ [query.sortBy]: query.sortDirection === "asc" ? 1 : -1 })
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .limit(query.pageSize)
+            .toArray();
+
+        return {
+            pagesCount: Math.ceil(totalCount / query.pageSize),
+            page: query.pageNumber,
+            pageSize: query.pageSize,
+            totalCount,
+            items: items.map(PostMapper.toDomain)
+        }
     }
 
     async getPostById(postId: string): Promise<Post | null> {
@@ -42,13 +57,29 @@ export class PostRepository implements IPostRepository {
         );
     }
 
-    async getAllCommentsByPostID(postId: string): Promise<Comment[]> {
-        const comments = await commentDBCollection
-            .find({ postId: new ObjectId(postId) })
-            .sort({ createdAt: -1 })
-            .toArray();
+    async getAllCommentsByPostID(postId: string, query:PostsQueryDTO): Promise<PagedResponse<Comment> | null> {
+        const post = await postsDBCollection.findOne({ _id: new ObjectId(postId) });
+        if(!post) return null;
+        else {
 
-        return comments.map(CommentMapper.toDomain);
+
+            const filter: any = {};
+            const totalCount = await commentDBCollection.countDocuments(filter);
+            const items = await commentDBCollection
+                .find(filter)
+                .sort({[query.sortBy]: query.sortDirection === "asc" ? 1 : -1})
+                .skip((query.pageNumber - 1) * query.pageSize)
+                .limit(query.pageSize)
+                .toArray();
+
+            return {
+                pagesCount: Math.ceil(totalCount / query.pageSize),
+                page: query.pageNumber,
+                pageSize: query.pageSize,
+                totalCount,
+                items: items.map(CommentMapper.toDomain)
+            };
+        }
     }
 
     async createCommentByPostID(postId: string, comment: Comment): Promise<Comment> {

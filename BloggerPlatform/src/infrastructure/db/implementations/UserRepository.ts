@@ -5,6 +5,7 @@ import {ObjectId} from "mongodb";
 import {UserMapper} from "../mappers/UserMapper";
 import {UserDB} from "../models/UserModel";
 import {PasswordService} from "../../applicationServices/PasswordService";
+import {PagedResponse, UsersQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
 
 const passService = new PasswordService();
 
@@ -33,10 +34,35 @@ export class UserRepository implements IUserRepository {
         return user;
     }
 
-    async getAllUsers(): Promise<User[]> {
-        const users = await userDBCollection.find().sort({ "accountData.createdAt": -1 }).toArray();
-        return users.map(UserMapper.toDomain);
+    async getAllUsers(query: UsersQueryDTO): Promise<PagedResponse<User>> {
+        const filter: any = {};
+
+        if (query.searchLoginTerm) {
+            filter.login = { $regex: query.searchLoginTerm, $options: "i" };
+        }
+
+        if (query.searchEmailTerm) {
+            filter.email = { $regex: query.searchEmailTerm, $options: "i" };
+        }
+
+        const totalCount = await userDBCollection.countDocuments(filter);
+
+        const items = await userDBCollection
+            .find(filter)
+            .sort({ [query.sortBy]: query.sortDirection === "asc" ? 1 : -1 })
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .limit(query.pageSize)
+            .toArray();
+
+        return {
+            pagesCount: Math.ceil(totalCount / query.pageSize),
+            page: query.pageNumber,
+            pageSize: query.pageSize,
+            totalCount,
+            items: items.map(UserMapper.toDomain)
+        };
     }
+
 
     async getUserById(userId: string): Promise<User | null> {
         const user = await userDBCollection.findOne({ _id: new ObjectId(userId) });
