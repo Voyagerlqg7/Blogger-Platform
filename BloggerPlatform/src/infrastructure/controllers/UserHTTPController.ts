@@ -1,9 +1,16 @@
 import {Request, Response} from 'express';
 import {userService} from "../composition";
+import {UsersQueryDTO} from "../../core/repository/DTO/QueryParamsDTO";
+import {getQueryParams} from "../helpers/queryHelper";
 
 
 export const getAllUsers = async (req: Request, res: Response) => {
-    res.status(200).json(await userService.getAllUsers());
+    const query:UsersQueryDTO = getQueryParams<Pick<UsersQueryDTO, "searchLoginTerm" | "searchEmailTerm">>(req,{
+        searchLoginTerm:"string",
+        searchEmailTerm:"string"
+    });
+
+    res.status(200).json(await userService.getAllUsers(query));
 }
 
 export const getUserById = async (req: Request, res: Response) => {

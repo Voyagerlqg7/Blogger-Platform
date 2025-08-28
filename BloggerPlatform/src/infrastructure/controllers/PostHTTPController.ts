@@ -1,8 +1,11 @@
 import {postService} from "../composition";
 import {Request, Response} from "express";
+import {PostsQueryDTO} from "../../core/repository/DTO/QueryParamsDTO";
+import {getQueryParams} from "../helpers/queryHelper";
 
 export const getAllPosts = async (req: Request, res: Response) => {
-    const posts = await postService.getAllPosts();
+    const query:PostsQueryDTO = getQueryParams<PostsQueryDTO>(req);
+    const posts = await postService.getAllPosts(query);
     res.status(200).send(posts);
 }
 
@@ -28,7 +31,8 @@ export const updatePostById = async (req: Request, res: Response) => {
 }
 
 export const getAllCommentsByPostId = async (req:Request, res:Response) => {
-    const comments = await postService.getAllCommentsFromPost(req.params.id);
+    const query:PostsQueryDTO = getQueryParams<PostsQueryDTO>(req);
+    const comments = await postService.getAllCommentsFromPost(req.params.id,query);
     if(!comments){res.status(404).send()}
     else{res.status(200).send(comments);}
 }

@@ -1,13 +1,14 @@
 import {Post} from "../entities/Post";
 import {Comment} from "../entities/Comment";
 import {UpdatePostByIdDTO} from "./DTO/PostDTO";
+import {PostsQueryDTO} from "./DTO/QueryParamsDTO";
 
 export interface IPostRepository {
-    getAllPosts():Promise<Post[]>;
+    getAllPosts(Q_params:PostsQueryDTO):Promise<Post[]>;
     getPostById(postId:string):Promise<Post|null>;
     deletePostById(postId:string):Promise<void | null>;
     updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<void>;
     createPost(post:Post):Promise<Post>;
-    getAllCommentsByPostID(postId:string):Promise<Comment[]>;
+    getAllCommentsByPostID(postId:string, Q_params:PostsQueryDTO):Promise<Comment[]>;
     createCommentByPostID(postId:string, comment:Comment):Promise<Comment>;
 }

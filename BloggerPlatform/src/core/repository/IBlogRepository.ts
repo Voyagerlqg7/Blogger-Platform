@@ -1,9 +1,11 @@
 import {Blog} from "../entities/Blog";
 import {UpdateBlogDTO} from "./DTO/BlogDTO";
 import {Post} from "../entities/Post";
+import {BlogsQueryDTO} from "./DTO/QueryParamsDTO";
+
 
 export interface IBlogRepository {
-    getAllBlogs(): Promise<Blog[]>;
+    getAllBlogs(Q_params:BlogsQueryDTO): Promise<Blog[]>;
     createBlog(blog:Blog):Promise<Blog>;
     getAllPostsFromBlog(blogId:string):Promise<Post[]>;
     createNewPostForSpecialBlog(post:Post):Promise<Post>;

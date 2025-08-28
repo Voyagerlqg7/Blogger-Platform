@@ -4,12 +4,13 @@ import {v4 as uuidv4} from "uuid";
 import {CreateBlogDTO, UpdateBlogDTO} from "../repository/DTO/BlogDTO";
 import {Post} from "../entities/Post";
 import {CreatePostForSpecialBlogDTO} from "../repository/DTO/PostDTO";
+import {BlogsQueryDTO} from "../repository/DTO/QueryParamsDTO";
 
 
 export class BlogService {
     constructor(private readonly blogRepository: IBlogRepository) {}
-    async getAllBlogs(): Promise<Blog[]>{
-        return await this.blogRepository.getAllBlogs();
+    async getAllBlogs(query:BlogsQueryDTO): Promise<Blog[]>{
+        return await this.blogRepository.getAllBlogs(query);
     }
     async createBlog(dto:CreateBlogDTO):Promise<Blog>{
         const id = uuidv4();

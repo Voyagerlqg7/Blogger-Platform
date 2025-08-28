@@ -1,8 +1,14 @@
 import {Request, Response} from "express";
 import {blogService} from "../composition";
+import {BlogsQueryDTO} from "../../core/repository/DTO/QueryParamsDTO";
+import {getQueryParams} from "../helpers/queryHelper";
 
 export const getAllBlogsHandler = async (req: Request, res: Response) => {
-    const blogs = await blogService.getAllBlogs();
+    const query: BlogsQueryDTO = getQueryParams<Pick<BlogsQueryDTO, "searchNameTerm">>(req, {
+        searchNameTerm: "string",
+    });
+
+    const blogs = await blogService.getAllBlogs(query);
     res.status(200).json(blogs);
 };
 
