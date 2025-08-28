@@ -1,7 +1,7 @@
 import {Router} from "express";
-import {getCommentById, updateComment, deleteCommentById} from "../controllers/CommentHTTPController";
-import {authMiddleware} from "../auth/AuthMiddleware";
-import {commentsValidationMiddleware} from "../middlewares/CommentsValidation";
+import {getCommentById, updateComment, deleteCommentById} from "../CommentHTTPController";
+import {authMiddleware} from "../../auth/AuthMiddleware";
+import {commentsValidationMiddleware} from "../../middlewares/CommentsValidation";
 
 export const commentRouter = Router();
 

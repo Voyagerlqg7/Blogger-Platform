@@ -1,12 +1,12 @@
 import {Router} from "express";
-import {createBlogHandler, getAllBlogsHandler} from "../controllers/BlogHTTPController";
-import {getBlogByIdHandler, updateBlogHandler, deleteBlogHandler} from "../controllers/BlogHTTPController";
-import {getAllPostsFromBlogHandler,createPostForSpecialBlogHandler} from "../controllers/BlogHTTPController";
-import {blogValidationMiddleware} from "../middlewares/BlogsValidation";
+import {createBlogHandler, getAllBlogsHandler} from "../BlogHTTPController";
+import {getBlogByIdHandler, updateBlogHandler, deleteBlogHandler} from "../BlogHTTPController";
+import {getAllPostsFromBlogHandler,createPostForSpecialBlogHandler} from "../BlogHTTPController";
+import {blogValidationMiddleware} from "../../middlewares/BlogsValidation";
 
 
-import {basicAuthMiddleware} from "../auth/BasicAuthMiddleware";
-import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
+import {basicAuthMiddleware} from "../../auth/BasicAuthMiddleware";
+import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 
 export const blogRouter = Router();
 

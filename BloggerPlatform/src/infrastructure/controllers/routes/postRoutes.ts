@@ -1,12 +1,12 @@
 import {Router} from "express";
-import {getAllPosts,getPostById,createPost,deletePostById} from "../controllers/PostHTTPController";
-import {updatePostById,getAllCommentsByPostId,createCommentByPostId} from "../controllers/PostHTTPController";
+import {getAllPosts,getPostById,createPost,deletePostById} from "../PostHTTPController";
+import {updatePostById,getAllCommentsByPostId,createCommentByPostId} from "../PostHTTPController";
 
-import {basicAuthMiddleware} from "../auth/BasicAuthMiddleware";
-import {authMiddleware} from "../auth/AuthMiddleware";
-import {postValidationMiddleware} from "../middlewares/PostsValidation";
-import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
-import {commentsValidationMiddleware} from "../middlewares/CommentsValidation";
+import {basicAuthMiddleware} from "../../auth/BasicAuthMiddleware";
+import {authMiddleware} from "../../auth/AuthMiddleware";
+import {postValidationMiddleware} from "../../middlewares/PostsValidation";
+import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
+import {commentsValidationMiddleware} from "../../middlewares/CommentsValidation";
 
 export const postRouter = Router();
 

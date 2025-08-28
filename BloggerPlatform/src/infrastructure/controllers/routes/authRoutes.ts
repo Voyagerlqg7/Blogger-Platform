@@ -1,11 +1,11 @@
 import {Router} from "express";
-import {loginHandler, logoutHandler, aboutMeHandler, refreshTokenHandler} from "../controllers/AuthHTTPController";
-import {registerHandler,registrationConfirmationHandler, registrationEmailResendingHandler} from "../controllers/AuthHTTPController";
-import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
-import {usersValidationMiddleware} from "../middlewares/UserValidation";
-import {emailResendingValidation} from "../middlewares/EmailValidation";
-import {validateRefreshToken} from "../middlewares/validateRefToken";
-import {authMiddleware} from "../auth/AuthMiddleware";
+import {loginHandler, logoutHandler, aboutMeHandler, refreshTokenHandler} from "../AuthHTTPController";
+import {registerHandler,registrationConfirmationHandler, registrationEmailResendingHandler} from "../AuthHTTPController";
+import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
+import {usersValidationMiddleware} from "../../middlewares/UserValidation";
+import {emailResendingValidation} from "../../middlewares/EmailValidation";
+import {validateRefreshToken} from "../../middlewares/validateRefToken";
+import {authMiddleware} from "../../auth/AuthMiddleware";
 
 export const authRouter = Router();
 

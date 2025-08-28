@@ -1,9 +1,9 @@
 import {Router} from "express";
-import {getAllUsers, getUserById, createNewUser, deleteUserById} from "../controllers/UserHTTPController";
-import {basicAuthMiddleware} from "../auth/BasicAuthMiddleware";
+import {getAllUsers, getUserById, createNewUser, deleteUserById} from "../UserHTTPController";
+import {basicAuthMiddleware} from "../../auth/BasicAuthMiddleware";
 
-import {usersValidationMiddleware} from "../middlewares/UserValidation";
-import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
+import {usersValidationMiddleware} from "../../middlewares/UserValidation";
+import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 
 export const userRouter = Router();
 

@@ -1,9 +1,9 @@
 import express, {Request, Response} from 'express';
-import {authRouter} from "./infrastructure/routes/authRoutes"
-import {blogRouter} from "./infrastructure/routes/blogRoutes";
-import {commentRouter} from "./infrastructure/routes/commentRoutes";
-import {userRouter} from "./infrastructure/routes/userRoutes";
-import {postRouter} from "./infrastructure/routes/postRoutes";
+import {authRouter} from "./infrastructure/controllers/routes/authRoutes"
+import {blogRouter} from "./infrastructure/controllers/routes/blogRoutes";
+import {commentRouter} from "./infrastructure/controllers/routes/commentRoutes";
+import {userRouter} from "./infrastructure/controllers/routes/userRoutes";
+import {postRouter} from "./infrastructure/controllers/routes/postRoutes";
 import {connectDB} from "./infrastructure/db/connection";
 import {client} from "./infrastructure/db/connection";
 import dotenv from "dotenv";
