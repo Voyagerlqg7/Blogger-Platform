@@ -5,7 +5,6 @@ import {CreateBlogDTO, UpdateBlogDTO} from "../repository/DTO/BlogDTO";
 import {Post} from "../entities/Post";
 import {CreatePostForSpecialBlogDTO} from "../repository/DTO/PostDTO";
 import {BlogsQueryDTO, PagedResponse, PostsQueryDTO} from "../repository/DTO/QueryParamsDTO";
-import {PostsDB} from "../../infrastructure/db/models/PostModel";
 
 
 export class BlogService {

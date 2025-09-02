@@ -17,14 +17,14 @@ export class CommentMapper{
     }
     static toPersistence(postId: string, comment: Comment):CommentDB{
         return {
-            _id: new ObjectId(comment.id),
+            _id: comment.id,
             content: comment.content,
             commentatorInfo: {
                 userId: comment.commentatorInfo.userId,
                 userLogin: comment.commentatorInfo.userLogin,
             },
             createdAt: new Date(comment.createdAt),
-            postId: new ObjectId(postId),
+            postId: postId,
         }
     }
 }

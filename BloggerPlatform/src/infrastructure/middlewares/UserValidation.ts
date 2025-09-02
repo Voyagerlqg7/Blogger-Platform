@@ -1,6 +1,4 @@
 import {body, ValidationChain} from "express-validator";
-import {userDBCollection} from "../db/collections/collections";
-import {UserRepository} from "../db/implementations/UserRepository"
 import {userService} from "../composition";
 
 export const usersValidationMiddleware: ValidationChain[] = [

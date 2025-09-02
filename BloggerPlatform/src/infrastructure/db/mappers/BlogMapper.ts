@@ -16,7 +16,7 @@ export class BlogMapper {
 
     static toPersistence(blog: Blog): BlogsDB {
         return {
-            _id: new ObjectId(blog.id),
+            _id: blog.id,
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl,

@@ -16,11 +16,11 @@ export class PostMapper{
     }
     static toPersistence(post: Post):PostsDB{
         return{
-            _id: new ObjectId(post.id),
+            _id: post.id,
             title: post.title,
             content: post.content,
             shortDescription: post.shortDescription,
-            blogId: new ObjectId(post.blogId),
+            blogId: post.blogId,
             blogName:post.blogName,
             createdAt: new Date(post.createdAt),
         }
