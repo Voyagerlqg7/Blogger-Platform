@@ -4,16 +4,15 @@ import {userDBCollection} from "../collections/collections";
 import {ObjectId} from "mongodb";
 import {UserMapper} from "../mappers/UserMapper";
 import {UserDB} from "../models/UserModel";
-import {PasswordService} from "../../applicationServices/PasswordService";
-import {PagedResponse, UsersQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
-
-const passService = new PasswordService();
-
+import {UsersQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
+import {PagedResponse} from "../../../core/repository/DTO/QueryParamsDTO";
 
 export class UserRepository implements IUserRepository {
+    constructor(private readonly passwordService: any) {}
+
     async createUser(user: User): Promise<User> {
-        const passwordSalt = await passService.generatePasswordSalt();
-        const passwordHash = await passService.generateHash(user.password, passwordSalt);
+        const passwordSalt = await this.passwordService.generatePasswordSalt();
+        const passwordHash = await this.passwordService.generateHash(user.password, passwordSalt);
 
         const newUser : UserDB={
             _id: new ObjectId(),

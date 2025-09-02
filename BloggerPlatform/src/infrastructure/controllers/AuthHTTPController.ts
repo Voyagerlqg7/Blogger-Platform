@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 import {sessionsRepository} from "../db/implementations/SessionRepository";
 import {JWTService} from "../auth/JWTService";
-import {PasswordService} from "../applicationServices/PasswordService";
 import {userService} from "../composition";
 import {EmailService} from "../applicationServices/EmailService";
+import {PasswordService} from "../applicationServices/PasswordService";
 
 export const loginHandler = async (req: Request, res: Response) => {
     const user = await new PasswordService().checkCredentials(req.body.loginOrEmail, req.body.password);
