@@ -1,9 +1,9 @@
 import {Request, Response, NextFunction} from "express";
-import {sessionsRepository} from "../../Repository/sessionsRepository";
-import {UserService} from "../../Domain/UserService";
+import {sessionsRepository} from "../db/implementations/SessionRepository";
 import jwt from "jsonwebtoken";
 import {settings} from "../settings/settings";
 import {JWTService} from "../auth/JWTService";
+import {userService} from "../composition";
 
 const JWTClass = new JWTService();
 
@@ -27,7 +27,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     console.log('STEP 3: token in DB:', tokenInDb);
     if (!tokenInDb) {res.status(401).send("step 3"); return;}
 
-    const user = await UserService.FindUserById(userId);
+    const user = await userService.getUserById(userId);//Вот тут
     console.log('STEP 4: user from DB:', user);
     if (!user) {res.status(401).send("step 4"); return;}
 
