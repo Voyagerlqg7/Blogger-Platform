@@ -14,7 +14,7 @@ export class CommentRepository implements ICommentsRepository {
         return CommentMapper.toDomain(comment);
     }
     async updateCommentById(commentId:string, content: string):Promise<void> {
-        const comment = await commentDBCollection.updateOne({_id:new ObjectId(commentId)}, {$set:{content:content}});
+        await commentDBCollection.updateOne({_id:new ObjectId(commentId)}, {$set:{content:content}});
     }
     async deleteCommentById(commentId:string):Promise<void> {
         await commentDBCollection.deleteOne({_id:new ObjectId(commentId)});
