@@ -1,8 +1,9 @@
 import {User} from "../entities/User";
 import {UsersQueryDTO,PagedResponse} from "./DTO/QueryParamsDTO";
+import {UserViewModel} from "../entities/User";
 
 export interface IUserRepository {
-    createUser(user:User): Promise<User>;
+    createUser(user:User): Promise<UserViewModel>;
     getAllUsers(Q_params:UsersQueryDTO): Promise<PagedResponse<User>>;
     deleteUser(userId: string): Promise<void>;
     getUserById(userId: string): Promise<User|null>;

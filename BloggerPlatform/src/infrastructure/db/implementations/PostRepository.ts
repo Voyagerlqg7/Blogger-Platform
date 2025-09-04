@@ -1,7 +1,6 @@
 import {Post} from "../../../core/entities/Post";
 import {IPostRepository} from "../../../core/repository/IPostRepository";
 import {postsDBCollection, commentDBCollection} from "../collections/collections";
-import {ObjectId} from "mongodb"
 import {UpdatePostByIdDTO} from "../../../core/repository/DTO/PostDTO";
 import {PostMapper} from "../mappers/PostMapper";
 import {Comment} from "../../../core/entities/Comment";

@@ -1,5 +1,4 @@
 import {commentDBCollection} from "../collections/collections";
-import {ObjectId} from "mongodb";
 import {Comment} from "../../../core/entities/Comment";
 import {CommentMapper} from "../mappers/CommentMapper";
 import {ICommentsRepository} from "../../../core/repository/ICommentsRepository";

@@ -10,3 +10,9 @@ export class User{
         public isConfirmed: boolean
     ) {}
 }
+export type UserViewModel = {
+    id: string;
+    login: string;
+    email: string;
+    createdAt: string;
+}

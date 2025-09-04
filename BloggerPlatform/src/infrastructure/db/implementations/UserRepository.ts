@@ -1,5 +1,5 @@
 import {IUserRepository} from "../../../core/repository/IUserRepository";
-import {User} from "../../../core/entities/User";
+import {User, UserViewModel} from "../../../core/entities/User";
 import {userDBCollection} from "../collections/collections";
 import {UserMapper} from "../mappers/UserMapper";
 import {UserDB} from "../models/UserModel";
@@ -9,7 +9,7 @@ import {PagedResponse} from "../../../core/repository/DTO/QueryParamsDTO";
 export class UserRepository implements IUserRepository {
     constructor(private readonly passwordService: any) {}
 
-    async createUser(user: User): Promise<User> {
+    async createUser(user: User): Promise<UserViewModel> {
         const passwordSalt = await this.passwordService.generatePasswordSalt();
         const passwordHash = await this.passwordService.generateHash(user.password, passwordSalt);
 
@@ -29,7 +29,7 @@ export class UserRepository implements IUserRepository {
             }
         }
         await userDBCollection.insertOne(newUser);
-        return user;
+        return UserMapper.toViewModel(UserMapper.toDomain(newUser));
     }
 
     async getAllUsers(query: UsersQueryDTO): Promise<PagedResponse<User>> {
