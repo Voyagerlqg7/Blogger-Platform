@@ -7,15 +7,14 @@ export class PasswordService {
         return await bcrypt.genSalt(10);
     }
     async generateHash(password:string, passwordSalt:string){
-        const hash = await bcrypt.hash(password, passwordSalt);
-        return hash;
+         return await bcrypt.hash(password, passwordSalt);
     }
     async checkCredentials(loginOrEmail: string, password: string) {
         try {
             const passwordHash = await userService.getPasswordHash(loginOrEmail);
             if (!passwordHash) return undefined;
 
-            const isValid = await bcrypt.compare(password, passwordHash);
+            const isValid = bcrypt.compare(password, passwordHash);
             if (!isValid) return undefined;
 
             const user = await userService.findByLoginOrEmail(loginOrEmail);

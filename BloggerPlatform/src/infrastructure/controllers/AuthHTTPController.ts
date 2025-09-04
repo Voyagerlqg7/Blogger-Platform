@@ -36,7 +36,7 @@ export const loginHandler = async (req: Request, res: Response) => {
             maxAge: 20 * 1000
         });
 
-        return res.status(200).json({ accessToken });
+        return res.status(200).json(accessToken);
     } catch (error) {
         console.error("Login error:", error);
         return res.status(500).send("Internal server error");

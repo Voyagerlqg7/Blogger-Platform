@@ -1,4 +1,4 @@
-import {UserViewModel} from "../infrastructure/db/models/UserModel";
+import {UserViewModel} from "../core/entities/User";
 
 declare global {
     namespace Express {

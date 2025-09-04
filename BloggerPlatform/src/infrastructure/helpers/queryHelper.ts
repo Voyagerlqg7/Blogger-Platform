@@ -1,5 +1,5 @@
 import {Request} from "express";
-import {BaseQueryDTO, BlogsQueryDTO, UsersQueryDTO, PostsQueryDTO} from "../../core/repository/DTO/QueryParamsDTO";
+import {BaseQueryDTO} from "../../core/repository/DTO/QueryParamsDTO";
 
 export function getQueryParams<T extends object>(
     req: Request,
