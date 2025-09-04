@@ -7,9 +7,10 @@ import {UserRepository} from "./db/implementations/UserRepository";
 import {CommentService} from "../core/services/CommentService";
 import {CommentRepository} from "./db/implementations/CommentRepository";
 import {PasswordService} from "./applicationServices/PasswordService";
+import {JWTService} from "./auth/JWTService"; // Добавьте импорт
 
 const passwordService = new PasswordService();
-
+const jwtService = new JWTService();
 
 const blogRepository = new BlogRepository();
 export const blogService = new BlogService(blogRepository);
@@ -22,3 +23,5 @@ export const userService = new UserService(userRepository);
 
 const commentRepository = new CommentRepository();
 export const commentService = new CommentService(commentRepository);
+
+export { passwordService, jwtService };

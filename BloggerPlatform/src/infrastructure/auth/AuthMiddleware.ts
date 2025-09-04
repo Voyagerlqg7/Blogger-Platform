@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { JWTService } from './JWTService';
 import {UserService} from "../../core/services/UserService";
 import {UserRepository} from "../db/implementations/UserRepository";
+import {PasswordService} from "../applicationServices/PasswordService";
 
 export const authMiddleware = async (
     req: Request,
@@ -23,8 +24,8 @@ export const authMiddleware = async (
         res.sendStatus(401);
         return;
     }
-
-    const userRepository = new UserRepository();
+    const passwordService = new PasswordService();
+    const userRepository = new UserRepository(passwordService);
     const getUserByIdService = new UserService(userRepository);
     const user = await getUserByIdService.getUserById(userId);
 

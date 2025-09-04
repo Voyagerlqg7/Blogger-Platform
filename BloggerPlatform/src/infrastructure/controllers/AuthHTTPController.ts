@@ -1,26 +1,34 @@
 import {Request, Response} from "express";
 import {sessionsRepository} from "../db/implementations/SessionRepository";
-import {JWTService} from "../auth/JWTService";
-import {userService} from "../composition";
 import {EmailService} from "../applicationServices/EmailService";
-import {PasswordService} from "../applicationServices/PasswordService";
+import {
+    userService,
+    passwordService,
+    jwtService,
+} from "../composition";
 
 export const loginHandler = async (req: Request, res: Response) => {
     try {
-        const user = await new PasswordService().checkCredentials(
+        // Теперь используем готовые инстансы!
+        const user = await passwordService.checkCredentials(
             req.body.loginOrEmail,
             req.body.password
         );
+
         if (!user) {
-            res.status(401).json({
-                errorsMessages: [{ message: "Invalid Credentials", field: "loginOrEmail/password" }]
+            return res.status(401).json({
+                errorsMessages: [{
+                    message: "Invalid login or password",
+                    field: "loginOrEmail"
+                }]
             });
-            return;
         }
 
-        const accessToken = await new JWTService().createAccessToken(user);
-        const refreshToken = await new JWTService().createRefreshJWT(user);
+        const accessToken = await jwtService.createAccessToken(user);
+        const refreshToken = await jwtService.createRefreshJWT(user);
+
         await sessionsRepository.saveToken(refreshToken);
+
         res.clearCookie("refreshToken");
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
@@ -28,10 +36,11 @@ export const loginHandler = async (req: Request, res: Response) => {
             sameSite: "strict",
             maxAge: 20 * 1000
         });
-        res.status(200).json({ accessToken });
+
+        return res.status(200).json({ accessToken });
     } catch (error) {
         console.error("Login error:", error);
-        res.status(500).send("Internal server error");
+        return res.status(500).send("Internal server error");
     }
 };
 
@@ -113,8 +122,8 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
         const user = req.user!;
         const oldToken = req.refreshToken!;
         await sessionsRepository.deleteToken(oldToken);
-        const newAccessToken = await new JWTService().createAccessToken(user);
-        const newRefreshToken = await new JWTService().createRefreshJWT(user);
+        const newAccessToken = await jwtService.createAccessToken(user);
+        const newRefreshToken = await jwtService.createRefreshJWT(user);
         await sessionsRepository.saveToken(newRefreshToken);
         res.cookie("refreshToken", newRefreshToken, {
             httpOnly: true,
