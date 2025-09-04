@@ -25,7 +25,7 @@ export const loginHandler = async (req: Request, res: Response) => {
             sameSite: "strict",
             maxAge: 20 * 1000
         });
-        res.status(200).send(accessToken);
+        res.status(200).json({ accessToken, refreshToken });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).send("Internal server error");
@@ -38,13 +38,13 @@ export const registerHandler = async (req: Request, res: Response) => {
         const dto = { login, password, email };
         const user = await userService.createUser(dto);
         if (!user) {
-            res.status(400).send({ message: "Invalid Credentials" });
+            res.status(400).json({ message: "Invalid Credentials" });
             return;
         }
         res.sendStatus(204);
     } catch (error) {
         console.error("Register error:", error);
-        res.status(500).send("Internal server error");
+        res.status(500).json("Internal server error");
     }
 };
 
@@ -56,14 +56,14 @@ export const registrationConfirmationHandler = async (req: Request, res: Respons
             return;
         }
         if (result === undefined) {
-            res.status(400).send({
+            res.status(400).json({
                 errorsMessages: [
                     { message: "Email is already confirmed or doesnt exist", field: "code" }
                 ]
             });
             return;
         }
-        res.status(400).send({
+        res.status(400).json({
             errorsMessages: [{ message: "Wrong code confirmation", field: "code" }]
         });
     } catch (error) {
@@ -79,14 +79,14 @@ export const registrationEmailResendingHandler = async (req: Request, res: Respo
             res.sendStatus(204);
             return;
         }
-        res.status(400).send({
+        res.status(400).json({
             errorsMessages: [
                 { message: "Email doesnt exist or already confirmed", field: "email" }
             ]
         });
     } catch (error) {
         console.error("Resend email error:", error);
-        res.status(500).send("Internal server error");
+        res.status(500).json("Internal server error");
     }
 };
 
@@ -101,7 +101,7 @@ export const logoutHandler = async (req: Request, res: Response) => {
         res.sendStatus(204);
     } catch (error) {
         console.error("Logout error:", error);
-        res.status(500).send("Internal server error");
+        res.status(500).json("Internal server error");
     }
 };
 
@@ -136,6 +136,6 @@ export const aboutMeHandler = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error("About me error:", error);
-        res.status(500).send("Internal server error");
+        res.status(500).json("Internal server error");
     }
 };
