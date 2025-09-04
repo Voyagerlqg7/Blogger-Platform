@@ -1,7 +1,6 @@
 import {IUserRepository} from "../../../core/repository/IUserRepository";
 import {User} from "../../../core/entities/User";
 import {userDBCollection} from "../collections/collections";
-import {ObjectId} from "mongodb";
 import {UserMapper} from "../mappers/UserMapper";
 import {UserDB} from "../models/UserModel";
 import {UsersQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
