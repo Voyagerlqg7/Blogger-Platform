@@ -12,9 +12,12 @@ export const loginHandler = async (req: Request, res: Response) => {
             req.body.password
         );
         if (!user) {
-            res.status(400).json({ message: "Invalid Credentials" });
+            res.status(401).json({
+                errorsMessages: [{ message: "Invalid Credentials", field: "loginOrEmail/password" }]
+            });
             return;
         }
+
         const accessToken = await new JWTService().createAccessToken(user);
         const refreshToken = await new JWTService().createRefreshJWT(user);
         await sessionsRepository.saveToken(refreshToken);
@@ -25,7 +28,7 @@ export const loginHandler = async (req: Request, res: Response) => {
             sameSite: "strict",
             maxAge: 20 * 1000
         });
-        res.status(200).json({ accessToken, refreshToken });
+        res.status(200).json({ accessToken });
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).send("Internal server error");

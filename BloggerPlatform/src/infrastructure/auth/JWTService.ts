@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import {settings} from "../settings/settings";
-import {UserViewModel} from "../db/models/UserModel"
+import {UserViewModel} from "../../core/entities/User";
 
 export class JWTService {
     async createAccessToken(user:UserViewModel): Promise<string> {
