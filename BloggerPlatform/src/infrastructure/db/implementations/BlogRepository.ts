@@ -40,7 +40,7 @@ export class BlogRepository implements IBlogRepository {
         return BlogMapper.toDomain(newBlog);
     }
     async getBlogById(blogId:string):Promise<Blog | null> {
-        const blog = await blogsDBCollection.findOne({_id: new ObjectId(blogId)});
+        const blog = await blogsDBCollection.findOne({_id: blogId});
         if (!blog) {
             return null;
         }
@@ -48,7 +48,7 @@ export class BlogRepository implements IBlogRepository {
     }
     async updateBlogById(blogId: string, dto: UpdateBlogDTO): Promise<void> {
         await blogsDBCollection.updateOne(
-            { _id: new ObjectId(blogId) },
+            { _id: blogId },
             { $set: { name: dto.name, description: dto.description, websiteUrl: dto.websiteUrl } }
         );
     }
@@ -77,7 +77,7 @@ export class BlogRepository implements IBlogRepository {
         return PostMapper.toDomain(newPost);
     }
     async deleteBlogById(blogId: string): Promise<void> {
-        await blogsDBCollection.deleteOne({ _id: new ObjectId(blogId) });
+        await blogsDBCollection.deleteOne({ _id: blogId });
     }
 
 }

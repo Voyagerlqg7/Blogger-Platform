@@ -7,16 +7,16 @@ import {ICommentsRepository} from "../../../core/repository/ICommentsRepository"
 
 export class CommentRepository implements ICommentsRepository {
     async getCommentById(commentId:string):Promise<Comment | null> {
-        const comment = await commentDBCollection.findOne({_id:new ObjectId(commentId)});
+        const comment = await commentDBCollection.findOne({_id:commentId});
         if (!comment) {
             return null;
         }
         return CommentMapper.toDomain(comment);
     }
     async updateCommentById(commentId:string, content: string):Promise<void> {
-        await commentDBCollection.updateOne({_id:new ObjectId(commentId)}, {$set:{content:content}});
+        await commentDBCollection.updateOne({_id:commentId}, {$set:{content:content}});
     }
     async deleteCommentById(commentId:string):Promise<void> {
-        await commentDBCollection.deleteOne({_id:new ObjectId(commentId)});
+        await commentDBCollection.deleteOne({_id:commentId});
     }
 }

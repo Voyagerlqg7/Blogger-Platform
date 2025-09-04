@@ -29,7 +29,7 @@ export class PostRepository implements IPostRepository {
     }
 
     async getPostById(postId: string): Promise<Post | null> {
-        const post = await postsDBCollection.findOne({ _id: new ObjectId(postId) });
+        const post = await postsDBCollection.findOne({ _id: postId });
         if (!post) return null;
         return PostMapper.toDomain(post);
     }
@@ -40,18 +40,18 @@ export class PostRepository implements IPostRepository {
     }
 
     async deletePostById(postId: string): Promise<void> {
-        await postsDBCollection.deleteOne({ _id: new ObjectId(postId) });
+        await postsDBCollection.deleteOne({ _id: postId });
     }
 
     async updatePostById(postId: string, dto: UpdatePostByIdDTO): Promise<void> {
         await postsDBCollection.updateOne(
-            { _id: new ObjectId(postId) },
+            { _id: postId },
             {
                 $set: {
                     title: dto.title,
                     shortDescription: dto.shortDescription,
                     content: dto.content,
-                    blogId: new ObjectId(dto.blogId),
+                    blogId: dto.blogId,
                 },
             }
         );

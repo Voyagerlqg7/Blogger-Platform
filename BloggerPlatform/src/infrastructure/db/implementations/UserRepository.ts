@@ -15,7 +15,7 @@ export class UserRepository implements IUserRepository {
         const passwordHash = await this.passwordService.generateHash(user.password, passwordSalt);
 
         const newUser : UserDB={
-            _id: new ObjectId(),
+            _id: user.id,
             accountData: {
                 login: user.login,
                 email: user.email,
@@ -64,13 +64,13 @@ export class UserRepository implements IUserRepository {
 
 
     async getUserById(userId: string): Promise<User | null> {
-        const user = await userDBCollection.findOne({ _id: new ObjectId(userId) });
+        const user = await userDBCollection.findOne({ _id: userId });
         if (!user) return null;
         return UserMapper.toDomain(user);
     }
 
     async deleteUser(userId: string): Promise<void> {
-        await userDBCollection.deleteOne({ _id: new ObjectId(userId) });
+        await userDBCollection.deleteOne({ _id: userId});
     }
     async findByLoginOrEmail(loginOrEmail: string): Promise<User | null> {
         const user = await userDBCollection.findOne({
@@ -103,7 +103,7 @@ export class UserRepository implements IUserRepository {
     async updateStatusConfirmation(user: User): Promise<void> {
         try {
             await userDBCollection.updateOne(
-                { _id: new ObjectId(user.id)},
+                { _id: user.id},
                 { $set: { "emailConfirmation.isConfirmed": true } }
             );
         } catch (error) {
@@ -112,11 +112,11 @@ export class UserRepository implements IUserRepository {
     }
     async updateCodeConfirmationAndExpiresTime(userId: string, newCode: string, newExpiresAt:string){
         await userDBCollection.updateOne(
-            { _id: new ObjectId(userId) },
+            { _id: userId },
             {
                 $set: {
                     "emailConfirmation.confirmationCode": newCode,
-                    "emailConfirmation.expiresAt": newExpiresAt,
+                    "emailConfirmation.expiresAt": new Date(newExpiresAt),
                     "emailConfirmation.isConfirmed": false
                 }
             }

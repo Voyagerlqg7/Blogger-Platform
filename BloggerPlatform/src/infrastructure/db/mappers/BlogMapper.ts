@@ -1,6 +1,5 @@
 import {Blog} from "../../../core/entities/Blog";
 import {BlogsDB} from "../models/BlogModel";
-import {ObjectId} from "mongodb"
 
 export class BlogMapper {
     static toDomain(blogDB: BlogsDB): Blog {
