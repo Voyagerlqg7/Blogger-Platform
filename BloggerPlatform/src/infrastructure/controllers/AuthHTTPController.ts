@@ -9,7 +9,6 @@ import {
 
 export const loginHandler = async (req: Request, res: Response) => {
     try {
-        // Теперь используем готовые инстансы!
         const user = await passwordService.checkCredentials(
             req.body.loginOrEmail,
             req.body.password

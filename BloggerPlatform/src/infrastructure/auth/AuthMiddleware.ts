@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { JWTService } from './JWTService';
 import {UserService} from "../../core/services/UserService";
 import {UserRepository} from "../db/implementations/UserRepository";
 import {PasswordService} from "../applicationServices/PasswordService";
+import {jwtService} from "../composition";
 
 export const authMiddleware = async (
     req: Request,
@@ -17,7 +17,6 @@ export const authMiddleware = async (
     }
 
     const token = authHeader.split(' ')[1];
-    const jwtService = new JWTService();
     const userId = await jwtService.getUserIdFromToken(token);
 
     if (!userId) {
