@@ -8,8 +8,31 @@ import {PagedResponse} from "../../../core/repository/DTO/QueryParamsDTO";
 
 export class UserRepository implements IUserRepository {
     constructor(private readonly passwordService: any) {}
-
     async createUser(user: User): Promise<UserViewModel> {
+        const passwordSalt = await this.passwordService.generatePasswordSalt();
+        const passwordHash = await this.passwordService.generateHash(user.password, passwordSalt);
+
+        const newUser : UserDB={
+            _id: user.id,
+            accountData: {
+                login: user.login,
+                email: user.email,
+                passwordHash,
+                passwordSalt,
+                createdAt: new Date()
+            },
+            emailConfirmation: {
+                confirmationCode: user.confirmationCode,
+                expiresAt: new Date(user.expiresAt),
+                isConfirmed: user.isConfirmed
+            }
+        }
+        await userDBCollection.insertOne(newUser);
+        return UserMapper.toViewModel(UserMapper.toDomain(newUser));
+    }
+
+
+    async registrationUser(user: User): Promise<UserViewModel> {
         const passwordSalt = await this.passwordService.generatePasswordSalt();
         const passwordHash = await this.passwordService.generateHash(user.password, passwordSalt);
 

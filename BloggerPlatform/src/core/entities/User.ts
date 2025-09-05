@@ -5,8 +5,8 @@ export class User{
         public email: string,
         public password: string,
         public createdAt: string,
-        public confirmationCode: string,
-        public expiresAt: string,
+        public confirmationCode: string | null,
+        public expiresAt: string | null,
         public isConfirmed: boolean
     ) {}
 }

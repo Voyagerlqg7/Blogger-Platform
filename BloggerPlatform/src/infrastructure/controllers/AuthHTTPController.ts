@@ -47,7 +47,7 @@ export const registerHandler = async (req: Request, res: Response) => {
     try {
         const { login, password, email } = req.body;
         const dto = { login, password, email };
-        const user = await userService.createUser(dto);
+        const user = await userService.registrationUser(dto);
         if (!user) {
             res.status(400).json({ message: "Invalid Credentials" });
             return;

@@ -50,7 +50,7 @@ export const deleteUserById: RequestHandler = async (req, res) => {
     }
 };
 
-export const createNewUser: RequestHandler = async (req, res) => {
+export const createUser: RequestHandler = async (req, res) => {
     try {
         const {login, password, email} = req.body;
         const dto = {login, password, email};
