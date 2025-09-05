@@ -14,7 +14,7 @@ export class PasswordService {
             const passwordHash = await userService.getPasswordHash(loginOrEmail);
             if (!passwordHash) return undefined;
 
-            const isValid = bcrypt.compare(password, passwordHash);
+            const isValid = await bcrypt.compare(password, passwordHash);
             if (!isValid) return undefined;
 
             const user = await userService.findByLoginOrEmail(loginOrEmail);
