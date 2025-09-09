@@ -1,6 +1,6 @@
 import {User} from "../../../core/entities/User";
 import {UserDB} from "../models/UserModel";
-import {UserViewModel} from "../models/UserModel";
+import {UserViewModel} from "../../../core/entities/User";
 
 export class UserMapper {
     static toDomain(userDB: UserDB): User {
@@ -11,10 +11,13 @@ export class UserMapper {
             userDB.accountData.passwordHash,
             userDB.accountData.createdAt.toISOString(),
             userDB.emailConfirmation.confirmationCode,
-            userDB.emailConfirmation.expiresAt.toISOString(),
+            userDB.emailConfirmation.expiresAt
+                ? userDB.emailConfirmation.expiresAt.toISOString()
+                : null,
             userDB.emailConfirmation.isConfirmed
         );
     }
+
     static toViewModel(user: User): UserViewModel {
         return {
             id: user.id,

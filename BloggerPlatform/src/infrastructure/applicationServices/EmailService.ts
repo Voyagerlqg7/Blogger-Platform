@@ -54,7 +54,7 @@ export const EmailService = {
         const user = await userService.findByCodeConfirmation(code);
         if (!user) return undefined;
 
-        const isExpired = new Date() > new Date(user.expiresAt);
+        const isExpired = !user.expiresAt || new Date() > new Date(user.expiresAt);
         const isConfirmed = user.isConfirmed;
 
         if (isConfirmed || isExpired) return false;

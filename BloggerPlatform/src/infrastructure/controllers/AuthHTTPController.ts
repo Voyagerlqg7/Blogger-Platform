@@ -23,6 +23,7 @@ export const loginHandler = async (req: Request, res: Response) => {
             });
             return
         }
+        console.log("USER BEFORE TOKEN:", user);
 
         const accessToken = await jwtService.createAccessToken(user);
         const refreshToken = await jwtService.createRefreshJWT(user);
@@ -36,7 +37,7 @@ export const loginHandler = async (req: Request, res: Response) => {
             sameSite: "strict",
             maxAge: 20 * 1000
         });
-        res.status(200).json({ accessToken });
+        res.status(200).send(accessToken);
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).send("Internal server error");

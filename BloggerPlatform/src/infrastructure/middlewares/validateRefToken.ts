@@ -2,10 +2,9 @@ import {Request, Response, NextFunction} from "express";
 import {sessionsRepository} from "../db/implementations/SessionRepository";
 import jwt from "jsonwebtoken";
 import {settings} from "../settings/settings";
-import {JWTService} from "../auth/JWTService";
-import {userService} from "../composition";
+import {jwtService, userService} from "../composition";
 
-const JWTClass = new JWTService();
+
 
 export const validateRefreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const token = req.cookies?.refreshToken;
@@ -19,7 +18,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
         res.status(401).send("step 0");
         return;
     }
-    const userId = await JWTClass.getUserIdFromToken(token);
+    const userId = await jwtService.getUserIdFromToken(token);
     console.log('STEP 2: userId from token:', userId);
     if (!userId) {res.status(401).send("step 2"); return;}
 
