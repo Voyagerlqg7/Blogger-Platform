@@ -1,6 +1,5 @@
 import {Comment} from "../../../core/entities/Comment";
 import {CommentDB} from "../models/CommentModel";
-import {ObjectId} from "mongodb";
 
 export class CommentMapper{
 

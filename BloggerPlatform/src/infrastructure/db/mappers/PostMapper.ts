@@ -1,6 +1,5 @@
 import {Post} from "../../../core/entities/Post";
 import {PostsDB} from "../models/PostModel";
-import {ObjectId} from "mongodb"
 
 export class PostMapper{
     static toDomain(postDB: PostsDB):Post{
