@@ -3,19 +3,14 @@ import {UserDB} from "../models/UserModel";
 import {UserViewModel} from "../../../core/entities/User";
 
 export class UserMapper {
-    static toDomain(userDB: UserDB): User {
-        return new User(
-            userDB._id.toString(),
-            userDB.accountData.login,
-            userDB.accountData.email,
-            userDB.accountData.passwordHash,
-            userDB.accountData.createdAt.toISOString(),
-            userDB.emailConfirmation.confirmationCode,
-            userDB.emailConfirmation.expiresAt
-                ? userDB.emailConfirmation.expiresAt.toISOString()
-                : null,
-            userDB.emailConfirmation.isConfirmed
-        );
+    static toDomain(userDB: UserDB): User { return new User( userDB._id.toString(),
+        userDB.accountData.login,
+        userDB.accountData.email,
+        userDB.accountData.passwordHash,
+        userDB.accountData.createdAt.toISOString(),
+        userDB.emailConfirmation.confirmationCode,
+        userDB.emailConfirmation.expiresAt.toISOString(),
+        userDB.emailConfirmation.isConfirmed );
     }
 
     static toViewModel(user: User): UserViewModel {
