@@ -15,7 +15,7 @@ export const loginHandler = async (req: Request, res: Response) => {
         );
 
         if (!user) {
-            return res.status(401).json({
+            res.status(401).json({
                 errorsMessages: [
                     {
                         message: "Invalid login or password",
@@ -23,6 +23,7 @@ export const loginHandler = async (req: Request, res: Response) => {
                     },
                 ],
             });
+            return;
         }
 
         const accessToken = await jwtService.createAccessToken(user);
@@ -39,10 +40,10 @@ export const loginHandler = async (req: Request, res: Response) => {
 
         console.log("ACCESS TOKEN ACTUAL:", accessToken, "TYPE:", typeof accessToken);
 
-        return res.status(200).json({ accessToken: String(accessToken) });
+        res.status(200).json({ accessToken: String(accessToken) });
     } catch (error) {
         console.error("Login error:", error);
-        return res.status(500).send("Internal server error");
+        res.status(500).send("Internal server error");
     }
 };
 
@@ -144,11 +145,17 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
 export const aboutMeHandler = async (req: Request, res: Response) => {
     try {
         const user = req.user!;
-        res.status(200).json({
-            email: user.email,
-            login: user.login,
-            userId: user.id
-        });
+
+        if (!user){
+            res.status(401)
+        }
+        else {
+            res.status(200).json({
+                email: user.email,
+                login: user.login,
+                userId: user.id
+            });
+        }
     } catch (error) {
         console.error("About me error:", error);
         res.status(500).json("Internal server error");
