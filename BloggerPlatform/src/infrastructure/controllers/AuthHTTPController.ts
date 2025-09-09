@@ -1,6 +1,6 @@
-import {Request, Response} from "express";
-import {sessionsRepository} from "../db/implementations/SessionRepository";
+import { Request, Response } from "express";
 import {EmailService} from "../applicationServices/EmailService";
+import { sessionsRepository } from "../db/implementations/SessionRepository";
 import {
     userService,
     passwordService,
@@ -15,35 +15,37 @@ export const loginHandler = async (req: Request, res: Response) => {
         );
 
         if (!user) {
-            res.status(401).json({
-                errorsMessages: [{
-                    message: "Invalid login or password",
-                    field: "loginOrEmail"
-                }]
+            return res.status(401).json({
+                errorsMessages: [
+                    {
+                        message: "Invalid login or password",
+                        field: "loginOrEmail",
+                    },
+                ],
             });
-            return
         }
-        console.log("USER BEFORE TOKEN:", user);
 
         const accessToken = await jwtService.createAccessToken(user);
         const refreshToken = await jwtService.createRefreshJWT(user);
 
         await sessionsRepository.saveToken(refreshToken);
 
-        res.clearCookie("refreshToken");
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
-            maxAge: 20 * 1000
+            maxAge: 20 * 1000,
         });
+
         console.log("ACCESS TOKEN ACTUAL:", accessToken, "TYPE:", typeof accessToken);
-        res.status(200).json({ accessToken });
+
+        return res.status(200).json({ accessToken: String(accessToken) });
     } catch (error) {
         console.error("Login error:", error);
-        res.status(500).send("Internal server error");
+        return res.status(500).send("Internal server error");
     }
 };
+
 
 export const registerHandler = async (req: Request, res: Response) => {
     try {
