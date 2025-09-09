@@ -13,15 +13,18 @@ export class UserService {
     }
     async createUser(dto: UserDTO): Promise<UserViewModel> {
         const id = uuidv4();
+        const code = uuidv4();
+        const expiresAt = add(new Date(), { seconds: 30 }).toISOString();
+
         const newUser = new User(
             id,
             dto.login,
             dto.email,
             dto.password,
             new Date().toISOString(),
-            null, // confirmationCode
-            null, // expiresAt
-            true
+            code,
+            expiresAt,
+            true //USER CREATED BY ADMIN AND ALREADY CONFIRMED
         );
         return await this.userRepository.createUser(newUser);
     }
