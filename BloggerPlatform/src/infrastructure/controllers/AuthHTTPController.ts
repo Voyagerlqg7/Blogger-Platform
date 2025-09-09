@@ -37,6 +37,7 @@ export const loginHandler = async (req: Request, res: Response) => {
             sameSite: "strict",
             maxAge: 20 * 1000
         });
+        console.log("ACCESS TOKEN ACTUAL:", accessToken, "TYPE:", typeof accessToken);
         res.status(200).json({ accessToken });
     } catch (error) {
         console.error("Login error:", error);

@@ -32,6 +32,7 @@ export const authMiddleware = async (
         res.sendStatus(401);
         return;
     }
+    //(req as any).userId = user.id;
     req.user = user;
     next();
 };
