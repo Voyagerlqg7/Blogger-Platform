@@ -15,4 +15,4 @@ authRouter.post("/registration-confirmation",registrationConfirmationHandler);
 authRouter.post('/registration-email-resending', emailResendingValidation,inputValidationMiddleware,registrationEmailResendingHandler);
 authRouter.post("/logout",validateRefreshToken,logoutHandler);
 authRouter.post("/refresh-token",validateRefreshToken,refreshTokenHandler)
-authRouter.post("/me",authMiddleware,aboutMeHandler)
+authRouter.get("/me",authMiddleware,aboutMeHandler)
