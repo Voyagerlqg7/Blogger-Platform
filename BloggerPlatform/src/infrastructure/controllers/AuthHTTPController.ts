@@ -147,7 +147,7 @@ export const aboutMeHandler = async (req: Request, res: Response) => {
         const user = req.user!;
 
         if (!user){
-            res.sendStatus(401)
+            res.status(401)
         }
         else {
             res.status(200).json({
