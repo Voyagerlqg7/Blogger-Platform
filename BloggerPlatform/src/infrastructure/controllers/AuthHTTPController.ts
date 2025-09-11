@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import {EmailService} from "../applicationServices/EmailService";
-import { sessionsRepository } from "../db/implementations/SessionRepository";
+import { tokenRepository } from "../db/implementations/TokenRepository";
 import {
     userService,
     passwordService,
@@ -29,7 +29,7 @@ export const loginHandler = async (req: Request, res: Response) => {
         const accessToken = await jwtService.createAccessToken(user);
         const refreshToken = await jwtService.createRefreshJWT(user);
 
-        await sessionsRepository.saveToken(refreshToken);
+        await tokenRepository.saveToken(refreshToken);
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
@@ -109,7 +109,7 @@ export const registrationEmailResendingHandler = async (req: Request, res: Respo
 export const logoutHandler = async (req: Request, res: Response) => {
     try {
         const oldToken = req.refreshToken!;
-        const result = await sessionsRepository.deleteToken(oldToken);
+        const result = await tokenRepository.deleteToken(oldToken);
         if (!result) {
             res.sendStatus(401);
             return;
@@ -125,10 +125,10 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
     try {
         const user = req.user!;
         const oldToken = req.refreshToken!;
-        await sessionsRepository.deleteToken(oldToken);
+        await tokenRepository.deleteToken(oldToken);
         const newAccessToken = await jwtService.createAccessToken(user);
         const newRefreshToken = await jwtService.createRefreshJWT(user);
-        await sessionsRepository.saveToken(newRefreshToken);
+        await tokenRepository.saveToken(newRefreshToken);
         res.cookie("refreshToken", newRefreshToken, {
             httpOnly: true,
             secure: true,

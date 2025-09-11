@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import {sessionsRepository} from "../db/implementations/SessionRepository";
+import {sessionsRepository} from "../db/implementations/TokenRepository";
 import jwt from "jsonwebtoken";
 import {settings} from "../settings/settings";
 import {jwtService, userService} from "../composition";

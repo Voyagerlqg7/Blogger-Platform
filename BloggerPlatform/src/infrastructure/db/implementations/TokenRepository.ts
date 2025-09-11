@@ -1,6 +1,6 @@
 import {tokenDBCollection} from "../collections/collections"
 
-export const sessionsRepository = {
+export const tokenRepository = {
     async deleteToken(token: string): Promise<true | null> {
         try {
             const result = await tokenDBCollection.findOneAndDelete({ token });
