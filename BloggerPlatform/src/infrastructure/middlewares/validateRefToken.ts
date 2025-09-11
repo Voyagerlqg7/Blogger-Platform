@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import {sessionsRepository} from "../db/implementations/TokenRepository";
+import {tokenRepository} from "../db/implementations/TokenRepository";
 import jwt from "jsonwebtoken";
 import {settings} from "../settings/settings";
 import {jwtService, userService} from "../composition";
@@ -22,7 +22,7 @@ export const validateRefreshToken = async (req: Request, res: Response, next: Ne
     console.log('STEP 2: userId from token:', userId);
     if (!userId) {res.status(401).send("step 2"); return;}
 
-    const tokenInDb = await sessionsRepository.findToken(token);
+    const tokenInDb = await tokenRepository.findToken(token);
     console.log('STEP 3: token in DB:', tokenInDb);
     if (!tokenInDb) {res.status(401).send("step 3"); return;}
 
