@@ -32,6 +32,8 @@ const startApp = async () => {
             await db.collection("users").deleteMany({});
             await db.collection("Comments").deleteMany({});
             await db.collection("token").deleteMany({});
+            await db.collection("customRateLimit").deleteMany({});
+            //await db.collection("customRateLimit").createIndex({ date: 1 }, { expireAfterSeconds: 60 });//чтобы данные удалялись через минуту, не хранить мусор
             response.status(204).send();
         } catch (error) {
             console.error("Error deleting data:", error);

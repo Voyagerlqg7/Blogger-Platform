@@ -9,3 +9,4 @@ export const userDBCollection = client.db("BloggerPlatform").collection<UserDB>(
 export const commentDBCollection = client.db("BloggerPlatform").collection<CommentDB>("Comments");
 export const postsDBCollection = client.db("BloggerPlatform").collection<PostsDB>("posts");
 export const tokenDBCollection = client.db("BloggerPlatform").collection("token");
+export const requestLogsCollection = client.db("BloggerPlatform").collection("customRateLimit");

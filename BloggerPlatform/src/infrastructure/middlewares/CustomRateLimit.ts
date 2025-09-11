@@ -1,29 +1,30 @@
-import { Request, Response, NextFunction } from 'express';
-import { RateLimiterRedis } from 'rate-limiter-flexible';
-import Redis from 'ioredis';
+import {Request, Response, NextFunction} from "express";
+import {requestLogsCollection} from "../db/collections/collections";
 
-const redisClient = new Redis({
-    host: '127.0.0.1',
-    port: 6419,
-    enableOfflineQueue: false,
-});
+const LIMIT =5;
 
-export function createRateLimiter(points: number, duration: number) {
-    const limiter = new RateLimiterRedis({
-        storeClient: redisClient,
-        keyPrefix: `rl_${duration}_${points}`,
-        points,
-        duration,
-    });
+export async function rateLimiter_to_DB(req: Request, res: Response, next: NextFunction) {
+    try{
+        const now = new Date();
+        const tenSecondsAdo = new Date(now.getTime() - 10 * 1000);
+        await requestLogsCollection.insertOne({
+            ip: req.ip,
+            url: req.originalUrl,
+            date: now,
+        })
 
-    return async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            await limiter.consume(req.ip as string);
-            next();
-        } catch {
-            res.status(429).json({
-                message: 'Too many requests. Please try again later.',
-            });
+        const count = await requestLogsCollection.countDocuments({
+            ip: req.ip,
+            utl: req.originalUrl,
+            date: {$gte: tenSecondsAdo},
+        })
+        if(count > LIMIT){
+            res.sendStatus(429)
         }
-    };
+        next();
+    }
+    catch(error){
+        console.log("internal request failed", error);
+        res.sendStatus(500).send("server error");
+    }
 }
