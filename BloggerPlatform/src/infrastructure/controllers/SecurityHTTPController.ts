@@ -11,11 +11,7 @@ export const getAllDevicesHandlers = async (req: Request, res:Response) => {
             deviceId:s.deviceId,
         }
     )));
-
-
 }
-
-
 export const deleteAllDevicesHandlers = async (req: Request, res:Response) => {
     await sessionsRepository.deleteAllExcept(req.user!.id, req.deviceId!);
     res.sendStatus(204);

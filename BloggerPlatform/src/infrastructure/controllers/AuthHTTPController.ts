@@ -125,11 +125,19 @@ export const registrationEmailResendingHandler = async (req: Request, res: Respo
 export const logoutHandler = async (req: Request, res: Response) => {
     try {
         const oldToken = req.refreshToken!;
+        const deviceId = req.deviceId!;
         const result = await tokenRepository.deleteToken(oldToken);
         if (!result) {
             res.sendStatus(401);
             return;
         }
+        await sessionsRepository.deleteDeviceById(deviceId);
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
+
         res.sendStatus(204);
     } catch (error) {
         console.error("Logout error:", error);

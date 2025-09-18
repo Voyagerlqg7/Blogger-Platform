@@ -15,11 +15,12 @@ export async function rateLimiter_to_DB(req: Request, res: Response, next: NextF
 
         const count = await requestLogsCollection.countDocuments({
             ip: req.ip,
-            utl: req.originalUrl,
+            url: req.originalUrl,
             date: {$gte: tenSecondsAdo},
         })
         if(count > LIMIT){
             res.sendStatus(429)
+            return;
         }
         next();
     }
