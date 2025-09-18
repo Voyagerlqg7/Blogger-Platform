@@ -10,8 +10,8 @@ import {authMiddleware} from "../../auth/AuthMiddleware";
 
 export const authRouter = Router();
 
-authRouter.post("/login",inputValidationMiddleware,rateLimiter_to_DB, loginHandler);
-authRouter.post("/registration",usersValidationMiddleware,inputValidationMiddleware,rateLimiter_to_DB,registerHandler);
+authRouter.post("/login",rateLimiter_to_DB,inputValidationMiddleware, loginHandler);
+authRouter.post("/registration",rateLimiter_to_DB,usersValidationMiddleware,inputValidationMiddleware,registerHandler);
 authRouter.post("/registration-confirmation",rateLimiter_to_DB,registrationConfirmationHandler);
 authRouter.post('/registration-email-resending', emailResendingValidation,inputValidationMiddleware,rateLimiter_to_DB,registrationEmailResendingHandler);
 authRouter.post("/logout",validateRefreshToken,logoutHandler);
