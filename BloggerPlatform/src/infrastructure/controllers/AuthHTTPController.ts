@@ -82,7 +82,15 @@ export const registerHandler = async (req: Request, res: Response) => {
 
 export const registrationConfirmationHandler = async (req: Request, res: Response) => {
     try {
-        const result = await EmailService.CheckCodeConfirmation(req.body.code);
+        let result: boolean | undefined;
+        try {
+            result = await EmailService.CheckCodeConfirmation(req.body.code);
+        } catch (error) {
+            // если сервис выбросил ошибку "код не найден", превращаем в undefined
+            console.warn("CheckCodeConfirmation failed:", error);
+            result = undefined;
+        }
+
         if (result) {
             res.sendStatus(204);
             return;
@@ -98,11 +106,13 @@ export const registrationConfirmationHandler = async (req: Request, res: Respons
         res.status(400).json({
             errorsMessages: [{ message: "Wrong code confirmation", field: "code" }]
         });
+
     } catch (error) {
         console.error("Registration confirmation error:", error);
         res.status(500).send("Internal server error");
     }
 };
+
 
 export const registrationEmailResendingHandler = async (req: Request, res: Response) => {
     try {
