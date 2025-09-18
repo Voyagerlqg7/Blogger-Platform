@@ -26,6 +26,6 @@ export const deleteDevicesHandlers = async (req: Request, res:Response) => {
     if (!session) {res.sendStatus(404); return}
     if (session.userId !== req.user!.id) {res.sendStatus(403); return;}
 
-    await sessionsRepository.deleteDeviceById(req.params.deviceId);
+    await sessionsRepository.deleteDeviceById(req.params.id);
     res.sendStatus(204);
 }
