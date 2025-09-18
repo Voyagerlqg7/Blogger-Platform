@@ -11,9 +11,9 @@ export class JWTService {
         return accessToken;
     }
 
-    async createRefreshJWT(user:UserViewModel):Promise<string>{
+    async createRefreshJWT(user:UserViewModel, deviceId:string):Promise<string>{
         const refreshToken:string = jwt.sign(
-            {userId: user.id},
+            {userId: user.id, deviceId},
             settings.JWT_SECRET,
             {expiresIn: "20s"}
         )

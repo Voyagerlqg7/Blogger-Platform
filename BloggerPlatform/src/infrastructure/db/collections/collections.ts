@@ -4,6 +4,8 @@ import {UserDB} from "../models/UserModel";
 import {PostsDB} from "../models/PostModel";
 import {CommentDB} from "../models/CommentModel";
 
+
+export const sessionDBCollection = client.db("BloggerPlatform").collection("sessions");
 export const blogsDBCollection = client.db("BloggerPlatform").collection<BlogsDB>("blogs");
 export const userDBCollection = client.db("BloggerPlatform").collection<UserDB>("users");
 export const commentDBCollection = client.db("BloggerPlatform").collection<CommentDB>("Comments");

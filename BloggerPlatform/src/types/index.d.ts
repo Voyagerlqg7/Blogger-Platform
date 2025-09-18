@@ -5,6 +5,7 @@ declare global {
         interface Request {
             user: UserViewModel | null;
             refreshToken?: string;
+            deviceId?: string;
         }
     }
 }

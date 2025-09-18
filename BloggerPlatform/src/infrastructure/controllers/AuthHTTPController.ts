@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import {EmailService} from "../applicationServices/EmailService";
 import { tokenRepository } from "../db/implementations/TokenRepository";
+import {v4 as uuidv4} from "uuid";
 import {
     userService,
     passwordService,
     jwtService,
 } from "../composition";
+import {sessionsRepository} from "../db/implementations/SessionsRepository";
+
 
 export const loginHandler = async (req: Request, res: Response) => {
     try {
@@ -25,9 +28,22 @@ export const loginHandler = async (req: Request, res: Response) => {
             });
             return;
         }
+        if(!req.ip){
+            console.log("ip address is empty!")
+            return;
+        }
+        const deviceId = uuidv4();
+        await sessionsRepository.create({
+            userId: user.id,
+            deviceId,
+            ip: req.ip,
+            title: req.headers["user-agent"]??"Unknown device",
+            lastActiveDate:new Date(),
+            expirationDate: new Date(Date.now() + 20_000),
+        })
 
         const accessToken = await jwtService.createAccessToken(user);
-        const refreshToken = await jwtService.createRefreshJWT(user);
+        const refreshToken = await jwtService.createRefreshJWT(user, deviceId);
 
         await tokenRepository.saveToken(refreshToken);
 
@@ -125,9 +141,15 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
     try {
         const user = req.user!;
         const oldToken = req.refreshToken!;
+        const deviceId = req.deviceId!;
         await tokenRepository.deleteToken(oldToken);
         const newAccessToken = await jwtService.createAccessToken(user);
-        const newRefreshToken = await jwtService.createRefreshJWT(user);
+        const newRefreshToken = await jwtService.createRefreshJWT(user, deviceId);
+        await sessionsRepository.updateLastActiveDate(deviceId, {
+            lastActiveDate: new Date(),
+            expirationDate: new Date(Date.now() + 20_000)
+        });
+
         await tokenRepository.saveToken(newRefreshToken);
         res.cookie("refreshToken", newRefreshToken, {
             httpOnly: true,

@@ -4,14 +4,17 @@ import {blogRouter} from "./infrastructure/controllers/routes/blogRoutes";
 import {commentRouter} from "./infrastructure/controllers/routes/commentRoutes";
 import {userRouter} from "./infrastructure/controllers/routes/userRoutes";
 import {postRouter} from "./infrastructure/controllers/routes/postRoutes";
+import {securityDevicesRouter} from "./infrastructure/controllers/routes/securityRoute";
 import {connectDB} from "./infrastructure/db/connection";
 import {client} from "./infrastructure/db/connection";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
-dotenv.config();
 
+
+dotenv.config();
 const app = express();
 const port = process.env.PORT || 6419;
+app.set('trust proxy', true)
 app.use(express.json());
 app.use(cookieParser())
 
@@ -20,6 +23,7 @@ app.use("/posts", postRouter);
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/comments", commentRouter);
+app.use("/security/devices", securityDevicesRouter)
 
 const startApp = async () => {
     await connectDB();
@@ -33,6 +37,7 @@ const startApp = async () => {
             await db.collection("Comments").deleteMany({});
             await db.collection("token").deleteMany({});
             await db.collection("customRateLimit").deleteMany({});
+            await db.collection("sessions").deleteMany({});
             //await db.collection("customRateLimit").createIndex({ date: 1 }, { expireAfterSeconds: 60 });//чтобы данные удалялись через минуту, не хранить мусор
             response.status(204).send();
         } catch (error) {
