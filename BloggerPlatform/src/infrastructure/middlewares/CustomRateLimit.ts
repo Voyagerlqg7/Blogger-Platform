@@ -7,6 +7,7 @@ export async function rateLimiter_to_DB(req: Request, res: Response, next: NextF
     const now = new Date();
     const tenSecondsAgo = new Date(now.getTime() - 10 * 1000);
 
+    // логируем запрос, но ошибки не прерывают выполнение
     try {
         await requestLogsCollection.insertOne({
             ip: req.ip,
@@ -14,27 +15,25 @@ export async function rateLimiter_to_DB(req: Request, res: Response, next: NextF
             date: now,
         });
     } catch (error) {
-        console.log("Warning: failed to log request, ignoring:", error);
-        // не обрываем выполнение
+        console.warn("Failed to log request:", error);
     }
 
+    let count = 0;
     try {
-        const count = await requestLogsCollection.countDocuments({
+        count = await requestLogsCollection.countDocuments({
             ip: req.ip,
             url: req.originalUrl,
             date: { $gte: tenSecondsAgo },
         });
-
-        if (count > LIMIT) {
-            res.sendStatus(429);
-            return;
-        }
-
-        next();
     } catch (error) {
-        console.log("internal request failed during count:", error);
-        // можно вернуть 400 вместо 500, если тест ожидает
-        res.status(400).send("Request failed");
+        console.warn("Failed to count requests:", error);
+        // не обрываем выполнение, пусть контроллер должен сам вернуть 400 при ошибке данных
+    }
+
+    if (count > LIMIT) {
+        res.sendStatus(429);
         return;
     }
+
+    next();
 }
