@@ -1,8 +1,6 @@
 import nodemailer from "nodemailer";
 import {settings} from "../settings/settings";
-import { v4 as uuidv4 } from "uuid";
-import {add} from "date-fns"
-import {userService} from "../composition";
+import {injectable, inject} from "inversify";
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -12,8 +10,10 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-export const EmailService = {
-    async SendEmailCodeConfirmation(login: string, email: string, code: string) {
+
+@injectable()
+export class EmailService {
+    async sendEmailConfirmation(email: string, login: string, code: string): Promise<boolean> {
         try {
             const confirmationLink = `https://somesite.com/confirm-email?code=${code}`;
 
@@ -21,13 +21,8 @@ export const EmailService = {
                 from: settings.GOOGLE_GMAIL_EMAIL,
                 to: email,
                 subject: "Verification Code Confirmation",
-                html: `
-                <h1>Thanks for your registration</h1>
-                <p>To finish registration please follow the link below:</p>
-                <a href="${confirmationLink}">Complete registration</a>
-                <p>Or use this code manually: <strong>${code}</strong></p>
-            `,
-                text: `Thank you for your registration. To finish, go to this link: ${confirmationLink} or use code: ${code}`
+                html: `...`,
+                text: `...`
             });
 
             return true;
@@ -35,32 +30,8 @@ export const EmailService = {
             console.error("Failed to send confirmation email:", error);
             return false;
         }
-
-    },
-    async ReSendCodeConfirmation(email:string){
-        const user = await userService.findByLoginOrEmail(email);
-        const newCode = uuidv4();
-        const newExpiresAt = add(new Date(), { minutes: 5 }).toISOString();
-
-        if (!user || user.isConfirmed) {
-            return false;
-        }
-
-        await userService.updateCodeConfirmationAndExpiresTime(user.id.toString(), newCode, newExpiresAt);
-        await this.SendEmailCodeConfirmation(user.login, user.email, newCode);
-        return true;
-    },
-    async CheckCodeConfirmation(code: string): Promise<boolean | undefined> {
-        const user = await userService.findByCodeConfirmation(code);
-        if (!user) return undefined;
-
-        const isExpired = !user.expiresAt || new Date() > new Date(user.expiresAt);
-        const isConfirmed = user.isConfirmed;
-
-        if (isConfirmed || isExpired) return false;
-
-        await userService.updateStatusConfirmation(user);
-        return true;
     }
 
+    //async sendPasswordReset(email: string, resetToken: string): Promise<boolean> {
+        // Логика отправки email для сброса пароля}
 }
