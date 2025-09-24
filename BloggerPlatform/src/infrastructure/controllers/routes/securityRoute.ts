@@ -1,10 +1,11 @@
-import {deleteAllDevicesHandlers, deleteDevicesHandlers, getAllDevicesHandlers} from "../SecurityHTTPController";
 import {Router} from "express";
-import {validateRefreshToken} from "../../middlewares/validateRefToken";
+import {createValidateRefreshToken} from "../../middlewares/validateRefToken";
+import {SecurityHTTPController} from "../SecurityHTTPController"
+import {container} from "../../composition";
 
 export const securityDevicesRouter = Router();
+const securityController = container.get<SecurityHTTPController>(SecurityHTTPController);
 
-
-securityDevicesRouter.get("/", validateRefreshToken,getAllDevicesHandlers);
-securityDevicesRouter.delete("/:id", validateRefreshToken, deleteDevicesHandlers);
-securityDevicesRouter.delete("/", validateRefreshToken, deleteAllDevicesHandlers);
+securityDevicesRouter.get("/", createValidateRefreshToken(),securityController.getAllDevicesHandlers);
+securityDevicesRouter.delete("/:id", createValidateRefreshToken(), securityController.deleteDevicesHandlers);
+securityDevicesRouter.delete("/", createValidateRefreshToken(), securityController.deleteAllDevicesHandlers);

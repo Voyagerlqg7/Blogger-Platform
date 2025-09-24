@@ -1,10 +1,12 @@
 import {Router} from "express";
-import {getCommentById, updateComment, deleteCommentById} from "../CommentHTTPController";
 import {authMiddleware} from "../../auth/AuthMiddleware";
 import {commentsValidationMiddleware} from "../../middlewares/CommentsValidation";
+import {container} from "../../composition";
+import {CommentController} from "../CommentHTTPController";
 
 export const commentRouter = Router();
+const commentController = container.get<CommentController>(CommentController);
 
-commentRouter.get("/:id", getCommentById);
-commentRouter.put("/:id", updateComment,authMiddleware,commentsValidationMiddleware);
-commentRouter.delete("/:id", authMiddleware,deleteCommentById);
+commentRouter.get("/:id", commentController.getCommentById);
+commentRouter.put("/:id",authMiddleware,commentsValidationMiddleware, commentController.updateComment);
+commentRouter.delete("/:id", authMiddleware,commentController.deleteCommentById);

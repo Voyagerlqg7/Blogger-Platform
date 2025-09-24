@@ -1,22 +1,39 @@
-import {Router} from "express";
-import {createBlogHandler, getAllBlogsHandler} from "../BlogHTTPController";
-import {getBlogByIdHandler, updateBlogHandler, deleteBlogHandler} from "../BlogHTTPController";
-import {getAllPostsFromBlogHandler,createPostForSpecialBlogHandler} from "../BlogHTTPController";
-import {blogValidationMiddleware} from "../../middlewares/BlogsValidation";
-
-
-import {basicAuthMiddleware} from "../../auth/BasicAuthMiddleware";
-import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
+import { Router } from "express";
+import { BlogController } from "../BlogHTTPController";
+import { blogValidationMiddleware } from "../../middlewares/BlogsValidation";
+import { basicAuthMiddleware } from "../../auth/BasicAuthMiddleware";
+import { inputValidationMiddleware } from "../../middlewares/input-validation-middleware";
+import { container } from "../../composition";
 
 export const blogRouter = Router();
+const blogController = container.get<BlogController>(BlogController);
 
-blogRouter.get("/", getAllBlogsHandler);
-blogRouter.get("/:id", getAllPostsFromBlogHandler);
-blogRouter.get("/:id", getBlogByIdHandler);
+blogRouter.get("/", blogController.getAllBlogsHandler);
+blogRouter.get("/:id", blogController.getBlogByIdHandler);
+blogRouter.get("/:id/posts", blogController.getAllPostsFromBlogHandler); // исправил путь
 
-blogRouter.put("/:id", updateBlogHandler,basicAuthMiddleware,blogValidationMiddleware,inputValidationMiddleware);
+blogRouter.put("/:id",
+    basicAuthMiddleware,
+    blogValidationMiddleware,
+    inputValidationMiddleware,
+    blogController.updateBlogHandler
+);
 
+blogRouter.post("/",
+    basicAuthMiddleware,
+    blogValidationMiddleware,
+    inputValidationMiddleware,
+    blogController.createBlogHandler
+);
 
-blogRouter.post("/", createBlogHandler,basicAuthMiddleware,blogValidationMiddleware,inputValidationMiddleware);
-blogRouter.post("/:id", createPostForSpecialBlogHandler, basicAuthMiddleware,blogValidationMiddleware,inputValidationMiddleware);
-blogRouter.delete("/:id", deleteBlogHandler,basicAuthMiddleware);
+blogRouter.post("/:id",
+    basicAuthMiddleware,
+    blogValidationMiddleware,
+    inputValidationMiddleware,
+    blogController.createPostForSpecialBlogHandler
+);
+
+blogRouter.delete("/:id",
+    basicAuthMiddleware,
+    blogController.deleteBlogHandler
+);

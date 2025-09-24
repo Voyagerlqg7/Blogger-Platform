@@ -1,19 +1,20 @@
 import {Router} from "express";
-import {getAllUsers, getUserById, createUser, deleteUserById} from "../UserHTTPController";
 import {basicAuthMiddleware} from "../../auth/BasicAuthMiddleware";
+import {UserHTTPController} from "../UserHTTPController";
 
-import {usersValidationMiddleware} from "../../middlewares/UserValidation";
+import {createUsersValidationMiddleware} from "../../middlewares/UserValidation";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
+import {container} from "../../composition";
 
 export const userRouter = Router();
-
-userRouter.get("/:id", getUserById);
-userRouter.get("/", basicAuthMiddleware, getAllUsers);
+const userController = container.get<UserHTTPController>(UserHTTPController);
+userRouter.get("/:id", userController.getUserById);
+userRouter.get("/", basicAuthMiddleware, userController.getAllUsers);
 userRouter.post(
     "/",
     basicAuthMiddleware,
-    usersValidationMiddleware,
     inputValidationMiddleware,
-    createUser
+    createUsersValidationMiddleware(),
+    userController.createUser
 );
-userRouter.delete("/:id", deleteUserById,basicAuthMiddleware);
+userRouter.delete("/:id",basicAuthMiddleware,userController.deleteUserById);
