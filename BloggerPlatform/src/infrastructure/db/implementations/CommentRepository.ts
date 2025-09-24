@@ -2,8 +2,9 @@ import {commentDBCollection} from "../collections/collections";
 import {Comment} from "../../../core/entities/Comment";
 import {CommentMapper} from "../mappers/CommentMapper";
 import {ICommentsRepository} from "../../../core/repository/ICommentsRepository";
+import { injectable } from "inversify";
 
-
+@injectable()
 export class CommentRepository implements ICommentsRepository {
     async getCommentById(commentId:string):Promise<Comment | null> {
         const comment = await commentDBCollection.findOne({_id:commentId});

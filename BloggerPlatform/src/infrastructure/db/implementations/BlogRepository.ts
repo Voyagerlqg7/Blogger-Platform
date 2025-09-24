@@ -6,7 +6,10 @@ import {UpdateBlogDTO} from "../../../core/repository/DTO/BlogDTO";
 import {PostMapper} from "../mappers/PostMapper";
 import {Post} from "../../../core/entities/Post";
 import {BlogsQueryDTO, PagedResponse, PostsQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
+import { injectable } from "inversify";
 
+
+@injectable()
 export class BlogRepository implements IBlogRepository {
     async getAllBlogs(query: BlogsQueryDTO): Promise<PagedResponse<Blog>> {
         const filter: any = {};

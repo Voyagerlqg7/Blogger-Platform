@@ -6,7 +6,9 @@ import {PostMapper} from "../mappers/PostMapper";
 import {Comment} from "../../../core/entities/Comment";
 import {CommentMapper} from "../mappers/CommentMapper";
 import {PagedResponse, PostsQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
+import { injectable } from "inversify";
 
+@injectable()
 export class PostRepository implements IPostRepository {
     async getAllPosts(query:PostsQueryDTO): Promise<PagedResponse<Post>> {
         const filter:any = {};

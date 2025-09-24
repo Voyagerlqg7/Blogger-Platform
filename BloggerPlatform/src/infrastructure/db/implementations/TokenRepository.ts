@@ -1,6 +1,8 @@
 import {tokenDBCollection} from "../collections/collections"
+import {injectable} from "inversify";
 
-export const tokenRepository = {
+@injectable()
+export class tokenRepository {
     async deleteToken(token: string): Promise<true | null> {
         try {
             const result = await tokenDBCollection.findOneAndDelete({ token });
@@ -9,7 +11,7 @@ export const tokenRepository = {
             console.log(error);
             return null;
         }
-    },
+    }
     async findToken(token: string): Promise<string | null> {
         try {
             const tokenInDb = await tokenDBCollection.findOne({ token });
@@ -17,7 +19,7 @@ export const tokenRepository = {
         } catch (err) {
             return null;
         }
-    },
+    }
     async saveToken(token: string): Promise<string | null> {
         try {
             const result = await tokenDBCollection.insertOne({ token });

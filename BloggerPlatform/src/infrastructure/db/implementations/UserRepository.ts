@@ -5,9 +5,12 @@ import {UserMapper} from "../mappers/UserMapper";
 import {UserDB} from "../models/UserModel";
 import {UsersQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
 import {PagedResponse} from "../../../core/repository/DTO/QueryParamsDTO";
+import {PasswordService} from "../../applicationServices/PasswordService";
+import { injectable, inject} from "inversify";
 
+@injectable()
 export class UserRepository implements IUserRepository {
-    constructor(private readonly passwordService: any) {}
+    constructor(@inject (PasswordService) private readonly passwordService: PasswordService) {}
     async createUser(user: User): Promise<UserViewModel> {
         const passwordSalt = await this.passwordService.generatePasswordSalt();
         const passwordHash = await this.passwordService.generateHash(user.password, passwordSalt);
