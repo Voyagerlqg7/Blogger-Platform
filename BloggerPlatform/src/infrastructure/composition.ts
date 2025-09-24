@@ -1,27 +1,54 @@
-import {BlogService} from "../core/services/BlogService";
+import "reflect-metadata";
+import { Container } from "inversify";
+
+// Интерфейсы репозитория
+import {IUserRepository} from "../core/repository/IUserRepository";
+import {IBlogRepository} from "../core/repository/IBlogRepository";
+import {IPostRepository} from "../core/repository/IPostRepository";
+import {ICommentsRepository} from "../core/repository/ICommentsRepository";
+
+// Реализации интерфейсов
 import {BlogRepository} from "./db/implementations/BlogRepository";
-import {PostService} from "../core/services/PostService";
 import {PostRepository} from "./db/implementations/PostRepository";
-import {UserService} from "../core/services/UserService";
 import {UserRepository} from "./db/implementations/UserRepository";
-import {CommentService} from "../core/services/CommentService";
 import {CommentRepository} from "./db/implementations/CommentRepository";
+
+// Сервисы сущностей
+import {UserService} from "../core/services/UserService";
+import {BlogService} from "../core/services/BlogService";
+import {CommentService} from "../core/services/CommentService";
+import {PostService} from "../core/services/PostService";
+
+//Сервисы приложения
 import {PasswordService} from "./applicationServices/PasswordService";
-import {JWTService} from "./auth/JWTService"; // Добавьте импорт
+import {JWTService} from "./auth/JWTService";
+import {EmailService} from "./applicationServices/EmailService";
+import {UserConfirmationService} from "./applicationServices/UserConfirmationService";
 
-const passwordService = new PasswordService();
-const jwtService = new JWTService();
 
-const blogRepository = new BlogRepository();
-export const blogService = new BlogService(blogRepository);
+// Репозитории
+import {tokenRepository} from "./db/implementations/TokenRepository";
+import {sessionsRepository} from "./db/implementations/SessionsRepository";
 
-const postRepository = new PostRepository();
-export const postService = new PostService(postRepository, blogRepository);
+const container = new Container();
 
-const userRepository = new UserRepository(passwordService);
-export const userService = new UserService(userRepository);
+// Репозитории
+container.bind<IUserRepository>("IUserRepository").to(UserRepository);
+container.bind<IBlogRepository>("IBlogRepository").to(BlogRepository);
+container.bind<IPostRepository>("IPostRepository").to(PostRepository);
+container.bind<ICommentsRepository>("ICommentsRepository").to(CommentRepository);
+container.bind<tokenRepository>("TokenRepository").to(tokenRepository);
+container.bind<sessionsRepository>("SessionsRepository").to(sessionsRepository);
 
-const commentRepository = new CommentRepository();
-export const commentService = new CommentService(commentRepository);
+// Сервисы
+container.bind<UserService>(UserService).toSelf().inSingletonScope();
+container.bind<BlogService>(BlogService).toSelf().inSingletonScope();
+container.bind<CommentService>(CommentService).toSelf().inSingletonScope();
+container.bind<PostService>(PostService).toSelf().inSingletonScope();
+container.bind<PasswordService>(PasswordService).toSelf().inSingletonScope();
+container.bind<JWTService>(JWTService).toSelf().inSingletonScope();
+container.bind<EmailService>(EmailService).toSelf().inSingletonScope();
+container.bind<EmailService>(EmailService).toSelf().inSingletonScope();
+container.bind<UserConfirmationService>(UserConfirmationService).toSelf().inSingletonScope();
 
-export { passwordService, jwtService };
+export { container };
