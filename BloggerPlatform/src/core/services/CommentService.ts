@@ -1,8 +1,12 @@
 import {Comment} from "../entities/Comment";
 import {ICommentsRepository} from "../repository/ICommentsRepository";
+import { injectable, inject } from "inversify";
 
+
+@injectable()
 export class CommentService {
-    constructor(private readonly commentRepository: ICommentsRepository) {}
+    constructor(@inject ("ICommentRepository") private commentRepository: ICommentsRepository) {}
+
     async deleteCommentById(commentId:string, userId:string):Promise<void| boolean> {
         const comment = await this.commentRepository.getCommentById(commentId);
         if (!comment) {

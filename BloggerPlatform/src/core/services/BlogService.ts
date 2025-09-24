@@ -5,10 +5,13 @@ import {CreateBlogDTO, UpdateBlogDTO} from "../repository/DTO/BlogDTO";
 import {Post} from "../entities/Post";
 import {CreatePostForSpecialBlogDTO} from "../repository/DTO/PostDTO";
 import {BlogsQueryDTO, PagedResponse, PostsQueryDTO} from "../repository/DTO/QueryParamsDTO";
+import { injectable, inject } from "inversify";
 
 
+@injectable()
 export class BlogService {
-    constructor(private readonly blogRepository: IBlogRepository) {}
+    constructor(@inject ("IBlogRepository") private blogRepository: IBlogRepository) {}
+
     async getAllBlogs(query:BlogsQueryDTO): Promise<PagedResponse<Blog>>{
         return await this.blogRepository.getAllBlogs(query);
     }

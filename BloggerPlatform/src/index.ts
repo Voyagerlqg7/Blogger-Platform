@@ -1,4 +1,5 @@
 import express, {Request, Response} from 'express';
+import "reflect-metadata";
 import {authRouter} from "./infrastructure/controllers/routes/authRoutes"
 import {blogRouter} from "./infrastructure/controllers/routes/blogRoutes";
 import {commentRouter} from "./infrastructure/controllers/routes/commentRoutes";

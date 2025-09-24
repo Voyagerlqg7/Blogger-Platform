@@ -4,10 +4,14 @@ import {UserDTO} from "../repository/DTO/UserDTO";
 import {v4 as uuidv4} from "uuid";
 import { add } from "date-fns";
 import {PagedResponse, UsersQueryDTO} from "../repository/DTO/QueryParamsDTO";
+import { injectable, inject } from "inversify";
 
-
+@injectable()
 export class UserService {
-    constructor(private readonly userRepository: IUserRepository) {}
+    constructor(
+        @inject("IUserRepository") private userRepository: IUserRepository
+    ) {}
+
     async getUserById(userId: string): Promise<User|null> {
         return await this.userRepository.getUserById(userId);
     }
