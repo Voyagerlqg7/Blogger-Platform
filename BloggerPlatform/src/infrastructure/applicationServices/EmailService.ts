@@ -10,28 +10,37 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-
 @injectable()
 export class EmailService {
-    async sendEmailConfirmation(email: string, login: string, code: string): Promise<boolean> {
+    private async send(to: string, subject: string, html: string): Promise<boolean> {
         try {
-            const confirmationLink = `https://somesite.com/confirm-email?code=${code}`;
-
             await transporter.sendMail({
                 from: settings.GOOGLE_GMAIL_EMAIL,
-                to: email,
-                subject: "Verification Code Confirmation",
-                html: `...`,
-                text: `...`
+                to,
+                subject,
+                html,
+                text: "..."
             });
-
             return true;
         } catch (error) {
-            console.error("Failed to send confirmation email:", error);
+            console.error("Email sending failed:", error);
             return false;
         }
     }
+    async sendEmail(email: string, code: string) {
+        const html = `<h1>Thanks for your registration</h1>
+                        <p>To finish registration please follow the link below:
+                        <a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>
+                        </p>`;
+        return this.send(email, "Verification Code Confirmation", html);
+    }
 
-    //async sendPasswordReset(email: string, resetToken: string): Promise<boolean> {
-        // Логика отправки email для сброса пароля}
+    async sendPasswordReset(email: string, code: string) {
+        const html = `<h1>Password recovery</h1>
+                <p>To finish password recovery please follow the link below:
+                <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>
+                </p>`;
+        return this.send(email, "Password recovery code", html);
+    }
+
 }
