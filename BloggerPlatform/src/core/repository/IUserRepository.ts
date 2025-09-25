@@ -11,6 +11,9 @@ export interface IUserRepository {
     findByLoginOrEmail(loginOrEmail:string): Promise<User|null>;
     updateStatusConfirmation(user:User):Promise<void>;
     updateCodeConfirmationAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>
+    updateRecoverPasswordCodeAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>
     getPasswordHash(loginOrEmail:string):Promise<string|null>;
     findByCodeConfirmation(codeConfirmation: string): Promise<User|null>;
+    findByRecoverPasswordCode(code:string): Promise<User|null>;
+    setNewPassword(userId:string,newPassword:string): Promise<void>;
 }

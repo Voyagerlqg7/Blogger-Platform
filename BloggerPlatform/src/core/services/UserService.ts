@@ -77,8 +77,17 @@ export class UserService {
         }
         return user;
     }
-
+    async findUserByRecoverPasswordCode(code:string): Promise<User> {
+        const user = await this.userRepository.findByRecoverPasswordCode(code);
+        if (!user) {
+            throw new Error(`Cannot find user with recover code: ${code}`);
+        }
+        return user;
+    }
     async updateCodeConfirmationAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>{
         return await this.userRepository.updateCodeConfirmationAndExpiresTime(userId,newCode,newExpiresAt);
+    }
+    async updateRecoverPasswordCodeAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>{
+        return await this.userRepository.updateRecoverPasswordCodeAndExpiresTime(userId,newCode,newExpiresAt);
     }
 }
