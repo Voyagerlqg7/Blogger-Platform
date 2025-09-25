@@ -11,12 +11,23 @@ export class UserConfirmationService {
         @inject(EmailService) private emailService: EmailService
     ) {}
 
-    async sendEmailConfirmation(login: string, email: string): Promise<boolean> {
+    async sendEmailConfirmation(id: string, email: string): Promise<boolean> {
         const code = uuidv4();
-        const expiresAt = add(new Date(), { minutes: 5 }).toISOString();
-        await this.userService.updateCodeConfirmationAndExpiresTime(email, code, expiresAt);
-        return await this.emailService.sendEmailConfirmation(email, login, code);
+        const expiresAt = add(new Date(), { seconds: 10 }).toISOString();
+        await this.userService.updateCodeConfirmationAndExpiresTime(id, code, expiresAt);
+        return await this.emailService.sendEmail(email, code);
     }
+    async sendRecoverPasswordCode(email: string): Promise<void> {
+        const user = await this.userService.findByLoginOrEmail(email);
+
+        if (user) {
+            const code = uuidv4();
+            const expiresAt = add(new Date(), { minutes: 15 }).toISOString();
+            await this.userService.updateRecoverPasswordCodeAndExpiresTime(user.id, code, expiresAt);
+            await this.emailService.sendPasswordReset(email, code);
+        }
+    }
+
 
     async resendCodeConfirmation(email: string): Promise<boolean> {
         const user = await this.userService.findByLoginOrEmail(email);
@@ -26,10 +37,10 @@ export class UserConfirmationService {
         }
 
         const newCode = uuidv4();
-        const newExpiresAt = add(new Date(), { minutes: 5 }).toISOString();
+        const newExpiresAt = add(new Date(), { seconds: 10 }).toISOString();
 
-        await this.userService.updateCodeConfirmationAndExpiresTime(email, newCode, newExpiresAt);
-        return await this.emailService.sendEmailConfirmation(email, user.login, newCode);
+        await this.userService.updateCodeConfirmationAndExpiresTime(user.id, newCode, newExpiresAt);
+        return await this.emailService.sendEmail(email, newCode);
     }
 
     async checkCodeConfirmation(code: string): Promise<boolean | undefined> {
@@ -42,6 +53,15 @@ export class UserConfirmationService {
         if (isConfirmed || isExpired) return false;
 
         await this.userService.updateStatusConfirmation(user);
+        return true;
+    }
+    async checkCodeRecoverPassword(code: string): Promise<boolean | undefined> {
+        const user = await this.userService.findUserByRecoverPasswordCode(code);
+        if (!user) return undefined;
+
+        const isExpired = !user.expiresAt || new Date() > new Date(user.expiresAt);
+
+        if (!isExpired) return false;
         return true;
     }
 }
