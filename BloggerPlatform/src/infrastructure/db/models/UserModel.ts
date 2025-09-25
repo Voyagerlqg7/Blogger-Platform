@@ -12,4 +12,8 @@ export type UserDB = {
         expiresAt: Date,
         isConfirmed: boolean
     }
+    recoverPasswordInfo:{
+        code:string | null,
+        expiresAt:Date | null
+    }
 }
