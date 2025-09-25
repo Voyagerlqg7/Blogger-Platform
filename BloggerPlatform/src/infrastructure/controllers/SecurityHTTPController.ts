@@ -1,11 +1,11 @@
 import {Response, Request} from "express";
-import {sessionsRepository} from "../db/implementations/SessionsRepository";
+import {SessionsRepository} from "../db/implementations/SessionsRepository";
 import {injectable, inject} from "inversify";
 
 
 @injectable()
 export class SecurityHTTPController {
-    constructor(@inject(sessionsRepository) private sessionRepository:sessionsRepository) {
+    constructor(@inject(SessionsRepository) private sessionRepository:SessionsRepository) {
     }
     getAllDevicesHandlers = async (req: Request, res: Response) => {
         const sessions = await this.sessionRepository.findByUserId(req.user!.id);

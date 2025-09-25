@@ -3,14 +3,14 @@ import jwt from "jsonwebtoken";
 import { settings } from "../settings/settings";
 import { container } from "../composition";
 import {UserService} from "../../core/services/UserService";
-import { tokenRepository } from "../db/implementations/TokenRepository";
-import { sessionsRepository } from "../db/implementations/SessionsRepository";
+import { TokenRepository } from "../db/implementations/TokenRepository";
+import { SessionsRepository } from "../db/implementations/SessionsRepository";
 
 export const createValidateRefreshToken = () => {
     // Получаем зависимости из контейнера
     const userService = container.get<UserService>(UserService);
-    const tokenRepo = container.get<tokenRepository>(tokenRepository);
-    const sessionsRepo = container.get<sessionsRepository>(sessionsRepository);
+    const tokenRepo = container.get<TokenRepository>(TokenRepository);
+    const sessionsRepo = container.get<SessionsRepository>(SessionsRepository);
 
     return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const token = req.cookies?.refreshToken;
