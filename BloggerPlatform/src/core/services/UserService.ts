@@ -90,4 +90,7 @@ export class UserService {
     async updateRecoverPasswordCodeAndExpiresTime(userId:string, newCode:string,newExpiresAt:string): Promise<void>{
         return await this.userRepository.updateRecoverPasswordCodeAndExpiresTime(userId,newCode,newExpiresAt);
     }
+    async setNewPassword(userId: string, newPassword:string){
+        return await this.userRepository.setNewPassword(userId,newPassword);
+    }
 }

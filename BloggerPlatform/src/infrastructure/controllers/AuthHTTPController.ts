@@ -7,6 +7,7 @@ import {UserService} from "../../core/services/UserService";
 import {JWTService} from "../auth/JWTService";
 import {AuthService} from "../applicationServices/AuthService";
 import {UserConfirmationService} from "../applicationServices/UserConfirmationService";
+import {EmailService} from "../applicationServices/EmailService";
 
 
 @injectable()
@@ -81,6 +82,7 @@ export class AuthController {
                 res.status(400).json({message: "Invalid Credentials"});
                 return;
             }
+            await this.confirmationService.sendEmailConfirmation(user.id, user.email);
             res.sendStatus(204);
         } catch (error) {
             console.error("Register error:", error);
@@ -202,4 +204,20 @@ export class AuthController {
             res.status(500).json("Internal server error");
         }
     }
+
+    recoverPasswordHandler = async (req: Request, res: Response) => {
+        await this.confirmationService.sendRecoverPasswordCode(req.body.email)
+        res.sendStatus(204);
+    }
+    setNewPasswordHandler = async (req: Request, res: Response) => {
+        const check = await this.confirmationService.checkCodeRecoverPassword(req.body.recoveryCode);
+        if (!check) {
+            res.sendStatus(400);
+            return;
+        }
+        await this.userService.setNewPassword(req.user!.id, req.body.newPassword);
+        res.sendStatus(204);
+    }
+
+
 }
