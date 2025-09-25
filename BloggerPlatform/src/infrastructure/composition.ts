@@ -38,8 +38,8 @@ container.bind<IUserRepository>("IUserRepository").to(UserRepository);
 container.bind<IBlogRepository>("IBlogRepository").to(BlogRepository);
 container.bind<IPostRepository>("IPostRepository").to(PostRepository);
 container.bind<ICommentsRepository>("ICommentsRepository").to(CommentRepository);
-container.bind<tokenRepository>("TokenRepository").to(tokenRepository);
-container.bind<sessionsRepository>("SessionsRepository").to(sessionsRepository);
+container.bind<tokenRepository>(tokenRepository).toSelf().inSingletonScope();
+container.bind<sessionsRepository>(sessionsRepository).toSelf().inSingletonScope();
 
 // Сервисы
 container.bind<AuthController>(AuthController).toSelf().inSingletonScope();
@@ -49,7 +49,6 @@ container.bind<CommentService>(CommentService).toSelf().inSingletonScope();
 container.bind<PostService>(PostService).toSelf().inSingletonScope();
 container.bind<PasswordService>(PasswordService).toSelf().inSingletonScope();
 container.bind<JWTService>(JWTService).toSelf().inSingletonScope();
-container.bind<EmailService>(EmailService).toSelf().inSingletonScope();
 container.bind<EmailService>(EmailService).toSelf().inSingletonScope();
 container.bind<UserConfirmationService>(UserConfirmationService).toSelf().inSingletonScope();
 
