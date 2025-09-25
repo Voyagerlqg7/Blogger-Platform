@@ -28,6 +28,10 @@ export class UserRepository implements IUserRepository {
                 confirmationCode: user.confirmationCode,
                 expiresAt: new Date(user.expiresAt),
                 isConfirmed: user.isConfirmed
+            },
+            recoverPasswordInfo:{
+                code:null,
+                expiresAt:null
             }
         }
         await userDBCollection.insertOne(newUser);
@@ -52,6 +56,10 @@ export class UserRepository implements IUserRepository {
                 confirmationCode: user.confirmationCode,
                 expiresAt: new Date(user.expiresAt),
                 isConfirmed: user.isConfirmed
+            },
+            recoverPasswordInfo:{
+                code:null,
+                expiresAt:null
             }
         }
         await userDBCollection.insertOne(newUser);
@@ -124,7 +132,12 @@ export class UserRepository implements IUserRepository {
         });
         return user ? UserMapper.toDomain(user) : null;
     }
-
+    async findByRecoverPasswordCode(code:string): Promise<User | null> {
+        const user = await userDBCollection.findOne({
+            "recoverPasswordInfo.code": code
+        });
+        return user ? UserMapper.toDomain(user) : null;
+    }
     async updateStatusConfirmation(user: User): Promise<void> {
         try {
             await userDBCollection.updateOne(
@@ -143,6 +156,32 @@ export class UserRepository implements IUserRepository {
                     "emailConfirmation.confirmationCode": newCode,
                     "emailConfirmation.expiresAt": new Date(newExpiresAt),
                     "emailConfirmation.isConfirmed": false
+                }
+            }
+        );
+    }
+    async updateRecoverPasswordCodeAndExpiresTime(userId: string, newCode: string, newExpiresAt:string){
+        await userDBCollection.updateOne(
+            { _id: userId },
+            {
+                $set: {
+                    "recoverPasswordInfo.code": newCode,
+                    "recoverPasswordInfo.expiresAt": new Date(newExpiresAt),
+
+                }
+            }
+        );
+    }
+    async setNewPassword(userId: string, newPassword:string){
+        const passwordSalt = await this.passwordService.generatePasswordSalt();
+        const passwordHash = await this.passwordService.generateHash(newPassword, passwordSalt);
+        await userDBCollection.updateOne(
+            { _id: userId },
+            {
+                $set: {
+                    "accountData.passwordHash": passwordHash,
+                    "accountData.passwordSalt": passwordSalt,
+
                 }
             }
         );
