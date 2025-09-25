@@ -1,7 +1,7 @@
 import {session} from "../models/SessionModel";
 import {sessionDBCollection} from "../collections/collections";
 
-export class sessionsRepository  {
+export class SessionsRepository  {
     async create(session:session){
         await sessionDBCollection.insertOne(session);
     }

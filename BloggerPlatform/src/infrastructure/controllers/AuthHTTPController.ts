@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {tokenRepository} from "../db/implementations/TokenRepository";
+import {TokenRepository} from "../db/implementations/TokenRepository";
 import {v4 as uuidv4} from "uuid";
-import {sessionsRepository} from "../db/implementations/SessionsRepository";
+import {SessionsRepository} from "../db/implementations/SessionsRepository";
 import {injectable, inject} from "inversify";
 import {UserService} from "../../core/services/UserService";
 import {JWTService} from "../auth/JWTService";
@@ -15,8 +15,8 @@ export class AuthController {
     constructor(
         @inject(UserService) private userService: UserService,
         @inject(JWTService) private jwtService: JWTService,
-        @inject(sessionsRepository) private sessionRepository:sessionsRepository,
-        @inject(tokenRepository) private tokenRepository: tokenRepository,
+        @inject(SessionsRepository) private sessionRepository:SessionsRepository,
+        @inject(TokenRepository) private tokenRepository: TokenRepository,
         @inject(AuthService)private authService: AuthService,
         @inject(UserConfirmationService)private confirmationService: UserConfirmationService,
     ) {}

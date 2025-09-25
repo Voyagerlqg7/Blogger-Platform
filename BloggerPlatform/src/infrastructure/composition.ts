@@ -28,8 +28,8 @@ import {AuthController} from "./controllers/AuthHTTPController";
 
 
 // Репозитории
-import {tokenRepository} from "./db/implementations/TokenRepository";
-import {sessionsRepository} from "./db/implementations/SessionsRepository";
+import {TokenRepository} from "./db/implementations/TokenRepository";
+import {SessionsRepository} from "./db/implementations/SessionsRepository";
 
 const container = new Container();
 
@@ -38,8 +38,8 @@ container.bind<IUserRepository>("IUserRepository").to(UserRepository);
 container.bind<IBlogRepository>("IBlogRepository").to(BlogRepository);
 container.bind<IPostRepository>("IPostRepository").to(PostRepository);
 container.bind<ICommentsRepository>("ICommentsRepository").to(CommentRepository);
-container.bind<tokenRepository>(tokenRepository).toSelf().inSingletonScope();
-container.bind<sessionsRepository>(sessionsRepository).toSelf().inSingletonScope();
+container.bind<TokenRepository>(TokenRepository).toSelf().inSingletonScope();
+container.bind<SessionsRepository>(SessionsRepository).toSelf().inSingletonScope();
 
 // Сервисы
 container.bind<AuthController>(AuthController).toSelf().inSingletonScope();

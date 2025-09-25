@@ -2,7 +2,7 @@ import {tokenDBCollection} from "../collections/collections"
 import {injectable} from "inversify";
 
 @injectable()
-export class tokenRepository {
+export class TokenRepository {
     async deleteToken(token: string): Promise<true | null> {
         try {
             const result = await tokenDBCollection.findOneAndDelete({ token });
