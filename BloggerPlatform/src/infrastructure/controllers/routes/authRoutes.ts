@@ -22,5 +22,5 @@ authRouter.post("/logout",createValidateRefreshToken(),authController.logoutHand
 authRouter.post("/refresh-token",createValidateRefreshToken(),authController.refreshTokenHandler);
 authRouter.get("/me",authMiddleware.execute.bind(authMiddleware),authController.aboutMeHandler);
 
-authRouter.post("/password-recovery",rateLimiter_to_DB,emailResendingValidation, authController.recoverPasswordHandler)
-authRouter.post("/new-password",rateLimiter_to_DB,resetPasswordMiddleware(),authController.setNewPasswordHandler);
+authRouter.post("/password-recovery",rateLimiter_to_DB,emailResendingValidation, inputValidationMiddleware, authController.recoverPasswordHandler)
+authRouter.post("/new-password",rateLimiter_to_DB,resetPasswordMiddleware(),inputValidationMiddleware,authController.setNewPasswordHandler);
