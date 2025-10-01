@@ -24,10 +24,16 @@ import {PasswordService} from "./applicationServices/PasswordService";
 import {JWTService} from "./auth/JWTService";
 import {EmailService} from "./applicationServices/EmailService";
 import {UserConfirmationService} from "./applicationServices/UserConfirmationService";
-import {AuthController} from "./controllers/AuthHTTPController";
 import {AuthMiddleware} from "./auth/AuthMiddleware";
 import {AuthService} from "./applicationServices/AuthService";
 
+//Импорт контроллеров:
+import {BlogController} from "./controllers/BlogHTTPController";
+import {AuthController} from "./controllers/AuthHTTPController";
+import {PostHTTPController} from "./controllers/PostHTTPController";
+import {CommentController} from "./controllers/CommentHTTPController";
+import {SecurityHTTPController} from "./controllers/SecurityHTTPController";
+import {UserHTTPController} from "./controllers/UserHTTPController";
 
 // Репозитории
 import {TokenRepository} from "./db/implementations/TokenRepository";
@@ -46,7 +52,6 @@ container.bind<SessionsRepository>(SessionsRepository).toSelf().inSingletonScope
 // Сервисы
 container.bind<AuthService>(AuthService).toSelf().inSingletonScope();
 container.bind<AuthMiddleware>(AuthMiddleware).toSelf().inSingletonScope();
-container.bind<AuthController>(AuthController).toSelf().inSingletonScope();
 container.bind<UserService>(UserService).toSelf().inSingletonScope();
 container.bind<BlogService>(BlogService).toSelf().inSingletonScope();
 container.bind<CommentService>(CommentService).toSelf().inSingletonScope();
@@ -55,5 +60,15 @@ container.bind<PasswordService>(PasswordService).toSelf().inSingletonScope();
 container.bind<JWTService>(JWTService).toSelf().inSingletonScope();
 container.bind<EmailService>(EmailService).toSelf().inSingletonScope();
 container.bind<UserConfirmationService>(UserConfirmationService).toSelf().inSingletonScope();
+
+
+//Контроллеры:
+container.bind<AuthController>(AuthController).toSelf().inSingletonScope();
+container.bind<BlogController>(BlogController).toSelf().inSingletonScope();
+container.bind<PostHTTPController>(PostHTTPController).toSelf().inSingletonScope();
+container.bind<CommentController>(CommentController).toSelf().inSingletonScope();
+container.bind<SecurityHTTPController>(SecurityHTTPController).toSelf().inSingletonScope();
+container.bind<UserHTTPController>(UserHTTPController).toSelf().inSingletonScope();
+
 
 export { container };
