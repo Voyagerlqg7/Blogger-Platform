@@ -1,38 +1,36 @@
-import { NextFunction, Request, Response } from 'express';
-import {UserService} from "../../core/services/UserService";
-import {UserRepository} from "../db/implementations/UserRepository";
-import {PasswordService} from "../applicationServices/PasswordService";
-import {jwtService} from "../composition";
+import { Request, Response, NextFunction } from "express";
+import { injectable, inject } from "inversify";
+import { JWTService } from "../auth/JWTService";
+import { UserService } from "../../core/services/UserService";
 
-export const authMiddleware = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-): Promise<void> => {
-    const authHeader = req.headers.authorization;
+@injectable()
+export class AuthMiddleware {
+    constructor(
+        @inject(JWTService) private jwtService: JWTService,
+        @inject(UserService) private userService: UserService
+    ) {}
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        res.sendStatus(401);
-        return;
+    async execute(req: Request, res: Response, next: NextFunction) {
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            res.sendStatus(401);
+            return;
+        }
+
+        const token = authHeader.split(" ")[1];
+        const userId = await this.jwtService.getUserIdFromToken(token);
+        if (!userId) {
+            res.sendStatus(401);
+            return;
+        }
+
+        const user = await this.userService.getUserById(userId);
+        if (!user) {
+            res.sendStatus(401);
+            return;
+        }
+
+        req.user = user;
+        next();
     }
-
-    const token = authHeader.split(' ')[1];
-    const userId = await jwtService.getUserIdFromToken(token);
-
-    if (!userId) {
-        res.sendStatus(401);
-        return;
-    }
-    const passwordService = new PasswordService();
-    const userRepository = new UserRepository(passwordService);
-    const getUserByIdService = new UserService(userRepository);
-    const user = await getUserByIdService.getUserById(userId);
-
-    if (!user) {
-        res.sendStatus(401);
-        return;
-    }
-    //(req as any).userId = user.id;
-    req.user = user;
-    next();
-};
+}

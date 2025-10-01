@@ -7,10 +7,12 @@ import {resetPasswordMiddleware} from "../../middlewares/PasswordValidation";
 import {emailResendingValidation} from "../../middlewares/EmailValidation";
 import {rateLimiter_to_DB} from "../../middlewares/CustomRateLimit";
 import {createValidateRefreshToken} from "../../middlewares/validateRefToken";
-import {authMiddleware} from "../../auth/AuthMiddleware";
+import {AuthMiddleware} from "../../auth/AuthMiddleware";
 
 export const authRouter = Router();
 const authController = container.get<AuthController>(AuthController);
+const authMiddleware = container.get(AuthMiddleware);
+
 
 authRouter.post("/login",rateLimiter_to_DB,inputValidationMiddleware, authController.loginHandler);
 authRouter.post("/registration",rateLimiter_to_DB,createUsersValidationMiddleware(),inputValidationMiddleware,authController.registerHandler);
@@ -18,7 +20,7 @@ authRouter.post("/registration-confirmation",rateLimiter_to_DB,authController.re
 authRouter.post('/registration-email-resending', emailResendingValidation,inputValidationMiddleware,rateLimiter_to_DB,authController.registrationEmailResendingHandler);
 authRouter.post("/logout",createValidateRefreshToken(),authController.logoutHandler);
 authRouter.post("/refresh-token",createValidateRefreshToken(),authController.refreshTokenHandler);
-authRouter.get("/me",authMiddleware,authController.aboutMeHandler);
+authRouter.get("/me",authMiddleware.execute.bind(authMiddleware),authController.aboutMeHandler);
 
 authRouter.post("/password-recovery",rateLimiter_to_DB,emailResendingValidation, authController.recoverPasswordHandler)
 authRouter.post("/new-password",rateLimiter_to_DB,resetPasswordMiddleware(),authController.setNewPasswordHandler);

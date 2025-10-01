@@ -25,6 +25,7 @@ import {JWTService} from "./auth/JWTService";
 import {EmailService} from "./applicationServices/EmailService";
 import {UserConfirmationService} from "./applicationServices/UserConfirmationService";
 import {AuthController} from "./controllers/AuthHTTPController";
+import {AuthMiddleware} from "./auth/AuthMiddleware";
 
 
 // Репозитории
@@ -42,6 +43,7 @@ container.bind<TokenRepository>(TokenRepository).toSelf().inSingletonScope();
 container.bind<SessionsRepository>(SessionsRepository).toSelf().inSingletonScope();
 
 // Сервисы
+container.bind<AuthMiddleware>(AuthMiddleware).toSelf().inSingletonScope();
 container.bind<AuthController>(AuthController).toSelf().inSingletonScope();
 container.bind<UserService>(UserService).toSelf().inSingletonScope();
 container.bind<BlogService>(BlogService).toSelf().inSingletonScope();
