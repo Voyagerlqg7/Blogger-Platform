@@ -132,7 +132,7 @@ export class UserRepository implements IUserRepository {
         });
         return user ? UserMapper.toDomain(user) : null;
     }
-    async findByRecoverPasswordCode(code:string): Promise<User | null> {
+    async findByRecoverPasswordCode(code: string): Promise<User | null> {
         const user = await userDBCollection.findOne({
             "recoverPasswordInfo.code": code
         });

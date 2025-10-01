@@ -59,9 +59,11 @@ export class UserConfirmationService {
         const user = await this.userService.findUserByRecoverPasswordCode(code);
         if (!user) return undefined;
 
-        const isExpired = !user.expiresAt || new Date() > new Date(user.expiresAt);
+        if (!user.recoverPasswordExpiresAt) return false;
 
-        if (!isExpired) return false;
-        return true;
+        const isExpired = new Date() > new Date(user.recoverPasswordExpiresAt);
+        if (isExpired) return false; // Код истек
+
+        return true; // Код валиден
     }
 }

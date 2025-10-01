@@ -10,7 +10,9 @@ export class UserMapper {
         userDB.accountData.createdAt.toISOString(),
         userDB.emailConfirmation.confirmationCode,
         userDB.emailConfirmation.expiresAt.toISOString(),
-        userDB.emailConfirmation.isConfirmed );
+        userDB.emailConfirmation.isConfirmed,
+        userDB.recoverPasswordInfo?.code || null,
+        userDB.recoverPasswordInfo?.expiresAt?.toISOString() || null)
     }
 
     static toViewModel(user: User): UserViewModel {

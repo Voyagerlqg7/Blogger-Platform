@@ -7,7 +7,9 @@ export class User{
         public createdAt: string,
         public confirmationCode: string,
         public expiresAt: string,
-        public isConfirmed: boolean
+        public isConfirmed: boolean,
+        public recoverPasswordCode: string | null = null,
+        public recoverPasswordExpiresAt: string | null = null
     ) {}
 }
 export type UserViewModel = {
