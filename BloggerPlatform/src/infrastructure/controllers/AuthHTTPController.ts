@@ -7,7 +7,6 @@ import {UserService} from "../../core/services/UserService";
 import {JWTService} from "../auth/JWTService";
 import {AuthService} from "../applicationServices/AuthService";
 import {UserConfirmationService} from "../applicationServices/UserConfirmationService";
-import {EmailService} from "../applicationServices/EmailService";
 
 
 @injectable()
