@@ -214,7 +214,13 @@ export class AuthController {
             res.sendStatus(400);
             return;
         }
-        await this.userService.setNewPassword(req.user!.id, req.body.newPassword);
+        const user = await this.userService.findUserByRecoverPasswordCode(req.body.recoveryCode);
+        if (!user) {
+            res.sendStatus(400);
+            return;
+        }
+
+        await this.userService.setNewPassword(user.id, req.body.newPassword);
         res.sendStatus(204);
     }
 

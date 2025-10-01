@@ -172,16 +172,20 @@ export class UserRepository implements IUserRepository {
             }
         );
     }
-    async setNewPassword(userId: string, newPassword:string){
+    async setNewPassword(userId: string, newPassword: string){
         const passwordSalt = await this.passwordService.generatePasswordSalt();
         const passwordHash = await this.passwordService.generateHash(newPassword, passwordSalt);
+
         await userDBCollection.updateOne(
             { _id: userId },
             {
                 $set: {
                     "accountData.passwordHash": passwordHash,
                     "accountData.passwordSalt": passwordSalt,
-
+                },
+                $unset: {
+                    "recoverPasswordInfo.code": "",
+                    "recoverPasswordInfo.expiresAt": ""
                 }
             }
         );
