@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs"
-import { injectable, inject} from "inversify";
+import { injectable} from "inversify";
 
 @injectable()
 export class PasswordService {

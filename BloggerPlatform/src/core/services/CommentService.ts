@@ -5,7 +5,7 @@ import { injectable, inject } from "inversify";
 
 @injectable()
 export class CommentService {
-    constructor(@inject ("ICommentRepository") private commentRepository: ICommentsRepository) {}
+    constructor(@inject ("ICommentsRepository") private commentRepository: ICommentsRepository) {}
 
     async deleteCommentById(commentId:string, userId:string):Promise<void| boolean> {
         const comment = await this.commentRepository.getCommentById(commentId);

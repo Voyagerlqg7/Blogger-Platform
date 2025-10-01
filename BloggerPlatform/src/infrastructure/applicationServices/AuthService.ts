@@ -2,13 +2,11 @@ import bcrypt from "bcryptjs"
 import {UserMapper} from "../db/mappers/UserMapper";
 import {injectable, inject} from "inversify";
 import {UserService} from "../../core/services/UserService";
-import {PasswordService} from "./PasswordService";
 
 @injectable()
 export class AuthService {
     constructor(
         @inject(UserService) private userService: UserService,
-        @inject(PasswordService) private passwordService: PasswordService
     ) {}
     async checkCredentials(loginOrEmail: string, password: string) {
         try {
