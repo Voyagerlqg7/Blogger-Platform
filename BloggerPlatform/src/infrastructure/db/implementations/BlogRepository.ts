@@ -10,7 +10,7 @@ import { injectable } from "inversify";
 
 
 @injectable()
-export class BlogRepository implements IBlogRepository {
+export class BlogRepository implements IBlogRepository{
     async getAllBlogs(query: BlogsQueryDTO): Promise<PagedResponse<Blog>> {
         const filter: any = {};
 
