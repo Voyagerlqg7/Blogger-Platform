@@ -1,4 +1,4 @@
-import {tokenDBCollection} from "../collections/collections"
+import {tokenDBCollection} from "../Models/collections"
 import {injectable} from "inversify";
 
 @injectable()

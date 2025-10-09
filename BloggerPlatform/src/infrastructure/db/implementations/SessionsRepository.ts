@@ -1,30 +1,30 @@
 import {session} from "../Schemas/SessionModel";
-import {sessionDBCollection} from "../collections/collections";
+import {SessionModel} from "../Models/collections";
 
 export class SessionsRepository  {
     async create(session:session){
-        await sessionDBCollection.insertOne(session);
+        await SessionModel.insertOne(session);
     }
     async findByUserId(userId:string){
-        return await sessionDBCollection.find({userId}).toArray();
+        return await SessionModel.find({userId}).lean();
     }
     async findByDeviceId(deviceId:string){
-        return await sessionDBCollection.findOne({deviceId});
+        return await SessionModel.findOne({deviceId});
     }
     async updateLastActiveDate(deviceId: string, update: { lastActiveDate: Date; expirationDate?: Date }) {
-        return await sessionDBCollection.updateOne(
+        return await SessionModel.updateOne(
             { deviceId },
             { $set: update }
         );
     }
 
     async deleteAllExcept(userId:string, deviceId:string){
-        await sessionDBCollection.deleteMany({userId,deviceId:{$ne:deviceId}});
+        await SessionModel.deleteMany({userId,deviceId:{$ne:deviceId}});
     }
     async deleteDeviceById(deviceId:string){
-        await sessionDBCollection.deleteOne({deviceId});
+        await SessionModel.deleteOne({deviceId});
     }
     async deleteExpired(now:Date){
-        await sessionDBCollection.deleteMany({expirationDate: {$lt:now}});
+        await SessionModel.deleteMany({expirationDate: {$lt:now}});
     }
 }

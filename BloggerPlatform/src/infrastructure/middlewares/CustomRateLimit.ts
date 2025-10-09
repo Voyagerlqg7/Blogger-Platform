@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import {requestLogsCollection} from "../db/collections/collections";
+import {requestLogsCollection} from "../db/Models/collections";
 
 const LIMIT =5;
 
