@@ -1,5 +1,5 @@
 import {Post} from "../../../core/entities/Post";
-import {PostsDB} from "../models/PostModel";
+import {PostsDB} from "../Schemas/PostModel";
 
 export class PostMapper{
     static toDomain(postDB: PostsDB):Post{

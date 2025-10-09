@@ -1,8 +1,8 @@
 import {client} from "../connection"
-import {BlogsDB} from "../models/BlogModel";
-import {UserDB} from "../models/UserModel";
-import {PostsDB} from "../models/PostModel";
-import {CommentDB} from "../models/CommentModel";
+import {BlogsDB} from "../Schemas/BlogModel";
+import {UserDB} from "../Schemas/UserModel";
+import {PostsDB} from "../Schemas/PostModel";
+import {CommentDB} from "../Schemas/CommentModel";
 
 
 export const sessionDBCollection = client.db("BloggerPlatform").collection("sessions");

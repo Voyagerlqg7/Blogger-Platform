@@ -1,5 +1,5 @@
 import {User} from "../../../core/entities/User";
-import {UserDB} from "../models/UserModel";
+import {UserDB} from "../Schemas/UserModel";
 import {UserViewModel} from "../../../core/entities/User";
 
 export class UserMapper {

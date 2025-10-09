@@ -2,7 +2,7 @@ import {IUserRepository} from "../../../core/repository/IUserRepository";
 import {User, UserViewModel} from "../../../core/entities/User";
 import {userDBCollection} from "../collections/collections";
 import {UserMapper} from "../mappers/UserMapper";
-import {UserDB} from "../models/UserModel";
+import {UserDB} from "../Schemas/UserModel";
 import {UsersQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
 import {PagedResponse} from "../../../core/repository/DTO/QueryParamsDTO";
 import {PasswordService} from "../../applicationServices/PasswordService";
