@@ -9,7 +9,7 @@ export class JWTService {
         const accessToken:string = jwt.sign(
             {userId: user.id},
             settings.JWT_SECRET,
-            {expiresIn: "10s"});
+            {expiresIn: "300s"});
         return accessToken;
     }
 
