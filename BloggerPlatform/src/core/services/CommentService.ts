@@ -30,14 +30,4 @@ export class CommentService {
         }
         return await this.commentRepository.updateCommentById(commentId, content);
     }
-    async rateCommentById(userId:string, commentId:string, assessment:string):Promise<void | boolean> {
-        const comment = await this.commentRepository.getCommentById(commentId);
-        if (!comment) {
-            throw new Error("Comment not found");
-        }
-        if (comment.commentatorInfo.userId !== userId) {
-            return false;
-        }
-        return await this.commentRepository.rateCommentById(userId, commentId, assessment);
-    }
 }

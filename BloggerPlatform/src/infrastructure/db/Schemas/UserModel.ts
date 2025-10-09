@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import {Comment} from "../../../core/entities/Comment";
 
 export type UserDB = {
     _id: string,

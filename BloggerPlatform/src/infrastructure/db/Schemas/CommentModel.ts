@@ -9,11 +9,8 @@ export type CommentDB = {
     },
     createdAt: Date,
     postId: string,
-    likesInfo:{
-        likesCount: number,
-        dislikesCount: number,
-        myStatus: string,
-    }
+    likesCount: number;
+    dislikesCount: number;
 }
 
 export const CommentSchema = new mongoose.Schema<CommentDB>({
@@ -25,9 +22,13 @@ export const CommentSchema = new mongoose.Schema<CommentDB>({
     }),
     createdAt: {type: Date, required: true},
     postId: {type: String, required: true},
-    likesInfo:({
-        likesCount: {type: Number, required: true},
-        dislikesCount: {type: Number, required: true},
-        myStatus: {type: String, required: true},
-    })
+    likesCount: {type: Number, required: true},
+    dislikesCount: {type: Number, required: true}
+})
+
+export const CommentLikeSchema = new mongoose.Schema({
+    userId:String,
+    commentId:String,
+    status:{type:String, enum:["Like","Dislike"]},
+    createdAt:Date,
 })

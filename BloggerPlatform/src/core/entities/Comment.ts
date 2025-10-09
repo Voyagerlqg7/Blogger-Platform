@@ -10,7 +10,15 @@ export class Comment {
         public likesInfo:{
             likesCount: number,
             dislikesCount: number,
-            myStatus: string,
+            myStatus: "Like" | "Dislike" | "None",
         }
     ){}
+}
+export class CommentLike {
+    constructor(
+        public userId: string,
+        public commentId: string,
+        public status: "Like" | "Dislike",
+        public createdAt: string
+    ) {}
 }

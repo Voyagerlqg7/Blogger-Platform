@@ -1,9 +1,9 @@
-import {Comment} from "../../../core/entities/Comment";
-import {CommentDB} from "../Schemas/CommentModel";
+import { Comment } from "../../../core/entities/Comment";
+import { CommentDB } from "../Schemas/CommentModel";
 
-export class CommentMapper{
+export class CommentMapper {
 
-    static toDomain(commentDB: CommentDB):Comment{
+    static toDomain(commentDB: CommentDB): Comment {
         return new Comment(
             commentDB._id.toString(),
             commentDB.content,
@@ -13,13 +13,13 @@ export class CommentMapper{
             },
             commentDB.createdAt.toISOString(),
             {
-                likesCount: commentDB.likesInfo.likesCount,
-                dislikesCount: commentDB.likesInfo.dislikesCount,
-                myStatus: commentDB.likesInfo.myStatus,
+                likesCount: commentDB.likesCount,
+                dislikesCount: commentDB.dislikesCount,
+                myStatus: "None",
             }
-        )
+        );
     }
-    static toPersistence(postId: string, comment: Comment):CommentDB{
+    static toPersistence(postId: string, comment: Comment): CommentDB {
         return {
             _id: comment.id,
             content: comment.content,
@@ -29,11 +29,8 @@ export class CommentMapper{
             },
             createdAt: new Date(comment.createdAt),
             postId: postId,
-            likesInfo:{
-                likesCount: comment.likesInfo.likesCount,
-                dislikesCount: comment.likesInfo.dislikesCount,
-                myStatus: comment.likesInfo.myStatus,
-            }
-        }
+            likesCount: comment.likesInfo.likesCount,
+            dislikesCount: comment.likesInfo.dislikesCount,
+        };
     }
 }
