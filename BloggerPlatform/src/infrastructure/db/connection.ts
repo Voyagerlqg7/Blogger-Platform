@@ -14,6 +14,8 @@ if(!mongoURI){
 export async function connectDB() {
     try {
         await mongoose.connect(mongoURI);
+        client.connect()
+        console.log("Connected to MongoDB via Mongoose and raw client");
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
         process.exit(1); // Завершаем процесс
