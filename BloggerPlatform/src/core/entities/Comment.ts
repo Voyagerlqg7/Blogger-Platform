@@ -7,5 +7,10 @@ export class Comment {
             userLogin: string,
         },
         public createdAt: string,
+        public likesInfo:{
+            likesCount: number,
+            dislikesCount: number,
+            myStatus: string,
+        }
     ){}
 }

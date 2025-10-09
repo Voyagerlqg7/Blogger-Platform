@@ -55,4 +55,7 @@ export class CommentController {
             res.status(500).send("Internal server error");
         }
     }
+    RateComment = async (req: Request, res: Response): Promise<void> => {
+
+    }
 }

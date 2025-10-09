@@ -8,7 +8,12 @@ export type CommentDB = {
         userLogin: string
     },
     createdAt: Date,
-    postId: string
+    postId: string,
+    likesInfo:{
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: string,
+    }
 }
 
 export const CommentSchema = new mongoose.Schema<CommentDB>({
@@ -20,4 +25,9 @@ export const CommentSchema = new mongoose.Schema<CommentDB>({
     }),
     createdAt: {type: Date, required: true},
     postId: {type: String, required: true},
+    likesInfo:({
+        likesCount: {type: Number, required: true},
+        dislikesCount: {type: Number, required: true},
+        myStatus: {type: String, required: true},
+    })
 })

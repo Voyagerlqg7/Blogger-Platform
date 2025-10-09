@@ -11,7 +11,12 @@ export class CommentMapper{
                 userId: commentDB.commentatorInfo.userId,
                 userLogin: commentDB.commentatorInfo.userLogin,
             },
-            commentDB.createdAt.toISOString()
+            commentDB.createdAt.toISOString(),
+            {
+                likesCount: commentDB.likesInfo.likesCount,
+                dislikesCount: commentDB.likesInfo.dislikesCount,
+                myStatus: commentDB.likesInfo.myStatus,
+            }
         )
     }
     static toPersistence(postId: string, comment: Comment):CommentDB{
@@ -24,6 +29,11 @@ export class CommentMapper{
             },
             createdAt: new Date(comment.createdAt),
             postId: postId,
+            likesInfo:{
+                likesCount: comment.likesInfo.likesCount,
+                dislikesCount: comment.likesInfo.dislikesCount,
+                myStatus: comment.likesInfo.myStatus,
+            }
         }
     }
 }

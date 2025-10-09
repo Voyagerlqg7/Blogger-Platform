@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {Comment} from "../../../core/entities/Comment";
 
 export type UserDB = {
     _id: string,
@@ -37,5 +38,5 @@ export const UserSchema = new mongoose.Schema<UserDB>({
     recoverPasswordInfo: ({
         code: { type: String, default: null },
         expiresAt: { type: Date, default: null },
-    })
+    }),
 })

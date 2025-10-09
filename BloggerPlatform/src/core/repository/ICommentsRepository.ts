@@ -4,4 +4,5 @@ export interface ICommentsRepository {
     getCommentById(commentId:string):Promise<Comment | null>;
     deleteCommentById(commentId:string):Promise<void>;
     updateCommentById(commentId:string, content:string):Promise<void>;
+    rateCommentById(userId:string,commentId:string, assessment:string):Promise<void>;
 }
