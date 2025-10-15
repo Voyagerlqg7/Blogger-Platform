@@ -18,7 +18,7 @@ postRouter.get("/:id",postController.getAllCommentsByPostId);
 
 postRouter.put("/:id",basicAuthMiddleware, postValidationMiddleware, inputValidationMiddleware,postController.updatePostById);
 
-postRouter.post("/:id",authMiddleware.execute.bind(authMiddleware), commentsValidationMiddleware, inputValidationMiddleware);
-postRouter.post("/",basicAuthMiddleware,postValidationMiddleware, inputValidationMiddleware);
+postRouter.post("/:id",authMiddleware.execute.bind(authMiddleware), commentsValidationMiddleware, inputValidationMiddleware, postController.createCommentByPostId);
+postRouter.post("/",basicAuthMiddleware,postValidationMiddleware, inputValidationMiddleware, postController.createPost);
 
 postRouter.delete("/:id",basicAuthMiddleware,postController.deletePostById);
