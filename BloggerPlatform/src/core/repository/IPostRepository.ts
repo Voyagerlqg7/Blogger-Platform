@@ -9,6 +9,6 @@ export interface IPostRepository {
     deletePostById(postId:string):Promise<void | null>;
     updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<void>;
     createPost(post:Post):Promise<Post>;
-    getAllCommentsByPostID(postId:string, Q_params:PostsQueryDTO):Promise<PagedResponse<Comment>>;
+    getAllCommentsByPostID(postId:string, Q_params:PostsQueryDTO, userId?:string):Promise<PagedResponse<Comment>>;
     createCommentByPostID(postId:string, comment:Comment):Promise<Comment>;
 }

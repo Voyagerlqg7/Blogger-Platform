@@ -16,10 +16,10 @@ export class PostService {
     async getAllPosts(query:PostsQueryDTO): Promise<PagedResponse<Post>> {
         return await this.postRepository.getAllPosts(query);
     }
-    async getAllCommentsFromPost(postId:string, query:PostsQueryDTO):Promise<PagedResponse<Comment>> {
+    async getAllCommentsFromPost(postId:string, query:PostsQueryDTO,userId?:string,):Promise<PagedResponse<Comment>> {
         const post = await this.postRepository.getPostById(postId);
         if (!post) {throw new Error("Post not found.");}
-        return await this.postRepository.getAllCommentsByPostID(postId,query);
+        return await this.postRepository.getAllCommentsByPostID(postId,query,userId);
     }
     async createCommentUnderPost(
         postId: string,
@@ -29,13 +29,17 @@ export class PostService {
     ): Promise<Comment> {
         const post = await this.postRepository.getPostById(postId);
         if (!post) throw new Error("Could not find post with id " + postId);
-
         const id = uuidv4();
         const newComment: Comment = new Comment(
             id,
             content,
             { userId, userLogin },
-            new Date().toISOString()
+            new Date().toISOString(),
+            {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+            },
         );
         return this.postRepository.createCommentByPostID(postId, newComment);
     }

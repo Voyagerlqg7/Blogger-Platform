@@ -66,7 +66,8 @@ export class PostHTTPController {
     getAllCommentsByPostId: RequestHandler = async (req, res) => {
         try {
             const query: PostsQueryDTO = getQueryParams<PostsQueryDTO>(req);
-            const comments = await this.postService.getAllCommentsFromPost(req.params.id, query);
+            const userId = req.user?.id;
+            const comments = await this.postService.getAllCommentsFromPost(req.params.id, query,userId);
 
             if (!comments) {
                 res.status(404).send("Post not found");
