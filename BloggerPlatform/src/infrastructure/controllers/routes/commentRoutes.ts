@@ -14,6 +14,6 @@ commentRouter.get("/:id", commentController.getCommentById);
 
 
 commentRouter.put("/:id",authMiddleware.execute.bind(authMiddleware),commentsValidationMiddleware, commentController.updateComment);
-commentRouter.put("/:id/like-status",authMiddleware.execute.bind(authMiddleware),);
+commentRouter.put("/:id/like-status",authMiddleware.execute.bind(authMiddleware),commentController.RateComment);
 
 commentRouter.delete("/:id", authMiddleware.execute.bind(authMiddleware),commentController.deleteCommentById);

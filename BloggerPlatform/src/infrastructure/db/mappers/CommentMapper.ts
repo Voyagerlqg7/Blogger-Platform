@@ -3,7 +3,7 @@ import { CommentDB } from "../Schemas/CommentModel";
 
 export class CommentMapper {
 
-    static toDomain(commentDB: CommentDB): Comment {
+    static toDomain(commentDB: CommentDB, status: "Like" | "Dislike" | "None"): Comment {
         return new Comment(
             commentDB._id.toString(),
             commentDB.content,
@@ -15,7 +15,7 @@ export class CommentMapper {
             {
                 likesCount: commentDB.likesCount,
                 dislikesCount: commentDB.dislikesCount,
-                myStatus: "None",
+                myStatus: status,
             }
         );
     }

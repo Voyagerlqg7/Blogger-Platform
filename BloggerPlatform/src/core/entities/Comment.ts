@@ -10,7 +10,7 @@ export class Comment {
         public likesInfo:{
             likesCount: number,
             dislikesCount: number,
-            myStatus: "Like" | "Dislike" | "None",
+            myStatus: string,
         }
     ){}
 }
