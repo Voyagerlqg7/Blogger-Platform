@@ -11,6 +11,17 @@ import {client} from "./infrastructure/db/connection";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 
+import {
+    BlogModel,
+    UserModel,
+    CommentLikeModel,
+    CommentModel,
+    SessionModel,
+    PostModel,
+    requestLogsCollection,
+    tokenDBCollection
+} from "./infrastructure/db/Models/collections";
+
 
 dotenv.config();
 const app = express();
@@ -31,15 +42,16 @@ const startApp = async () => {
 
     app.delete('/testing/all-data', async (request: Request, response: Response) => {
         try {
-            const db = client.db("BloggerPlatform");
-            await db.collection("blogs").deleteMany({});
-            await db.collection("posts").deleteMany({});
-            await db.collection("users").deleteMany({});
-            await db.collection("comments").deleteMany({});
-            await db.collection("token").deleteMany({});
-            await db.collection("commentLikes").deleteMany({});
-            await db.collection("customRateLimit").deleteMany({});
-            await db.collection("sessions").deleteMany({});
+            await Promise.all([
+                BlogModel.deleteMany({}),
+                PostModel.deleteMany({}),
+                UserModel.deleteMany({}),
+                CommentModel.deleteMany({}),
+                CommentLikeModel.deleteMany({}),
+                SessionModel.deleteMany({}),
+                tokenDBCollection.deleteMany({}),
+                requestLogsCollection.deleteMany({}),
+            ]);
             //await db.collection("customRateLimit").createIndex({ date: 1 }, { expireAfterSeconds: 60 });//чтобы данные удалялись через минуту, не хранить мусор
             response.status(204).send();
         } catch (error) {
