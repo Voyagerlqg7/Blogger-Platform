@@ -35,8 +35,9 @@ const startApp = async () => {
             await db.collection("blogs").deleteMany({});
             await db.collection("posts").deleteMany({});
             await db.collection("users").deleteMany({});
-            await db.collection("Comments").deleteMany({});
+            await db.collection("comments").deleteMany({});
             await db.collection("token").deleteMany({});
+            await db.collection("commentLikes").deleteMany({});
             await db.collection("customRateLimit").deleteMany({});
             await db.collection("sessions").deleteMany({});
             //await db.collection("customRateLimit").createIndex({ date: 1 }, { expireAfterSeconds: 60 });//чтобы данные удалялись через минуту, не хранить мусор
