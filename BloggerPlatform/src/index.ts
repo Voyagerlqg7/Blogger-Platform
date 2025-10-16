@@ -17,9 +17,7 @@ import {
     CommentLikeModel,
     CommentModel,
     SessionModel,
-    PostModel,
-    requestLogsCollection,
-    tokenDBCollection
+    PostModel
 } from "./infrastructure/db/Models/collections";
 
 
@@ -42,21 +40,20 @@ const startApp = async () => {
 
     app.delete('/testing/all-data', async (request: Request, response: Response) => {
         try {
-            await Promise.all([
-                BlogModel.deleteMany({}),
-                PostModel.deleteMany({}),
-                UserModel.deleteMany({}),
-                CommentModel.deleteMany({}),
-                CommentLikeModel.deleteMany({}),
-                SessionModel.deleteMany({}),
-                tokenDBCollection.deleteMany({}),
-                requestLogsCollection.deleteMany({}),
-            ]);
+            const db = client.db("BloggerPlatform");
+            await BlogModel.deleteMany({})
+            await PostModel.deleteMany({})
+            await UserModel.deleteMany({})
+            await CommentModel.deleteMany({})
+            await CommentLikeModel.deleteMany({})
+            await SessionModel.deleteMany({})
+            await db.collection("token").deleteMany({});
+            await db.collection("customRateLimit").deleteMany({});
             //await db.collection("customRateLimit").createIndex({ date: 1 }, { expireAfterSeconds: 60 });//чтобы данные удалялись через минуту, не хранить мусор
             response.status(204).send();
         } catch (error) {
             console.error("Error deleting data:", error);
-            response.status(500).json({ error: "Error deleting data" });
+            response.status(500).json({error: "Error deleting data"});
         }
     });
 
