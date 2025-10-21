@@ -5,10 +5,9 @@ dotenv.config();
 import { settings } from "../settings/settings";
 
 const mongoURI =
-    /*settings.NODE_ENV === "development"
+    settings.NODE_ENV === "development"
         ? settings.LOCAL_MONGODB_URI
-        : settings.ATLAS_MONGO_URI;*/
-    settings.ATLAS_MONGO_URI;
+        : settings.ATLAS_MONGO_URI;
 
 if (!mongoURI) {
     throw new Error("MongoDB URI is missing");
