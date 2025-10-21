@@ -81,7 +81,7 @@ export class PostHTTPController {
     };
     createCommentByPostId: RequestHandler = async (req, res) => {
         try {
-            const post = await this.postService.getPostById(req.params.postId);
+            const post = await this.postService.getPostById(req.params.id);
             if (!post) {
                 res.status(404).send("Post not found");
                 return;
