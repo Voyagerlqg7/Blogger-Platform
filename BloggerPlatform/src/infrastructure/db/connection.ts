@@ -4,7 +4,7 @@ import {settings} from "../settings/settings";
 import mongoose from "mongoose";
 
 dotenv.config();
-const mongoURI = settings.MONGODB_URI;
+const mongoURI = settings.LOCAL_MONGODB_URI;
 export const client = new MongoClient(mongoURI);
 
 if(!mongoURI){
