@@ -14,6 +14,7 @@ export const client = new mongoose.mongo.MongoClient(mongoURI);
 
 export async function connectDB() {
     try {
+        console.log("MONGO URI:", `"${mongoURI}"`);
         await mongoose.connect(mongoURI);
         await client.connect();
         console.log(`Connected to MongoDB via ${settings.NODE_ENV === "development" ? "local" : "Atlas"} database`);
