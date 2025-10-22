@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import {requestLogsCollection} from "../db/Models/collections";
+import {RequestLogsModel} from "../db/Models/collections";
 
 const LIMIT =5;
 
@@ -9,7 +9,7 @@ export async function rateLimiter_to_DB(req: Request, res: Response, next: NextF
 
     // логируем запрос, но ошибки не прерывают выполнение
     try {
-        await requestLogsCollection.insertOne({
+        await RequestLogsModel.insertOne({
             ip: req.ip,
             url: req.originalUrl,
             date: now,
@@ -20,7 +20,7 @@ export async function rateLimiter_to_DB(req: Request, res: Response, next: NextF
 
     let count = 0;
     try {
-        count = await requestLogsCollection.countDocuments({
+        count = await RequestLogsModel.countDocuments({
             ip: req.ip,
             url: req.originalUrl,
             date: { $gte: tenSecondsAgo },

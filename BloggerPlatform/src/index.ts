@@ -7,7 +7,6 @@ import {userRouter} from "./infrastructure/controllers/routes/userRoutes";
 import {postRouter} from "./infrastructure/controllers/routes/postRoutes";
 import {securityDevicesRouter} from "./infrastructure/controllers/routes/securityRoute";
 import {connectDB} from "./infrastructure/db/connection";
-import {client} from "./infrastructure/db/connection";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 
@@ -17,7 +16,9 @@ import {
     CommentLikeModel,
     CommentModel,
     SessionModel,
-    PostModel
+    PostModel,
+    RequestLogsModel,
+    TokenModel
 } from "./infrastructure/db/Models/collections";
 
 
@@ -40,15 +41,14 @@ const startApp = async () => {
 
     app.delete('/testing/all-data', async (request: Request, response: Response) => {
         try {
-            const db = client.db("BloggerPlatform");
             await BlogModel.deleteMany({})
             await PostModel.deleteMany({})
             await UserModel.deleteMany({})
             await CommentModel.deleteMany({})
             await CommentLikeModel.deleteMany({})
             await SessionModel.deleteMany({})
-            await db.collection("token").deleteMany({});
-            await db.collection("customRateLimit").deleteMany({});
+            await TokenModel.deleteMany({})
+            await RequestLogsModel.deleteMany({})
             //await db.collection("customRateLimit").createIndex({ date: 1 }, { expireAfterSeconds: 60 });//чтобы данные удалялись через минуту, не хранить мусор
             response.status(204).send();
         } catch (error) {

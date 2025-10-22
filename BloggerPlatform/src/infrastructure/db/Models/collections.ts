@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
-import {client} from "../connection";
 import {BlogsDB, BlogSchema} from "../Schemas/BlogModel";
 import {UserDB, UserSchema} from "../Schemas/UserModel";
 import {PostsDB, PostSchema} from "../Schemas/PostModel";
 import {CommentDB, CommentSchema, CommentLikeSchema} from "../Schemas/CommentModel";
 import {session, SessionSchema} from "../Schemas/SessionModel";
+import {TokenSchema} from "../Schemas/TokenModel";
+import {RequestLogSchema} from "../Schemas/RequestLogModel";
 
-export const tokenDBCollection = client.db("BloggerPlatform").collection("token");
-export const requestLogsCollection = client.db("BloggerPlatform").collection("customRateLimit");
-
+export const TokenModel = mongoose.model("Token", TokenSchema)
+export const RequestLogsModel = mongoose.model("CustomRateLimit", RequestLogSchema)
 export const UserModel = mongoose.model<UserDB>("User", UserSchema);
 export const BlogModel = mongoose.model<BlogsDB>("Blog", BlogSchema);
 export const PostModel = mongoose.model<PostsDB>("Post", PostSchema);
