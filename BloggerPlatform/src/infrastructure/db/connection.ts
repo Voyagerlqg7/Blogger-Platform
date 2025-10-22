@@ -1,6 +1,8 @@
 import * as dotenv from 'dotenv';
 import mongoose from "mongoose";
-dotenv.config();
+
+const envFile = process.env.NODE_ENV === "production" ? ".env.production" : ".env.development";
+dotenv.config({ path: envFile });
 
 import { settings } from "../settings/settings";
 
@@ -16,14 +18,12 @@ if (!mongoURI) {
 export async function connectDB() {
     try {
         console.log("ENV NODE_ENV:", settings.NODE_ENV);
-        console.log("MONGO URI:", JSON.stringify(mongoURI));
+        console.log("MONGO URI:", mongoURI);
 
         await mongoose.connect(mongoURI);
 
         console.log(
-            `Connected to MongoDB via ${
-                settings.NODE_ENV === "development" ? "local" : "Atlas"
-            } database`
+            `Connected to MongoDB via ${settings.NODE_ENV === "development" ? "local" : "Atlas"} database`
         );
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
