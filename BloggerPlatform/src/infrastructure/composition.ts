@@ -25,6 +25,7 @@ import {JWTService} from "./auth/JWTService";
 import {EmailService} from "./applicationServices/EmailService";
 import {UserConfirmationService} from "./applicationServices/UserConfirmationService";
 import {AuthMiddleware} from "./auth/AuthMiddleware";
+import {OptionalAuthMiddleware} from "./auth/OptionalAuthMiddleware";
 import {AuthService} from "./applicationServices/AuthService";
 
 //Импорт контроллеров:
@@ -52,6 +53,7 @@ container.bind<SessionsRepository>(SessionsRepository).toSelf().inSingletonScope
 // Сервисы
 container.bind<AuthService>(AuthService).toSelf().inSingletonScope();
 container.bind<AuthMiddleware>(AuthMiddleware).toSelf().inSingletonScope();
+container.bind<OptionalAuthMiddleware>(OptionalAuthMiddleware).toSelf().inSingletonScope();
 container.bind<UserService>(UserService).toSelf().inSingletonScope();
 container.bind<BlogService>(BlogService).toSelf().inSingletonScope();
 container.bind<CommentService>(CommentService).toSelf().inSingletonScope();

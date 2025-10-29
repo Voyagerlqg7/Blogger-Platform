@@ -8,10 +8,13 @@ export class CommentController {
     getCommentById = async (req: Request, res: Response): Promise<void> => {
         try {
             const commentId = req.params.id;
-            const userId = req.user?.id;
+            const userId = req.user?.id; // Будет undefined если пользователь не аутентифицирован
 
             const comment = await this.commentService.getCommentById(commentId, userId);
-            if (!comment) {res.sendStatus(404);return;}
+            if (!comment) {
+                res.sendStatus(404);
+                return;
+            }
             res.status(200).json(comment);
         } catch (error) {
             console.error('Get comment by id error:', error);
