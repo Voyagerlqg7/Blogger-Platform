@@ -8,15 +8,19 @@ import {CommentModel, CommentLikeModel} from "../Models/collections";
 @injectable()
 export class CommentRepository implements ICommentsRepository {
     async getCommentById(commentId:string, userId?:string):Promise<Comment | null> {
+        console.log(`getCommentById: commentId=${commentId}, userId=${userId}`);
         const comment = await CommentModel.findOne({ _id: commentId }).exec();
         if (!comment) return null;
+
         let myStatus: "Like" | "Dislike" | "None" = "None";
         if (userId) {
             const like = await CommentLikeModel.findOne({ userId, commentId }).lean().exec();
+            console.log(`Found like:`, like);
             if (like) {
                 myStatus = like.status as "Like" | "Dislike" | "None";
             }
         }
+        console.log(`Returning comment with myStatus: ${myStatus}`);
         return CommentMapper.toDomain(comment, myStatus);
     }
     async updateCommentById(commentId:string, content: string):Promise<void> {

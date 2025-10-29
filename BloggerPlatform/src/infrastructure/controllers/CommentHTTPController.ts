@@ -67,7 +67,7 @@ export class CommentController {
             const commentId = req.params.id;
             const userId = req.user!.id;
 
-            const comment = await this.commentService.getCommentById(commentId);
+            const comment = await this.commentService.getCommentById(commentId, userId);
             if (!comment) {
                 res.status(404).send('No comment found.');
                 return;

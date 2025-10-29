@@ -2,7 +2,6 @@ import {Comment} from "../entities/Comment";
 import {ICommentsRepository} from "../repository/ICommentsRepository";
 import { injectable, inject } from "inversify";
 
-
 @injectable()
 export class CommentService {
     constructor(@inject ("ICommentsRepository") private commentRepository: ICommentsRepository) {}
@@ -36,17 +35,11 @@ export class CommentService {
             throw new Error("Comment not found");
         }
 
-        if (likeStatus === "None") {
-            // если убираем лайк или дизлайк, просто удаляем из коллекции
-            await this.commentRepository.setLike(userId, commentId, likeStatus);
-        } else {
-            await this.commentRepository.setLike(userId, commentId, likeStatus);
-        }
+        await this.commentRepository.setLike(userId, commentId, likeStatus);
 
         const likesCount = await this.commentRepository.countLikes(commentId);
         const dislikesCount = await this.commentRepository.countDislikes(commentId);
 
         await this.commentRepository.updateLikesCount(commentId, likesCount, dislikesCount);
     }
-
 }
