@@ -61,12 +61,6 @@ export class CommentController {
     RateComment = async (req: Request, res: Response): Promise<void> => {
         try {
             const { likeStatus } = req.body;
-
-            if (!["Like", "Dislike", "None"].includes(likeStatus)) {
-                res.status(400).send({ error: "Invalid likeStatus value" });
-                return;
-            }
-
             const commentId = req.params.id;
             const userId = req.user!.id;
 
