@@ -1,26 +1,25 @@
 import {Router} from "express";
+import {PostHTTPController} from "../PostHTTPController"
+import {basicAuthMiddleware} from "../../auth/BasicAuthMiddleware";
 import {AuthMiddleware} from "../../auth/AuthMiddleware";
-import {OptionalAuthMiddleware} from "../../auth/OptionalAuthMiddleware";
+import {OptionalAuthMiddleware} from "../../auth/OptionalAuthMiddleware"; // Добавьте этот импорт
+import {postValidationMiddleware} from "../../middlewares/PostsValidation";
+import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {commentsValidationMiddleware} from "../../middlewares/CommentsValidation";
-import {likeStatusValidation} from "../../middlewares/likeStatusMiddleware";
-import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware"; // Убедитесь, что он есть
 import {container} from "../../composition";
-import {CommentController} from "../CommentHTTPController";
 
-export const commentRouter = Router();
-const commentController = container.get<CommentController>(CommentController);
+export const postRouter = Router();
+const postController = container.get<PostHTTPController>(PostHTTPController);
 const authMiddleware = container.get(AuthMiddleware);
-const optionalAuthMiddleware = container.get(OptionalAuthMiddleware);
+const optionalAuthMiddleware = container.get(OptionalAuthMiddleware); // Добавьте это
 
-commentRouter.get("/:id", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), commentController.getCommentById);
+postRouter.get("/", postController.getAllPosts);
+postRouter.get("/:id", postController.getPostById);
+postRouter.get("/:id/comments", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), postController.getAllCommentsByPostId);
 
-commentRouter.put("/:id", authMiddleware.execute.bind(authMiddleware), commentsValidationMiddleware, inputValidationMiddleware, commentController.updateComment);
+postRouter.put("/:id", basicAuthMiddleware, postValidationMiddleware, inputValidationMiddleware, postController.updatePostById);
 
-commentRouter.put("/:id/like-status",
-    authMiddleware.execute.bind(authMiddleware),
-    likeStatusValidation,
-    inputValidationMiddleware,
-    commentController.RateComment
-);
+postRouter.post("/:id/comments", authMiddleware.execute.bind(authMiddleware), commentsValidationMiddleware, inputValidationMiddleware, postController.createCommentByPostId);
+postRouter.post("/", basicAuthMiddleware, postValidationMiddleware, inputValidationMiddleware, postController.createPost);
 
-commentRouter.delete("/:id", authMiddleware.execute.bind(authMiddleware), commentController.deleteCommentById);
+postRouter.delete("/:id", basicAuthMiddleware, postController.deletePostById);
