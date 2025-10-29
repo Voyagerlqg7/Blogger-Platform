@@ -10,6 +10,7 @@ export async function rateLimiter_to_DB(req: Request, res: Response, next: NextF
     // логируем запрос, но ошибки не прерывают выполнение
     try {
         await RequestLogsModel.insertOne({
+            _id: `${req.ip}:${req.originalUrl}:${now.getTime()}`,
             ip: req.ip,
             url: req.originalUrl,
             date: now,
