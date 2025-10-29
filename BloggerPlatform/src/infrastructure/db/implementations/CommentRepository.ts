@@ -14,7 +14,7 @@ export class CommentRepository implements ICommentsRepository {
         if (userId) {
             const like = await CommentLikeModel.findOne({ userId, commentId }).lean().exec();
             if (like) {
-                myStatus = like.status as "Like" | "Dislike";
+                myStatus = like.status as "Like" | "Dislike" | "None";
             }
         }
         return CommentMapper.toDomain(comment, myStatus);
@@ -55,9 +55,10 @@ export class CommentRepository implements ICommentsRepository {
 
         await CommentLikeModel.findOneAndUpdate(
             { userId, commentId },
-            { status, createdAt: new Date() },
+            { userId, commentId, status, createdAt: new Date() },
             { upsert: true, new: true }
         );
+
     }
 
     async countLikes(commentId:string):Promise<number> {
