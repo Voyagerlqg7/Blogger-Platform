@@ -13,8 +13,8 @@ const postController = container.get<PostHTTPController>(PostHTTPController);
 const authMiddleware = container.get(AuthMiddleware);
 
 postRouter.get("/",postController.getAllPosts);
-postRouter.get("/:id",postController.getPostById);
-postRouter.get("/:id",postController.getAllCommentsByPostId);
+postRouter.get("/:id", postController.getPostById);
+postRouter.get("/:id/comments", postController.getAllCommentsByPostId);
 
 postRouter.put("/:id",basicAuthMiddleware, postValidationMiddleware, inputValidationMiddleware,postController.updatePostById);
 

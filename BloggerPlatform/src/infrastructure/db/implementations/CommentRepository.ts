@@ -53,10 +53,10 @@ export class CommentRepository implements ICommentsRepository {
             return;
         }
 
-        await CommentLikeModel.updateOne(
+        await CommentLikeModel.findOneAndUpdate(
             { userId, commentId },
-            { userId, commentId, status, createdAt: new Date().toISOString() },
-            { upsert: true }
+            { status, createdAt: new Date() },
+            { upsert: true, new: true }
         );
     }
 
