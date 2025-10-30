@@ -7,6 +7,7 @@ import {postValidationMiddleware} from "../../middlewares/PostsValidation";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {commentsValidationMiddleware} from "../../middlewares/CommentsValidation";
 import {container} from "../../composition";
+import {likeStatusValidation} from "../../middlewares/likeStatusMiddleware";
 
 export const postRouter = Router();
 const postController = container.get<PostHTTPController>(PostHTTPController);
@@ -18,6 +19,13 @@ postRouter.get("/:id", postController.getPostById);
 postRouter.get("/:id/comments", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), postController.getAllCommentsByPostId);
 
 postRouter.put("/:id", basicAuthMiddleware, postValidationMiddleware, inputValidationMiddleware, postController.updatePostById);
+postRouter.put("/:id/like-status",
+    authMiddleware.execute.bind(authMiddleware),
+    likeStatusValidation,
+    inputValidationMiddleware,
+    postController.RatePost
+    )
+
 
 postRouter.post("/:id/comments", authMiddleware.execute.bind(authMiddleware), commentsValidationMiddleware, inputValidationMiddleware, postController.createCommentByPostId);
 postRouter.post("/", basicAuthMiddleware, postValidationMiddleware, inputValidationMiddleware, postController.createPost);

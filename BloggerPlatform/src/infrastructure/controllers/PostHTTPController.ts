@@ -111,5 +111,26 @@ export class PostHTTPController {
             console.error('Delete post error:', error);
             res.status(500).send("Internal server error");
         }
-    }
+    };
+
+    RatePost = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { likeStatus } = req.body;
+            const commentId = req.params.id;
+            const userId = req.user!.id;
+
+            const comment = await this.commentService.getCommentById(commentId, userId);
+            if (!comment) {
+                res.status(404).send('No comment found.');
+                return;
+            }
+
+            await this.commentService.rateCommentById(userId, commentId, likeStatus);
+            res.status(204).send();
+        } catch (error) {
+            console.error('Rate comment error:', error);
+            res.status(500).send("Internal server error");
+        }
+    };
+
 }

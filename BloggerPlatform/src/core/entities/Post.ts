@@ -7,5 +7,18 @@ export class Post {
                 public blogId: string,
                 public blogName: string,
                 public createdAt: string,
+                public likesInfo:{
+                    likesCount: number,
+                    dislikesCount: number,
+                    myStatus: string,
+                }
     ){}
+}
+export class PostLike {
+    constructor(
+        public userId: string,
+        public postId: string,
+        public status: "Like" | "Dislike",
+        public createdAt: string
+    ) {}
 }

@@ -1,4 +1,4 @@
-import {Post} from "../entities/Post";
+import {Post, PostLike} from "../entities/Post";
 import {Comment} from "../entities/Comment";
 import {UpdatePostByIdDTO} from "./DTO/PostDTO";
 import {PostsQueryDTO,PagedResponse} from "./DTO/QueryParamsDTO";
@@ -11,4 +11,10 @@ export interface IPostRepository {
     createPost(post:Post):Promise<Post>;
     getAllCommentsByPostID(postId:string, Q_params:PostsQueryDTO, userId?:string):Promise<PagedResponse<Comment>>;
     createCommentByPostID(postId:string, comment:Comment):Promise<Comment>;
+
+    updateLikesCount(postId:string, likesCount:number, dislikeCount:number):Promise<void>;
+    getUserLikes(userId: string, postIds:string[]):Promise<PostLike[]>;
+    setLike(userId:string,postId:string,status:"Like"|"Dislike"|"None"):Promise<void>;
+    countLikes(postId:string):Promise<number>;
+    countDislikes(postId:string):Promise<number>;
 }

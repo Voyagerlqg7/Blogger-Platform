@@ -1,4 +1,4 @@
-import {Post} from "../../../core/entities/Post";
+import {Post, PostLike} from "../../../core/entities/Post";
 import {IPostRepository} from "../../../core/repository/IPostRepository";
 import {UpdatePostByIdDTO} from "../../../core/repository/DTO/PostDTO";
 import {PostMapper} from "../mappers/PostMapper";
@@ -6,7 +6,7 @@ import {Comment} from "../../../core/entities/Comment";
 import {CommentMapper} from "../mappers/CommentMapper";
 import {PagedResponse, PostsQueryDTO} from "../../../core/repository/DTO/QueryParamsDTO";
 import {injectable} from "inversify";
-import {PostModel, CommentModel, CommentLikeModel} from "../Models/collections";
+import {PostModel, CommentModel, CommentLikeModel, PostLikeModel} from "../Models/collections";
 
 @injectable()
 export class PostRepository implements IPostRepository {
@@ -98,6 +98,50 @@ export class PostRepository implements IPostRepository {
         const newComment = CommentMapper.toPersistence(postId, comment);
         await CommentModel.insertOne(newComment);
         return CommentMapper.toDomain(newComment,"None");
+    }
+
+
+    async updateLikesCount(postId:string, likesCount:number, dislikesCount:number):Promise<void> {
+        await PostModel.updateOne(
+            { _id: postId },
+            { $set: { likesCount, dislikesCount } }
+        );
+
+    }
+    async getUserLikes(userId: string, postIds: string[]): Promise<PostLike[]> {
+        const docs = await PostLikeModel.find({ userId, postId: { $in: postIds } })
+            .lean()
+            .exec();
+
+        return docs.map(d =>
+            new PostLike(
+                String(d.userId),
+                String(d.postId),
+                d.status as "Like" | "Dislike",
+                d.createdAt instanceof Date ? d.createdAt.toISOString() : String(d.createdAt)
+            )
+        );
+
+    }
+
+    async setLike(userId: string, postId: string, status: "Like" | "Dislike" | "None"): Promise<void> {
+        if (status === "None") {
+            await PostLikeModel.deleteOne({ userId, postId });
+            return;
+        }
+
+        await PostLikeModel.findOneAndUpdate(
+            { userId, postId },
+            { userId, postId, status, createdAt: new Date() },
+            { upsert: true, new: true }
+        );
+
+    }
+    async countLikes(postId:string):Promise<number> {
+        return PostLikeModel.countDocuments({postId, status:"Like"});
+    }
+    async countDislikes(postId:string):Promise<number> {
+        return PostLikeModel.countDocuments({postId, status:"Dislike"});
     }
 }
 

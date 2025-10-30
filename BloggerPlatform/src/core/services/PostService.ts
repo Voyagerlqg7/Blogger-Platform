@@ -55,7 +55,12 @@ export class PostService {
             dto.shortDescription,
             dto.blogId,
             blog.name,
-            new Date().toISOString()
+            new Date().toISOString(),
+            {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+            },
         )
         return await this.postRepository.createPost(newPost);
     }
@@ -71,6 +76,19 @@ export class PostService {
         const post = await this.postRepository.getPostById(postId);
         if (!post) {throw new Error("Post not found");}
         return await this.postRepository.deletePostById(postId);
+    }
+    async ratePostById(userId: string, postId: string, likeStatus: "Like" | "Dislike" | "None"): Promise<void> {
+        const post = await this.postRepository.getPostById(postId);
+        if (!post) {
+            throw new Error("Post not found");
+        }
+
+        await this.postRepository.setLike(userId, postId, likeStatus);
+
+        const likesCount = await this.postRepository.countLikes(postId);
+        const dislikesCount = await this.postRepository.countDislikes(postId);
+
+        await this.postRepository.updateLikesCount(postId, likesCount, dislikesCount);
     }
 
 }
