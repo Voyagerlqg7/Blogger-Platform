@@ -4,8 +4,8 @@ import {UpdatePostByIdDTO} from "./DTO/PostDTO";
 import {PostsQueryDTO,PagedResponse} from "./DTO/QueryParamsDTO";
 
 export interface IPostRepository {
-    getAllPosts(Q_params:PostsQueryDTO):Promise<PagedResponse<Post>>;
-    getPostById(postId:string):Promise<Post|null>;
+    getAllPosts(Q_params:PostsQueryDTO,userId?:string):Promise<PagedResponse<Post>>;
+    getPostById(postId:string, userId?:string):Promise<Post|null>;
     deletePostById(postId:string):Promise<void | null>;
     updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<void>;
     createPost(post:Post):Promise<Post>;
@@ -14,7 +14,10 @@ export interface IPostRepository {
 
     updateLikesCount(postId:string, likesCount:number, dislikeCount:number):Promise<void>;
     getUserLikes(userId: string, postIds:string[]):Promise<PostLike[]>;
-    setLike(userId:string,postId:string,status:"Like"|"Dislike"|"None"):Promise<void>;
+    setLike(userId: string,
+            postId: string,
+            login: string,
+            status: "Like" | "Dislike" | "None"):Promise<void>;
     countLikes(postId:string):Promise<number>;
     countDislikes(postId:string):Promise<number>;
 }
