@@ -10,35 +10,113 @@ import {PostModel, CommentModel, CommentLikeModel, PostLikeModel} from "../Model
 
 @injectable()
 export class PostRepository implements IPostRepository {
-    async getAllPosts(query: PostsQueryDTO): Promise<PagedResponse<Post>> {
+    async getAllPosts(query: PostsQueryDTO,userId?: string): Promise<PagedResponse<Post>> {
         const filter: any = {};
         const totalCount = await PostModel.countDocuments(filter);
         const items = await PostModel
             .find(filter)
-            .sort({[query.sortBy]: query.sortDirection === "asc" ? 1 : -1})
+            .sort({ [query.sortBy]: query.sortDirection === "asc" ? 1 : -1 })
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
             .lean();
+        let userLikes: Record<string, "Like" | "Dislike"> = {};
+        if (userId) {
+            const likes = await PostLikeModel.find({
+                userId,
+                postId: { $in: items.map(i => i._id) }
+            }).lean();
+
+            userLikes = likes.reduce((acc, l) => {
+                acc[String(l.postId)] = l.status as "Like" | "Dislike";
+                return acc;
+            }, {} as Record<string, "Like" | "Dislike">);
+        }
+
+        const postIds = items.map(i => i._id);
+        const allNewestLikes = await PostLikeModel.aggregate([
+            { $match: { postId: { $in: postIds }, status: "Like" } },
+            { $sort: { createdAt: -1 } },
+            {
+                $group: {
+                    _id: "$postId",
+                    likes: {
+                        $push: {
+                            addedAt: "$createdAt",
+                            userId: "$userId",
+                            login: "$login"
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    likes: { $slice: ["$likes", 3] } // берём только 3 последних
+                }
+            }
+        ]);
+
+        const newestLikesMap: Record<string, { addedAt: string; userId: string; login: string }[]> = {};
+        allNewestLikes.forEach(likeGroup => {
+            newestLikesMap[String(likeGroup._id)] = likeGroup.likes.map((l: any) => ({
+                addedAt: new Date(l.addedAt).toISOString(),
+                userId: l.userId,
+                login: l.login
+            }));
+        });
+
+        const domainItems = items.map(i =>
+            PostMapper.toDomain(
+                i,
+                userLikes[i._id.toString()] || "None",
+                newestLikesMap[i._id.toString()] || []
+            )
+        );
 
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: items.map(PostMapper.toDomain)
-        }
+            items: domainItems
+        };
     }
 
-    async getPostById(postId: string): Promise<Post | null> {
-        const post = await PostModel.findOne({_id: postId});
+
+    async getPostById(postId: string, userId?: string): Promise<Post | null> {
+        const post = await PostModel.findOne({ _id: postId }).lean().exec();
         if (!post) return null;
-        return PostMapper.toDomain(post);
+
+        let myStatus: "Like" | "Dislike" | "None" = "None";
+        if (userId) {
+            const like = await PostLikeModel.findOne({ userId, postId }).lean().exec();
+            if (like) {
+                myStatus = like.status as "Like" | "Dislike" | "None";
+            }
+        }
+
+        // последние 3 лайка
+        const newestLikes = await PostLikeModel.find({ postId, status: "Like" })
+            .sort({ createdAt: -1 })
+            .limit(3)
+            .select({ createdAt: 1, userId: 1, login: 1, _id: 0 })
+            .lean();
+
+        const formattedLikes = newestLikes.map(l => ({
+            addedAt: new Date(l.createdAt).toISOString(),
+            userId: l.userId,
+            login: l.login
+        }));
+
+
+        return PostMapper.toDomain(post, myStatus, formattedLikes);
     }
+
 
     async createPost(post: Post): Promise<Post> {
         const newPost = PostMapper.toPersistence(post);
-        await PostModel.insertOne(newPost);
-        return PostMapper.toDomain(newPost);
+        await PostModel.create(newPost);
+        return PostMapper.toDomain(newPost, "None");
     }
 
     async deletePostById(postId: string): Promise<void> {
@@ -117,6 +195,7 @@ export class PostRepository implements IPostRepository {
             new PostLike(
                 String(d.userId),
                 String(d.postId),
+                String(d.login),
                 d.status as "Like" | "Dislike",
                 d.createdAt instanceof Date ? d.createdAt.toISOString() : String(d.createdAt)
             )
@@ -124,19 +203,32 @@ export class PostRepository implements IPostRepository {
 
     }
 
-    async setLike(userId: string, postId: string, status: "Like" | "Dislike" | "None"): Promise<void> {
+    async setLike(
+        userId: string,
+        postId: string,
+        login: string,
+        status: "Like" | "Dislike" | "None"
+    ): Promise<void> {
+
         if (status === "None") {
             await PostLikeModel.deleteOne({ userId, postId });
-            return;
+        } else {
+            await PostLikeModel.findOneAndUpdate(
+                { userId, postId },
+                { userId, postId, login, status, createdAt: new Date() },
+                { upsert: true, new: true }
+            );
         }
-
-        await PostLikeModel.findOneAndUpdate(
-            { userId, postId },
-            { userId, postId, status, createdAt: new Date() },
-            { upsert: true, new: true }
+        const [likesCount, dislikesCount] = await Promise.all([
+            PostLikeModel.countDocuments({ postId, status: "Like" }),
+            PostLikeModel.countDocuments({ postId, status: "Dislike" })
+        ]);
+        await PostModel.updateOne(
+            { _id: postId },
+            { $set: { likesCount, dislikesCount } }
         );
-
     }
+
     async countLikes(postId:string):Promise<number> {
         return PostLikeModel.countDocuments({postId, status:"Like"});
     }

@@ -1,8 +1,12 @@
-import {Post} from "../../../core/entities/Post";
-import {PostsDB} from "../Schemas/PostModel";
+import { Post } from "../../../core/entities/Post";
+import { PostsDB } from "../Schemas/PostModel";
 
-export class PostMapper{
-    static toDomain(postDB: PostsDB, status: "Like" | "Dislike" | "None"):Post{
+export class PostMapper {
+    static toDomain(
+        postDB: PostsDB,
+        myStatus: "Like" | "Dislike" | "None",
+        newestLikes: { addedAt: string; userId: string; login: string }[] = []
+    ): Post {
         return new Post(
             postDB._id.toString(),
             postDB.title,
@@ -12,23 +16,25 @@ export class PostMapper{
             postDB.blogName,
             postDB.createdAt.toISOString(),
             {
-                likesCount:postDB.likesCount,
-                dislikesCount:postDB.dislikesCount,
-                myStatus: status,
+                likesCount: postDB.likesCount,
+                dislikesCount: postDB.dislikesCount,
+                myStatus,
+                newestLikes
             }
-        )
+        );
     }
-    static toPersistence(post: Post):PostsDB{
-        return{
+
+    static toPersistence(post: Post): PostsDB {
+        return {
             _id: post.id,
             title: post.title,
             content: post.content,
             shortDescription: post.shortDescription,
             blogId: post.blogId,
-            blogName:post.blogName,
+            blogName: post.blogName,
             createdAt: new Date(post.createdAt),
-            likesCount: post.likesInfo.likesCount,
-            dislikesCount: post.likesInfo.dislikesCount,
-        }
+            likesCount: post.extendedLikesInfo.likesCount,
+            dislikesCount: post.extendedLikesInfo.dislikesCount
+        };
     }
 }
