@@ -13,8 +13,8 @@ export class PostService {
     constructor(@inject ("IPostRepository") private postRepository: IPostRepository,
                 @inject ("IBlogRepository") private blogRepository: IBlogRepository) {}
 
-    async getAllPosts(query:PostsQueryDTO): Promise<PagedResponse<Post>> {
-        return await this.postRepository.getAllPosts(query);
+    async getAllPosts(query:PostsQueryDTO,userId?:string): Promise<PagedResponse<Post>> {
+        return await this.postRepository.getAllPosts(query, userId);
     }
     async getAllCommentsFromPost(postId:string, query:PostsQueryDTO,userId?:string,):Promise<PagedResponse<Comment>> {
         const post = await this.postRepository.getPostById(postId);
@@ -60,12 +60,20 @@ export class PostService {
                 likesCount: 0,
                 dislikesCount: 0,
                 myStatus: "None",
+                newestLikes: [
+                    {
+                        addedAt: "None",
+                        userId: "None",
+                        login: "None"
+                    }
+                ]
             },
+
         )
         return await this.postRepository.createPost(newPost);
     }
-    async getPostById(postId:string):Promise<Post|null>{
-        return await this.postRepository.getPostById(postId);
+    async getPostById(postId:string, userId?:string):Promise<Post|null>{
+        return await this.postRepository.getPostById(postId,userId);
     }
     async updatePostById(postId:string, dto:UpdatePostByIdDTO):Promise<void>{
         const post = await this.postRepository.getPostById(postId);
@@ -77,13 +85,13 @@ export class PostService {
         if (!post) {throw new Error("Post not found");}
         return await this.postRepository.deletePostById(postId);
     }
-    async ratePostById(userId: string, postId: string, likeStatus: "Like" | "Dislike" | "None"): Promise<void> {
+    async ratePostById(userId: string, postId: string, login:string,likeStatus: "Like" | "Dislike" | "None"): Promise<void> {
         const post = await this.postRepository.getPostById(postId);
         if (!post) {
             throw new Error("Post not found");
         }
 
-        await this.postRepository.setLike(userId, postId, likeStatus);
+        await this.postRepository.setLike(userId, postId,login, likeStatus);
 
         const likesCount = await this.postRepository.countLikes(postId);
         const dislikesCount = await this.postRepository.countDislikes(postId);

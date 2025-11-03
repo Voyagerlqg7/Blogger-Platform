@@ -24,8 +24,9 @@ export const PostSchema = new mongoose.Schema<PostsDB>({
     dislikesCount: {type: Number, required: true}
 })
 export const PostLikeSchema = new mongoose.Schema({
-    userId:String,
-    postId:String,
-    status:{type:String, enum:["Like","Dislike"]},
-    createdAt:Date,
-})
+    userId: { type: String, required: true },
+    postId: { type: String, required: true },
+    login: { type: String, required: true },
+    status: { type: String, enum: ["Like", "Dislike"], required: true },
+    createdAt: { type: Date, default: Date.now, required: true }
+});
