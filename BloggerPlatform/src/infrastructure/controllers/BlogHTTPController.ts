@@ -102,7 +102,7 @@ export class BlogController {
         try {
             const {title, shortDescription, content} = req.body;
             const dto = {title, shortDescription, content};
-            const newPostToBlog = await this.blogService.createNewPostForSpecialBlog(req.params.blogId, dto);
+            const newPostToBlog = await this.blogService.createNewPostForSpecialBlog(req.params.id, dto);
             if (!newPostToBlog) {
                 res.status(404).send("Blog not found!");
                 return;
