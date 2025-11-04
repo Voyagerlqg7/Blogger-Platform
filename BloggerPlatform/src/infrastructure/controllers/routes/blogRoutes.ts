@@ -4,6 +4,7 @@ import { blogValidationMiddleware } from "../../middlewares/BlogsValidation";
 import { basicAuthMiddleware } from "../../auth/BasicAuthMiddleware";
 import { inputValidationMiddleware } from "../../middlewares/input-validation-middleware";
 import { container } from "../../composition";
+import {postValidationMiddleware} from "../../middlewares/PostsValidation";
 
 export const blogRouter = Router();
 const blogController = container.get<BlogController>(BlogController);
@@ -28,7 +29,7 @@ blogRouter.post("/",
 
 blogRouter.post("/:id/posts",
     basicAuthMiddleware,
-    blogValidationMiddleware,
+    postValidationMiddleware,
     inputValidationMiddleware,
     blogController.createPostForSpecialBlogHandler
 );
