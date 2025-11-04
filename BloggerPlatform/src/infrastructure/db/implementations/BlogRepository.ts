@@ -1,6 +1,6 @@
 import {IBlogRepository} from "../../../core/repository/IBlogRepository";
 import {Blog} from "../../../core/entities/Blog";
-import {BlogModel, PostModel} from "../Models/collections";
+import {BlogModel, PostLikeModel, PostModel} from "../Models/collections";
 import {BlogMapper} from "../mappers/BlogMapper";
 import {UpdateBlogDTO} from "../../../core/repository/DTO/BlogDTO";
 import {PostMapper} from "../mappers/PostMapper";
@@ -53,30 +53,74 @@ export class BlogRepository implements IBlogRepository{
             { $set: { name: dto.name, description: dto.description, websiteUrl: dto.websiteUrl } }
         );
     }
-    async getAllPostsFromBlog(blogId: string, query:PostsQueryDTO): Promise<PagedResponse<Post>> {
-            const filter:any = {};
-            const totalCount = await PostModel.countDocuments(filter);
-            const items = await PostModel
-                .find(filter)
-                .sort({ [query.sortBy]: query.sortDirection === "asc" ? 1 : -1 })
-                .skip((query.pageNumber - 1) * query.pageSize)
-                .limit(query.pageSize)
-                .lean();
+    async getAllPostsFromBlog(blogId: string, query: PostsQueryDTO): Promise<PagedResponse<Post>> {
+        const filter = { blogId }; // фильтруем по blogId
+        const totalCount = await PostModel.countDocuments(filter);
 
-            return {
-                pagesCount: Math.ceil(totalCount / query.pageSize),
-                page: query.pageNumber,
-                pageSize: query.pageSize,
-                totalCount,
-                items: items.map(PostMapper.toDomain)
+        const items = await PostModel
+            .find(filter)
+            .sort({ [query.sortBy]: query.sortDirection === "asc" ? 1 : -1 })
+            .skip((query.pageNumber - 1) * query.pageSize)
+            .limit(query.pageSize)
+            .lean();
+
+        const postIds = items.map(i => i._id);
+
+        // Получаем последние 3 лайка на каждый пост
+        const allNewestLikes = await PostLikeModel.aggregate([
+            { $match: { postId: { $in: postIds }, status: "Like" } },
+            { $sort: { createdAt: -1 } },
+            {
+                $group: {
+                    _id: "$postId",
+                    likes: {
+                        $push: {
+                            addedAt: "$createdAt",
+                            userId: "$userId",
+                            login: "$login"
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    likes: { $slice: ["$likes", 3] } // берём только 3 последних
+                }
             }
-    }
+        ]);
 
-    async createNewPostForSpecialBlog(post:Post):Promise<Post>{
+        const newestLikesMap: Record<string, { addedAt: string; userId: string; login: string }[]> = {};
+        allNewestLikes.forEach(likeGroup => {
+            newestLikesMap[String(likeGroup._id)] = likeGroup.likes.map((l:any) => ({
+                addedAt: new Date(l.addedAt).toISOString(),
+                userId: l.userId,
+                login: l.login
+            }));
+        });
+
+        const domainItems = items.map(i =>
+            PostMapper.toDomain(
+                i,
+                "None",
+                newestLikesMap[i._id.toString()] || []
+            )
+        );
+
+        return {
+            pagesCount: Math.ceil(totalCount / query.pageSize),
+            page: query.pageNumber,
+            pageSize: query.pageSize,
+            totalCount,
+            items: domainItems
+        };
+    }
+    async createNewPostForSpecialBlog(post: Post): Promise<Post> {
         const newPost = PostMapper.toPersistence(post);
         await PostModel.insertOne(newPost);
-        return PostMapper.toDomain(newPost);
+        return PostMapper.toDomain(newPost, "None", []);
     }
+
     async deleteBlogById(blogId: string): Promise<void> {
         await BlogModel.deleteOne({ _id: blogId });
     }

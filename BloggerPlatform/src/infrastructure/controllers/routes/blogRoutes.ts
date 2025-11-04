@@ -10,7 +10,7 @@ const blogController = container.get<BlogController>(BlogController);
 
 blogRouter.get("/", blogController.getAllBlogsHandler);
 blogRouter.get("/:id", blogController.getBlogByIdHandler);
-blogRouter.get("/:id/posts", blogController.getAllPostsFromBlogHandler); // исправил путь
+blogRouter.get("/:id/posts", blogController.getAllPostsFromBlogHandler);
 
 blogRouter.put("/:id",
     basicAuthMiddleware,

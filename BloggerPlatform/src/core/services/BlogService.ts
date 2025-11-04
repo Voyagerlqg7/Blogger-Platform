@@ -47,7 +47,20 @@ export class BlogService {
             dto.shortDescription,
             blogId,
             blog.name,
-            new Date().toISOString()
+            new Date().toISOString(),
+            {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+                newestLikes: [
+                    {
+                        addedAt: "None",
+                        userId: "None",
+                        login: "None"
+                    }
+                ]
+            },
+
         )
         return await this.blogRepository.createNewPostForSpecialBlog(newPost);
 
