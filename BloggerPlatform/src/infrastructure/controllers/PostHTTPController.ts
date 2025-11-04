@@ -12,8 +12,9 @@ export class PostHTTPController {
 
     getAllPosts: RequestHandler = async (req, res) => {
         try {
+            const userId = req.user?.id
             const query: PostsQueryDTO = getQueryParams<PostsQueryDTO>(req);
-            const posts = await this.postService.getAllPosts(query);
+            const posts = await this.postService.getAllPosts(query,userId);
             res.status(200).json(posts);
         } catch (error) {
             console.error('Get all posts error:', error);
