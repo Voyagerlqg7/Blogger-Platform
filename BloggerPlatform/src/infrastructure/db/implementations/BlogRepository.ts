@@ -53,8 +53,8 @@ export class BlogRepository implements IBlogRepository{
             { $set: { name: dto.name, description: dto.description, websiteUrl: dto.websiteUrl } }
         );
     }
-    async getAllPostsFromBlog(blogId: string, query: PostsQueryDTO, userId?:string): Promise<PagedResponse<Post>> {
-        const filter = { blogId }; // фильтруем по blogId
+    async getAllPostsFromBlog(blogId: string, query: PostsQueryDTO, userId?: string): Promise<PagedResponse<Post>> {
+        const filter = { blogId };
         const totalCount = await PostModel.countDocuments(filter);
 
         const items = await PostModel
@@ -79,7 +79,6 @@ export class BlogRepository implements IBlogRepository{
 
         const postIds = items.map(i => i._id);
 
-        // Получаем последние 3 лайка на каждый пост
         const allNewestLikes = await PostLikeModel.aggregate([
             { $match: { postId: { $in: postIds }, status: "Like" } },
             { $sort: { createdAt: -1 } },
@@ -98,14 +97,14 @@ export class BlogRepository implements IBlogRepository{
             {
                 $project: {
                     _id: 1,
-                    likes: { $slice: ["$likes", 3] } // берём только 3 последних
+                    likes: { $slice: ["$likes", 3] }
                 }
             }
         ]);
 
         const newestLikesMap: Record<string, { addedAt: string; userId: string; login: string }[]> = {};
         allNewestLikes.forEach(likeGroup => {
-            newestLikesMap[String(likeGroup._id)] = likeGroup.likes.map((l:any) => ({
+            newestLikesMap[String(likeGroup._id)] = likeGroup.likes.map((l: any) => ({
                 addedAt: new Date(l.addedAt).toISOString(),
                 userId: l.userId,
                 login: l.login
@@ -115,7 +114,7 @@ export class BlogRepository implements IBlogRepository{
         const domainItems = items.map(i =>
             PostMapper.toDomain(
                 i,
-                "None",
+                userLikes[i._id.toString()] || "None",
                 newestLikesMap[i._id.toString()] || []
             )
         );
