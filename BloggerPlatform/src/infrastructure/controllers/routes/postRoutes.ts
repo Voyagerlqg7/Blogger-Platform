@@ -14,7 +14,7 @@ const postController = container.get<PostHTTPController>(PostHTTPController);
 const authMiddleware = container.get(AuthMiddleware);
 const optionalAuthMiddleware = container.get(OptionalAuthMiddleware); // Добавьте это
 
-postRouter.get("/", postController.getAllPosts);
+postRouter.get("/", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), postController.getAllPosts);
 postRouter.get("/:id", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), postController.getPostById);
 postRouter.get("/:id/comments", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), postController.getAllCommentsByPostId);
 
