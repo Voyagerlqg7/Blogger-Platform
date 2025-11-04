@@ -22,7 +22,8 @@ export class PostHTTPController {
     };
     getPostById: RequestHandler = async (req, res) => {
         try {
-            const post = await this.postService.getPostById(req.params.id);
+            const userId = req.user?.id;
+            const post = await this.postService.getPostById(req.params.id, userId);
             if (!post) {
                 res.status(404).send("Post not found");
                 return;
