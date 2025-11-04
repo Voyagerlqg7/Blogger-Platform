@@ -85,18 +85,13 @@ export class PostService {
         if (!post) {throw new Error("Post not found");}
         return await this.postRepository.deletePostById(postId);
     }
-    async ratePostById(userId: string, postId: string, login:string,likeStatus: "Like" | "Dislike" | "None"): Promise<void> {
+    async ratePostById(userId: string, postId: string, login:string, likeStatus: "Like" | "Dislike" | "None"): Promise<void> {
         const post = await this.postRepository.getPostById(postId);
         if (!post) {
             throw new Error("Post not found");
         }
 
-        await this.postRepository.setLike(userId, postId,login, likeStatus);
-
-        const likesCount = await this.postRepository.countLikes(postId);
-        const dislikesCount = await this.postRepository.countDislikes(postId);
-
-        await this.postRepository.updateLikesCount(postId, likesCount, dislikesCount);
+        await this.postRepository.setLike(userId, postId, login, likeStatus);
     }
 
 }

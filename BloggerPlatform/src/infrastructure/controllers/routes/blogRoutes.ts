@@ -26,7 +26,7 @@ blogRouter.post("/",
     blogController.createBlogHandler
 );
 
-blogRouter.post("/:id",
+blogRouter.post("/:id/posts",
     basicAuthMiddleware,
     blogValidationMiddleware,
     inputValidationMiddleware,

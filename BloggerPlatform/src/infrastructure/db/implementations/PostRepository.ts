@@ -87,7 +87,7 @@ export class PostRepository implements IPostRepository {
         const post = await PostModel.findOne({ _id: postId }).lean().exec();
         if (!post) return null;
 
-        let myStatus: "Like" | "Dislike" | "None" = "None";
+        let myStatus: "Like" | "Dislike" | "None"= "None";
         if (userId) {
             const like = await PostLikeModel.findOne({ userId, postId }).lean().exec();
             if (like) {
@@ -209,13 +209,18 @@ export class PostRepository implements IPostRepository {
         login: string,
         status: "Like" | "Dislike" | "None"
     ): Promise<void> {
-
         if (status === "None") {
             await PostLikeModel.deleteOne({ userId, postId });
         } else {
             await PostLikeModel.findOneAndUpdate(
                 { userId, postId },
-                { userId, postId, login, status, createdAt: new Date() },
+                {
+                    userId,
+                    postId,
+                    login,
+                    status,
+                    createdAt: new Date()  //обновляем время при каждом изменении
+                },
                 { upsert: true, new: true }
             );
         }
@@ -223,6 +228,7 @@ export class PostRepository implements IPostRepository {
             PostLikeModel.countDocuments({ postId, status: "Like" }),
             PostLikeModel.countDocuments({ postId, status: "Dislike" })
         ]);
+
         await PostModel.updateOne(
             { _id: postId },
             { $set: { likesCount, dislikesCount } }

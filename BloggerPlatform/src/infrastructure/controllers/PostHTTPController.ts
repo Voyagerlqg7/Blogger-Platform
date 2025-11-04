@@ -120,14 +120,13 @@ export class PostHTTPController {
             const postId = req.params.id;
             const userId = req.user!.id;
             const login = req.user!.login;
-
-            const comment = await this.postService.getPostById(postId, userId);
-            if (!comment) {
-                res.status(404).send('No comment found.');
+            const post = await this.postService.getPostById(postId);
+            if (!post) {
+                res.status(404).send('Post not found.');
                 return;
             }
 
-            await this.postService.ratePostById(userId, postId, login,likeStatus);
+            await this.postService.ratePostById(userId, postId, login, likeStatus);
             res.status(204).send();
         } catch (error) {
             console.error('Rate post error:', error);
