@@ -12,7 +12,7 @@ import {likeStatusValidation} from "../../middlewares/likeStatusMiddleware";
 export const postRouter = Router();
 const postController = container.get<PostHTTPController>(PostHTTPController);
 const authMiddleware = container.get(AuthMiddleware);
-const optionalAuthMiddleware = container.get(OptionalAuthMiddleware); // Добавьте это
+const optionalAuthMiddleware = container.get(OptionalAuthMiddleware);
 
 postRouter.get("/", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), postController.getAllPosts);
 postRouter.get("/:id", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), postController.getPostById);

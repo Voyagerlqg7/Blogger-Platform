@@ -5,13 +5,16 @@ import { basicAuthMiddleware } from "../../auth/BasicAuthMiddleware";
 import { inputValidationMiddleware } from "../../middlewares/input-validation-middleware";
 import { container } from "../../composition";
 import {postValidationMiddleware} from "../../middlewares/PostsValidation";
+import {OptionalAuthMiddleware} from "../../auth/OptionalAuthMiddleware";
 
 export const blogRouter = Router();
 const blogController = container.get<BlogController>(BlogController);
+const optionalAuthMiddleware = container.get(OptionalAuthMiddleware);
+
 
 blogRouter.get("/", blogController.getAllBlogsHandler);
 blogRouter.get("/:id", blogController.getBlogByIdHandler);
-blogRouter.get("/:id/posts", blogController.getAllPostsFromBlogHandler);
+blogRouter.get("/:id/posts", optionalAuthMiddleware.execute.bind(optionalAuthMiddleware), blogController.getAllPostsFromBlogHandler);
 
 blogRouter.put("/:id",
     basicAuthMiddleware,

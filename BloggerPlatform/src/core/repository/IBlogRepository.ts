@@ -7,7 +7,7 @@ import {BlogsQueryDTO, PagedResponse, PostsQueryDTO} from "./DTO/QueryParamsDTO"
 export interface IBlogRepository {
     getAllBlogs(Q_params:BlogsQueryDTO): Promise<PagedResponse<Blog>>;
     createBlog(blog:Blog):Promise<Blog>;
-    getAllPostsFromBlog(blogId:string, query:PostsQueryDTO):Promise<PagedResponse<Post>>;
+    getAllPostsFromBlog(blogId:string, query:PostsQueryDTO, userId?:string):Promise<PagedResponse<Post>>;
     createNewPostForSpecialBlog(post:Post):Promise<Post>;
     getBlogById(blogId:string):Promise<Blog | null>;
     updateBlogById(blogId:string, dto:UpdateBlogDTO):Promise<void | null>;

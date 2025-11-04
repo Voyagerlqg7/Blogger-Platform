@@ -53,7 +53,7 @@ export class BlogRepository implements IBlogRepository{
             { $set: { name: dto.name, description: dto.description, websiteUrl: dto.websiteUrl } }
         );
     }
-    async getAllPostsFromBlog(blogId: string, query: PostsQueryDTO): Promise<PagedResponse<Post>> {
+    async getAllPostsFromBlog(blogId: string, query: PostsQueryDTO, userId?:string): Promise<PagedResponse<Post>> {
         const filter = { blogId }; // фильтруем по blogId
         const totalCount = await PostModel.countDocuments(filter);
 
@@ -63,6 +63,19 @@ export class BlogRepository implements IBlogRepository{
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
             .lean();
+
+        let userLikes: Record<string, "Like" | "Dislike"> = {};
+        if (userId) {
+            const likes = await PostLikeModel.find({
+                userId,
+                postId: { $in: items.map(i => i._id) }
+            }).lean();
+
+            userLikes = likes.reduce((acc, l) => {
+                acc[String(l.postId)] = l.status as "Like" | "Dislike";
+                return acc;
+            }, {} as Record<string, "Like" | "Dislike">);
+        }
 
         const postIds = items.map(i => i._id);
 

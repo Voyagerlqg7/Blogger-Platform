@@ -87,7 +87,7 @@ export class BlogController {
     getAllPostsFromBlogHandler = async (req: Request, res: Response) => {
         try {
             const query: PostsQueryDTO = getQueryParams<PostsQueryDTO>(req);
-            const posts = await this.blogService.getAllPostsFromBlog(req.params.id, query);
+            const posts = await this.blogService.getAllPostsFromBlog(req.params.id, query, req.user?.id);
             if (!posts) {
                 res.status(404).send("Blog not found");
                 return;

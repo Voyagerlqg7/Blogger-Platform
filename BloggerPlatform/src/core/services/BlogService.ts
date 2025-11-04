@@ -27,12 +27,12 @@ export class BlogService {
         );
         return await this.blogRepository.createBlog(newBlog);
     }
-    async getAllPostsFromBlog(blogId:string, query:PostsQueryDTO):Promise<PagedResponse<Post>>{
+    async getAllPostsFromBlog(blogId:string, query:PostsQueryDTO, userId?:string):Promise<PagedResponse<Post>>{
         const blog = await this.blogRepository.getBlogById(blogId);
         if (!blog) {
             throw new Error("Blog not found");
         }
-        return await this.blogRepository.getAllPostsFromBlog(blogId,query);
+        return await this.blogRepository.getAllPostsFromBlog(blogId,query, userId);
     }
     async createNewPostForSpecialBlog(blogId:string, dto:CreatePostForSpecialBlogDTO):Promise<Post>{
         const blog = await this.blogRepository.getBlogById(blogId);
