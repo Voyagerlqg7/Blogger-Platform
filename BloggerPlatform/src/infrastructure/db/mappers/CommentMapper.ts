@@ -1,5 +1,5 @@
 import { Comment } from "../../../core/entities/Comment";
-import { CommentDB } from "../Schemas/CommentModel";
+import { CommentDB } from "../Schemas/CommentSchema";
 
 export class CommentMapper {
 

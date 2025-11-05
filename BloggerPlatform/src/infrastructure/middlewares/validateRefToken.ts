@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { settings } from "../settings/settings";
-import { container } from "../composition";
+import { container } from "../DIContainers";
 import {UserService} from "../../core/services/UserService";
 import { TokenRepository } from "../db/implementations/TokenRepository";
 import { SessionsRepository } from "../db/implementations/SessionsRepository";

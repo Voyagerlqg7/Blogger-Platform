@@ -1,5 +1,5 @@
 import { body, ValidationChain } from "express-validator";
-import { container } from "../composition";
+import { container } from "../DIContainers";
 import {UserService} from "../../core/services/UserService";
 
 export const createUsersValidationMiddleware = (): ValidationChain[] => {

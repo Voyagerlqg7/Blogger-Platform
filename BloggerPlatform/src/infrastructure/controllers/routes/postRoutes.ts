@@ -6,7 +6,7 @@ import {OptionalAuthMiddleware} from "../../auth/OptionalAuthMiddleware"; // Ð”Ð
 import {postValidationMiddleware} from "../../middlewares/PostsValidation";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {commentsValidationMiddleware} from "../../middlewares/CommentsValidation";
-import {container} from "../../composition";
+import {container} from "../../DIContainers";
 import {likeStatusValidation} from "../../middlewares/likeStatusMiddleware";
 
 export const postRouter = Router();

@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import {BlogsDB, BlogSchema} from "../Schemas/BlogModel";
-import {UserDB, UserSchema} from "../Schemas/UserModel";
-import {PostsDB, PostSchema, PostLikeSchema} from "../Schemas/PostModel";
-import {CommentDB, CommentSchema, CommentLikeSchema} from "../Schemas/CommentModel";
-import {session, SessionSchema} from "../Schemas/SessionModel";
-import {TokenSchema} from "../Schemas/TokenModel";
-import {RequestLogSchema} from "../Schemas/RequestLogModel";
+import {BlogsDB, BlogSchema} from "../Schemas/BlogSchema";
+import {UserDB, UserSchema} from "../Schemas/UserSchema";
+import {PostsDB, PostSchema, PostLikeSchema} from "../Schemas/PostSchema";
+import {CommentDB, CommentSchema, CommentLikeSchema} from "../Schemas/CommentSchema";
+import {session, SessionSchema} from "../Schemas/SessionSchema";
+import {TokenSchema} from "../Schemas/TokenSchema";
+import {RequestLogSchema} from "../Schemas/RequestLogsSchema";
 
 export const TokenModel = mongoose.model("Token", TokenSchema)
 export const RequestLogsModel = mongoose.model("CustomRateLimit", RequestLogSchema)

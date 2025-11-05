@@ -1,5 +1,5 @@
 import {Blog} from "../../../core/entities/Blog";
-import {BlogsDB} from "../Schemas/BlogModel";
+import {BlogsDB} from "../Schemas/BlogSchema";
 
 export class BlogMapper {
     static toDomain(blogDB: BlogsDB): Blog {

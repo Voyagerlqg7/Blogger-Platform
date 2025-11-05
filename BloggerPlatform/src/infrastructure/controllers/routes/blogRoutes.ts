@@ -3,7 +3,7 @@ import { BlogController } from "../BlogHTTPController";
 import { blogValidationMiddleware } from "../../middlewares/BlogsValidation";
 import { basicAuthMiddleware } from "../../auth/BasicAuthMiddleware";
 import { inputValidationMiddleware } from "../../middlewares/input-validation-middleware";
-import { container } from "../../composition";
+import { container } from "../../DIContainers";
 import {postValidationMiddleware} from "../../middlewares/PostsValidation";
 import {OptionalAuthMiddleware} from "../../auth/OptionalAuthMiddleware";
 

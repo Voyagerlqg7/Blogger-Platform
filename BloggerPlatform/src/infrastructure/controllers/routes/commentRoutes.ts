@@ -4,7 +4,7 @@ import {OptionalAuthMiddleware} from "../../auth/OptionalAuthMiddleware";
 import {commentsValidationMiddleware} from "../../middlewares/CommentsValidation";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {likeStatusValidation} from "../../middlewares/likeStatusMiddleware";
-import {container} from "../../composition";
+import {container} from "../../DIContainers";
 import {CommentController} from "../CommentHTTPController";
 
 export const commentRouter = Router();

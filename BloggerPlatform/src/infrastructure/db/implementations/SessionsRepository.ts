@@ -1,4 +1,4 @@
-import {session} from "../Schemas/SessionModel";
+import {session} from "../Schemas/SessionSchema";
 import {SessionModel} from "../Models/collections";
 
 export class SessionsRepository  {

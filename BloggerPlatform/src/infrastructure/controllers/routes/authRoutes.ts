@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {AuthController} from "../AuthHTTPController";
-import {container} from "../../composition";
+import {container} from "../../DIContainers";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {createUsersValidationMiddleware} from "../../middlewares/UserValidation";
 import {resetPasswordMiddleware} from "../../middlewares/PasswordValidation";

@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {createValidateRefreshToken} from "../../middlewares/validateRefToken";
 import {SecurityHTTPController} from "../SecurityHTTPController"
-import {container} from "../../composition";
+import {container} from "../../DIContainers";
 
 export const securityDevicesRouter = Router();
 const securityController = container.get<SecurityHTTPController>(SecurityHTTPController);

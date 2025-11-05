@@ -4,7 +4,7 @@ import {UserHTTPController} from "../UserHTTPController";
 
 import {createUsersValidationMiddleware} from "../../middlewares/UserValidation";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
-import {container} from "../../composition";
+import {container} from "../../DIContainers";
 
 export const userRouter = Router();
 const userController = container.get<UserHTTPController>(UserHTTPController);
